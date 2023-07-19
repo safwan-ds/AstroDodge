@@ -1,0 +1,32 @@
+# Byte-compiled / optimized Python files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment-specific settings files
+.env
+.env.*
+
+# IDE-specific files and directories
+.idea/
+.vscode/
+
+# Editor backup files
+*~
+*.swp
+
+# Compiled binary files
+*.so
+*.dll
+*.pyd
+
+# Log files
+*.log
+
+# Package distribution / build directories
+dist/
+build/
+*.egg-info/
+
+# Virtual environment
+venv/
