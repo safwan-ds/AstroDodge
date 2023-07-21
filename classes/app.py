@@ -163,6 +163,18 @@ class App:
         self.last_frame = time()
         return min(dt * 60, 1.5)
 
+    def render(self):
+        mouse_pos = pygame.mouse.get_pos()
+        frame_tex = self.surface_to_texture(self.screen)
+        frame_tex.use()
+        self.program["tex"] = 0
+        # self.program["u_resolution"] = self.display_size
+        # self.program["u_time"] = self.elapsed_time
+        # self.program["u_mouse"] = mouse_pos
+        self.renderer.render(moderngl.TRIANGLE_STRIP)
+        pygame.display.flip()
+        frame_tex.release()
+
     def game_loop(self):
         self.dt = self.get_dt()
         self.elapsed_time += self.dt * 60
@@ -172,7 +184,7 @@ class App:
         self.state_stack[-1].update(self.dt)
 
         fps = self.clock.get_fps()
-        mouse_pos = pygame.mouse.get_pos()
+
         # onscreen_debug(
         #     self.screen,
         #     f"FPS: {fps:.2f} " + ("locked" if self.fps else "unlocked"),
@@ -181,17 +193,7 @@ class App:
         # onscreen_debug(self.screen, f"DT: {self.dt:.2f}", y=30)
         # onscreen_debug(self.screen, mouse_pos, y=150)
 
-        frame_tex = self.surface_to_texture(self.screen)
-        frame_tex.use()
-        self.program["tex"] = 0
-        # self.program["u_resolution"] = self.display_size
-        # self.program["u_time"] = self.elapsed_time
-        # self.program["u_mouse"] = mouse_pos
-        self.renderer.render(moderngl.TRIANGLE_STRIP)
-
-        pygame.display.flip()
-
-        frame_tex.release()
+        self.render()
 
         self.clock.tick(self.fps)
 

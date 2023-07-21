@@ -30,11 +30,10 @@ class Gameplay(State):
         self.asteroids = pygame.sprite.Group()
         self.last_asteroid = time()
         self.score = 0
-        self.current_score = 0
 
         self.shake = 0
 
-        self.font = pygame.Font(DEFAULT_FONT, 20)
+        self.font = pygame.Font(DEFAULT_FONT, 30)
 
         # UI
         self.ui = pygame.sprite.Group()
@@ -85,15 +84,20 @@ class Gameplay(State):
                 self.hit_sound.play()
                 self.remove()
 
-        if pygame.sprite.groupcollide(self.bullets, self.asteroids, True, True):
-            self.asteroid_explosion_sound.play()
-            self.score += 1
-            self.shake = 15
+            if pygame.sprite.spritecollide(asteroid, self.bullets, True):
+                self.asteroid_explosion_sound.play()
+                asteroid.kill()
+                self.shake = 15
+                if asteroid.rect.height > ASTEROID_MAX_SIZE / 2:
+                    self.score += 100
+                else:
+                    self.score += 200
 
     def update(self, dt):
         super().update()
 
         self.level += 0.001 * dt
+        self.score += self.level * dt
 
         # Music
         if pygame.mixer.music.get_volume() < 0.1:
@@ -130,9 +134,7 @@ class Gameplay(State):
         self.asteroids.draw(self.screen)
 
         # UI
-        if self.current_score != self.score:
-            self.score_text.update(self.font, self.score)
-            self.current_score = self.score
+        self.score_text.update(self.font, int(self.score))
         self.ui.draw(self.screen)
 
         # Debugging
