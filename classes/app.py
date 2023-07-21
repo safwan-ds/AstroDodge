@@ -1,4 +1,5 @@
 from array import array
+import math
 from time import time
 import pygame
 import moderngl
@@ -33,10 +34,17 @@ class App:
             32,
         )
         self.fullscreen = False
-        self.shaders_init()
+
+        # Shaders
+        with open("shaders/vertex_shader.vert", "r") as f:
+            self.vertex_shader = f.read()
+        with open("shaders/post_processing.frag", "r") as f:
+            fragment_shader = f.read()
+        self.shaders_init(self.vertex_shader, fragment_shader)
 
         # DT
         self.last_frame = time()
+        self.elapsed_time = 0.0
 
         # Cursor
         cursor_img = pygame.image.load(IMGS_DIR + "cursors/crosshair.png")
@@ -67,12 +75,14 @@ class App:
                 self.running = False
 
             if event.type == KEYDOWN:
-                self.keys["esc"] = event.key == K_ESCAPE
-                self.keys["shift"] = event.key == K_LSHIFT
-                self.keys["space"] = event.key == K_SPACE
-                self.keys["d"] = event.key == K_d
-                self.keys["a"] = event.key == K_a
-                self.keys["f3"] = event.key == K_F3
+                self.keys = {
+                    "esc": event.key == K_ESCAPE,
+                    "shift": event.key == K_LSHIFT,
+                    "space": event.key == K_SPACE,
+                    "d": event.key == K_d,
+                    "a": event.key == K_a,
+                    "f3": event.key == K_F3,
+                }
 
                 if event.key == K_F1:
                     self.fps = 0 if self.fps else FPS
@@ -112,7 +122,7 @@ class App:
                 self.mouse_buttons[2] = event.button == 2
                 self.mouse_buttons[3] = event.button == 3
 
-    def shaders_init(self):
+    def shaders_init(self, vertex_shader, fragment_shader):
         self.ctx = moderngl.create_context()
         quad_buffer = self.ctx.buffer(
             array(
@@ -128,11 +138,6 @@ class App:
             )  # Position(x, y), UV(x, y)
         )
 
-        with open("shaders/vertex_shader.glsl", "r") as f:
-            vertex_shader = f.read()
-        with open("shaders/fragment_shader.glsl", "r") as f:
-            fragment_shader = f.read()
-
         self.program = self.ctx.program(
             vertex_shader=vertex_shader, fragment_shader=fragment_shader
         )
@@ -140,37 +145,48 @@ class App:
             self.program, [(quad_buffer, "2f 2f", "vert", "texCoord")]
         )
 
-    def surface_texture_convert(self, surface: pygame.Surface):
-        tex = self.ctx.texture(surface.get_size(), 4)
-        tex.filter = (moderngl.NEAREST, moderngl.NEAREST)
-        tex.swizzle = "BGRA"
-        tex.write(surface.get_view("1"))
-        return tex
+    def surface_to_texture(self, surface: pygame.Surface):
+        texture = self.ctx.texture(surface.get_size(), 4)
+        texture.filter = (moderngl.NEAREST, moderngl.NEAREST)
+        texture.swizzle = "BGRA"
+        texture.write(surface.get_view("1"))
+        return texture
+
+    def texture_to_surface(self, texture):
+        texture_data = texture.read()
+        surface = pygame.image.fromstring(texture_data, texture.size, "RGBA", True)
+        surface.set_colorkey((0, 0, 0))
+        return surface
 
     def get_dt(self):
         dt = time() - self.last_frame
         self.last_frame = time()
-        return dt * 60
+        return min(dt * 60, 1.5)
 
     def game_loop(self):
         self.dt = self.get_dt()
-        if self.dt >= 1.5:
-            self.dt = 1.5
+        self.elapsed_time += self.dt * 60
+
         self.handle_events()
 
         self.state_stack[-1].update(self.dt)
 
         fps = self.clock.get_fps()
-        onscreen_debug(
-            self.screen,
-            f"FPS: {fps:.2f} " + ("locked" if self.fps else "unlocked"),
-            f_color="green" if fps >= FPS else "red",
-        )
-        onscreen_debug(self.screen, f"DT: {self.dt:.2f}", y=30)
+        mouse_pos = pygame.mouse.get_pos()
+        # onscreen_debug(
+        #     self.screen,
+        #     f"FPS: {fps:.2f} " + ("locked" if self.fps else "unlocked"),
+        #     f_color="green" if fps >= FPS else "red",
+        # )
+        # onscreen_debug(self.screen, f"DT: {self.dt:.2f}", y=30)
+        # onscreen_debug(self.screen, mouse_pos, y=150)
 
-        frame_tex = self.surface_texture_convert(self.screen)
+        frame_tex = self.surface_to_texture(self.screen)
         frame_tex.use()
         self.program["tex"] = 0
+        # self.program["u_resolution"] = self.display_size
+        # self.program["u_time"] = self.elapsed_time
+        # self.program["u_mouse"] = mouse_pos
         self.renderer.render(moderngl.TRIANGLE_STRIP)
 
         pygame.display.flip()

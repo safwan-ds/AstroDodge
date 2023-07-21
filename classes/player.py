@@ -14,8 +14,10 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load(IMGS_DIR + "player.png")
         self.original_image = self.image.copy()
         self.rect = self.image.get_frect(center=pos)
+        self.hit_box = self.rect.inflate(-15, -15)
 
         self.speed = Vector2(0, 0)
+        self.rotated_images = {}
 
     def get_input(self):
         keys = pygame.key.get_pressed()
@@ -35,7 +37,7 @@ class Player(pygame.sprite.Sprite):
             self.speed.y = 0
 
     def move(self, scroll, dt):
-        self.rect.move_ip(self.speed * dt + scroll)
+        self.hit_box.move_ip(self.speed * dt + scroll)
 
     def rotate(self):
         screen_size = pygame.display.get_window_size()
@@ -48,24 +50,32 @@ class Player(pygame.sprite.Sprite):
         direction = Vector2(
             mouse_pos.x - self.rect.centerx, mouse_pos.y - self.rect.centery
         )
-        angle = math.degrees(math.atan2(direction.y, direction.x))
+        angle = int(math.degrees(math.atan2(direction.y, direction.x)))
 
         # Rotate the spaceship image
-        self.image = pygame.transform.rotate(self.original_image, -angle - 90)
+        try:
+            if self.image != self.rotated_images[angle]:
+                self.image = self.rotated_images[angle]
+        except KeyError:
+            self.rotated_images[angle] = pygame.transform.rotate(
+                self.original_image, -angle - 90
+            )
+            self.image = self.rotated_images[angle]
+
         self.rect = self.image.get_frect(center=self.rect.center)
 
     def update(self, scroll, dt):
         self.get_input()
         self.move(scroll, dt)
         self.rotate()
+        self.rect.center = self.hit_box.center
 
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, pos, group):
         super().__init__(group)
 
-        self.image = pygame.Surface((10, 5))
-        self.image.fill("red")
+        self.image = pygame.image.load(IMGS_DIR + "misc/bullet.png")
         self.rect = self.image.get_frect(center=pos)
 
         screen_size = pygame.display.get_window_size()
@@ -78,7 +88,7 @@ class Bullet(pygame.sprite.Sprite):
             mouse_pos.x - self.rect.centerx, mouse_pos.y - self.rect.centery
         )
         angle = math.atan2(direction.y, direction.x)
-        self.image = pygame.transform.rotate(self.image, math.degrees(angle))
+        self.image = pygame.transform.rotate(self.image, -math.degrees(angle) - 90)
         self.speed = Vector2(
             math.cos(angle) * BULLET_SPEED, math.sin(angle) * BULLET_SPEED
         )

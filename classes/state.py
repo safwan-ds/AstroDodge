@@ -9,8 +9,10 @@ class State:
         self.app.state_stack.append(self)
 
     def remove(self):
-        self.app.state_stack.pop()
-        self.app.state_time = time()
+        try:
+            self.app.state_stack.remove(self)
+        except ValueError:
+            ...
 
     def get_input(self):
         ...
