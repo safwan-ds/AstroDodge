@@ -4,6 +4,8 @@ from time import time
 import pygame
 from pygame.math import Vector2
 
+from utils import get_animations
+
 from pygame.locals import *
 from config import *
 
@@ -32,21 +34,22 @@ class Asteroid(pygame.sprite.Sprite):
             )
 
         # Randomly select a size
-        scale = random.randint(ASTEROID_MIN_SIZE, ASTEROID_MAX_SIZE)
+        self.scale = random.uniform(ASTEROID_MIN_SCALE, ASTEROID_MAX_SCALE)
 
-        self.image = pygame.transform.scale(
-            pygame.transform.rotate(
-                pygame.image.load(IMGS_DIR + "asteroids/1.png"),
-                random.randint(-180, 180),
-            ),
-            (scale, scale),
+        self.image = pygame.transform.scale_by(
+            pygame.image.load(IMGS_DIR + "asteroids/1.png"), self.scale
         )
         self.rect = self.image.get_frect(center=(x, y))
 
+        x = SCREEN_WIDTH / 2 - self.rect.centerx
+        y = SCREEN_HEIGHT / 2 - self.rect.centery
+        randomness = 500
         direction = Vector2(
-            SCREEN_WIDTH / 2 - self.rect.centerx, SCREEN_HEIGHT / 2 - self.rect.centery
+            x + random.randint(-randomness, randomness),
+            y + random.randint(-randomness, randomness),
         )
         angle = math.atan2(direction.y, direction.x)
+        self.image = pygame.transform.rotate(self.image, -math.degrees(angle))
 
         # Randomly select a speed
         self.speed = random.randint(ASTEROID_MIN_SPEED, ASTEROID_MAX_SPEED)
@@ -65,3 +68,27 @@ class Asteroid(pygame.sprite.Sprite):
             self.kill()
 
         self.rect.move_ip(self.speed * dt + scroll)
+
+
+class Explosion(pygame.sprite.Sprite):
+    def __init__(self, group, pos, scale):
+        super().__init__(group)
+
+        self.frames = get_animations(IMGS_DIR + "asteroids", 16)["explosion"]
+        for i, frame in enumerate(self.frames):
+            self.frames[i] = pygame.transform.scale_by(frame, scale)
+        self.frame = 0
+
+        self.image = self.frames[self.frame]
+        self.rect = self.image.get_frect(center=pos)
+
+    def animate(self, dt):
+        self.frame += ANIMATION_SPEED * dt
+        self.image = self.frames[int(self.frame)]
+
+    def update(self, scroll, dt):
+        if self.frame >= len(self.frames) - 1:
+            self.kill()
+
+        self.rect.move_ip(scroll)
+        self.animate(dt)

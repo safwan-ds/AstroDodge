@@ -24,7 +24,7 @@ class Title(State):
         Button("start", self.start, (pos_x, 215), self.buttons)
         Button("quit", self.quit, (pos_x, 280), self.buttons)
 
-        self.particles = Emitter(SCREEN_HEIGHT, 1)
+        self.particles = Emitter(SCREEN_HEIGHT)
 
     def start(self):
         Gameplay(self.app).add()
@@ -34,9 +34,9 @@ class Title(State):
 
     def update(self, dt):
         if self.app.mouse_buttons[1]:
-            self.particles.add_particle()
+            self.particles.add_particle(5)
         self.app.screen.fill("black")
-        self.particles.update(self.app.dt)
+        self.particles.update((0, 0), self.app.dt, 5, 0.5)
         self.particles.draw(self.app.screen)
         self.logo.update()
         self.logo.draw(self.app.screen)

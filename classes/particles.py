@@ -10,32 +10,31 @@ from config import *
 
 
 class Emitter(pygame.sprite.Group):
-    def __init__(self, y, interval=None):
+    def __init__(self, y):
         super().__init__()
-        self.interval = interval
 
         self.last_addition = 0
 
         self.y = y + 20
         # self.PARTICLE_EVENT = USEREVENT + 1
 
-    def add_particle(self):
-        for _ in range(random.randint(1, int(PARTICLE_AMOUNT))):
+    def add_particle(self, amount):
+        for _ in range(random.randint(1, amount)):
             self.add(
                 Particle(
                     (
                         random.uniform(0, SCREEN_WIDTH) - 20,
-                        self.y,
+                        random.uniform(0, self.y),
                     )
                 )
             )
 
-    def update(self, dt):
-        super().update(dt)
+    def update(self, scroll, dt, amount, interval=None):
+        super().update(scroll, dt)
 
-        if self.interval:
-            if time() - self.last_addition >= self.interval:
-                self.add_particle()
+        if interval:
+            if time() - self.last_addition >= interval:
+                self.add_particle(amount)
                 self.last_addition = time()
 
 
@@ -52,9 +51,14 @@ class Particle(pygame.sprite.Sprite):
             -PARTICLE_VELOCITY * random.uniform(0.1, 2),
         )
         self.age = 0
+        self.alpha = 0
 
-    def update(self, dt):
-        self.rect.move_ip(self.velocity * dt)
+    def update(self, scroll, dt):
+        if self.alpha < 255:
+            self.alpha += (1 / 60) * dt
+            self.image.set_alpha(int(self.alpha))
+
+        self.rect.move_ip(self.velocity * dt + scroll)
 
         self.age += (1 / 60) * dt
         if self.age < PARTICLE_LIFETIME:

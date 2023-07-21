@@ -165,6 +165,7 @@ class App:
 
     def render(self):
         mouse_pos = pygame.mouse.get_pos()
+        onscreen_debug(self.screen, mouse_pos, y=150)
         frame_tex = self.surface_to_texture(self.screen)
         frame_tex.use()
         self.program["tex"] = 0
@@ -185,13 +186,12 @@ class App:
 
         fps = self.clock.get_fps()
 
-        # onscreen_debug(
-        #     self.screen,
-        #     f"FPS: {fps:.2f} " + ("locked" if self.fps else "unlocked"),
-        #     f_color="green" if fps >= FPS else "red",
-        # )
-        # onscreen_debug(self.screen, f"DT: {self.dt:.2f}", y=30)
-        # onscreen_debug(self.screen, mouse_pos, y=150)
+        onscreen_debug(
+            self.screen,
+            f"FPS: {fps:.2f} " + ("locked" if self.fps else "unlocked"),
+            f_color="green" if fps >= FPS else "red",
+        )
+        onscreen_debug(self.screen, f"DT: {self.dt:.2f}", y=30)
 
         self.render()
 
