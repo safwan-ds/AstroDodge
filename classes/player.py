@@ -8,18 +8,18 @@ from config import *
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos):
-        super().__init__()
+    def __init__(self, group, pos):
+        super().__init__(group)
 
-        self.image = pygame.image.load(IMGS_DIR + "player.png")
-        self.original_image = self.image.copy()
-        self.rect = self.image.get_frect(center=pos)
-        self.hit_box = self.rect.inflate(-15, -15)
+        self.original_image = pygame.image.load(IMGS_DIR + "player.png")
+        self.rect = self.original_image.get_frect(center=pos)
+        self.hit_box = self.rect.inflate(-20, -20)
 
         self.speed = Vector2(PLAYER_SPEED, 0)
-        self.rotated_images = {}
+        self.cache = {}
 
         self.angle = 0
+        self.target_angle = 0
 
     def get_input(self):
         keys = pygame.key.get_pressed()
@@ -75,8 +75,8 @@ class Player(pygame.sprite.Sprite):
             rotation_sign = -1 if angle_difference < 0 else 1
             self.angle += rotation_sign * rotation_amount
 
-            self.speed.x = math.cos(math.radians(self.target_angle)) * PLAYER_SPEED
-            self.speed.y = math.sin(math.radians(self.target_angle)) * PLAYER_SPEED
+            self.speed.x = math.cos(math.radians(self.angle)) * PLAYER_SPEED
+            self.speed.y = math.sin(math.radians(self.angle)) * PLAYER_SPEED
 
             # Rotate the spaceship image
             if self.angle > 359:
@@ -84,13 +84,13 @@ class Player(pygame.sprite.Sprite):
             if self.angle < 0:
                 self.angle = 360 + self.angle
             try:
-                if self.image != self.rotated_images[self.angle]:
-                    self.image = self.rotated_images[self.angle]
+                if self.image != self.cache[self.angle]:
+                    self.image = self.cache[self.angle]
             except KeyError:
-                self.rotated_images[self.angle] = pygame.transform.rotate(
+                self.cache[self.angle] = pygame.transform.rotate(
                     self.original_image, -self.angle - 90
                 )
-                self.image = self.rotated_images[self.angle]
+                self.image = self.cache[self.angle]
 
             self.rect = self.image.get_frect(center=self.rect.center)
 

@@ -10,7 +10,7 @@ def console_debug(
 
 
 pygame.font.init()
-font = pygame.Font(DEFAULT_FONT, 20)
+font = pygame.Font(DEFAULT_FONT, 30)
 
 
 def onscreen_debug(

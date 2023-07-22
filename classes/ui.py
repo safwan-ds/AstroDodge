@@ -24,6 +24,15 @@ class Arrow(pygame.sprite.Sprite):
         self.original_image = pygame.image.load(IMGS_DIR + "misc/arrow.png")
         self.rect = self.original_image.get_frect(center=pos)
 
+        self.cache = {}
+
     def update(self, angle):
-        self.image = pygame.transform.rotate(self.original_image, -angle - 90)
+        try:
+            if self.image != self.cache[angle]:
+                self.image = self.cache[angle]
+        except KeyError:
+            self.cache[angle] = pygame.transform.rotate(
+                self.original_image, -angle - 90
+            )
+            self.image = self.cache[angle]
         self.rect = self.image.get_frect(center=self.rect.center)

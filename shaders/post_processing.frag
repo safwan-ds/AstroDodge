@@ -1,4 +1,4 @@
-#version 330
+#version 330 core
 
 uniform vec2 u_resolution;
 uniform float u_time;
@@ -211,11 +211,11 @@ void main() {
     
     
     //ACES Tonemapping
-  	// color = ACESFilm(color);
+  	color = ACESFilm(color);
     
     
     //contrast
-    // color = contrast(color) * 0.9;
+    color = contrast(color) * 0.9;
     
     
     //flare

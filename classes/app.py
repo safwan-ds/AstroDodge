@@ -60,6 +60,7 @@ class App:
         Title(self).add()
 
     def handle_events(self):
+        self.keydown = False
         self.keys = {
             "esc": False,
             "shift": False,
@@ -68,6 +69,7 @@ class App:
             "a": False,
             "f3": False,
         }
+        self.mousebuttondown = False
         self.mouse_buttons = {1: False, 2: False, 3: False}
 
         for event in pygame.event.get():
@@ -75,6 +77,7 @@ class App:
                 self.running = False
 
             if event.type == KEYDOWN:
+                self.keydown = True
                 self.keys = {
                     "esc": event.key == K_ESCAPE,
                     "shift": event.key == K_LSHIFT,
@@ -118,6 +121,7 @@ class App:
                         self.fullscreen = True
 
             if event.type == MOUSEBUTTONDOWN:
+                self.mousebuttondown = True
                 self.mouse_buttons[1] = event.button == 1
                 self.mouse_buttons[2] = event.button == 2
                 self.mouse_buttons[3] = event.button == 3
@@ -152,12 +156,6 @@ class App:
         texture.write(surface.get_view("1"))
         return texture
 
-    def texture_to_surface(self, texture):
-        texture_data = texture.read()
-        surface = pygame.image.fromstring(texture_data, texture.size, "RGBA", True)
-        surface.set_colorkey((0, 0, 0))
-        return surface
-
     def get_dt(self):
         dt = time() - self.last_frame
         self.last_frame = time()
@@ -165,13 +163,16 @@ class App:
 
     def render(self):
         mouse_pos = pygame.mouse.get_pos()
-        onscreen_debug(self.screen, mouse_pos, y=150)
+        onscreen_debug(self.screen, mouse_pos, y=210)
         frame_tex = self.surface_to_texture(self.screen)
         frame_tex.use()
         self.program["tex"] = 0
-        # self.program["u_resolution"] = self.display_size
-        # self.program["u_time"] = self.elapsed_time
-        # self.program["u_mouse"] = mouse_pos
+        try:
+            self.program["u_resolution"] = self.display_size
+            self.program["u_time"] = self.elapsed_time
+            self.program["u_mouse"] = mouse_pos
+        except KeyError:
+            ...
         self.renderer.render(moderngl.TRIANGLE_STRIP)
         pygame.display.flip()
         frame_tex.release()

@@ -18,14 +18,13 @@ from config import *
 class Gameplay(State):
     def __init__(self, app):
         super().__init__(app)
-        self.screen = self.app.screen
+        self.screen: pygame.Surface = self.app.screen
 
         self.start_time = time()
         self.level = 1
 
-        self.player = pygame.sprite.GroupSingle(
-            Player((SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
-        )
+        self.player = pygame.sprite.GroupSingle()
+        Player(self.player, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
         self.bullets = pygame.sprite.Group()
         self.last_shot = 0
         self.asteroids = pygame.sprite.Group()
@@ -37,8 +36,27 @@ class Gameplay(State):
 
         self.shake = 0
 
-        self.font = pygame.Font(DEFAULT_FONT, 30)
+        self.font = pygame.Font(DEFAULT_FONT, 40)
+
+        # Gameplay states
+        self.paused = False
+        self.paused_text = self.font.render("Paused", False, "white")
+        self.paused_text_rect = self.paused_text.get_frect(
+            center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        )
+
         self.game_over = False
+        self.game_over_text1 = self.font.render(
+            "Game Over! Press any key to try again", True, "white"
+        )
+        self.game_over_text2 = self.font.render(
+            "or press ESC to exit to title screen", True, "white"
+        )
+        # Calculate positions for each line of text
+        self.line1_x = SCREEN_WIDTH / 2 - self.game_over_text1.get_width() / 2
+        self.line1_y = SCREEN_HEIGHT / 2 - self.game_over_text1.get_height()
+        self.line2_x = SCREEN_WIDTH / 2 - self.game_over_text2.get_width() / 2
+        self.line2_y = SCREEN_HEIGHT / 2
 
         # UI
         self.ui = pygame.sprite.Group()
@@ -66,7 +84,31 @@ class Gameplay(State):
 
     def get_input(self):
         if self.app.keys["esc"]:
-            self.remove()
+            if self.game_over:
+                self.remove()
+            else:
+                self.paused = not self.paused
+
+        if (
+            self.app.mouse_buttons[1]
+            and time() - self.last_shot >= SHOOTING_INTERVAL
+            and not self.game_over
+        ):
+            self.shoot_sound.play()
+            Bullet(
+                self.bullets,
+                self.player.sprite.rect.center,
+                self.player.sprite.target_angle,
+            )
+            self.last_shot = time()
+
+        if self.game_over and (self.app.keydown or self.app.mousebuttondown):
+            Player(self.player, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+            self.arrow = Arrow(self.ui, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+            self.level = 1
+            self.score = 0
+            self.asteroids.empty()
+            self.game_over = False
 
     def move_camera(self, dt):
         self.scroll = Vector2(
@@ -87,6 +129,7 @@ class Gameplay(State):
                     self.hit_sound.play()
                     Explosion(self.explosions, self.player.sprite.hit_box.center, 10)
                     self.player.sprite.kill()
+                    self.bullets.empty()
                     self.arrow.kill()
                     self.scroll = (0, 0)
                     self.game_over = True
@@ -132,7 +175,7 @@ class Gameplay(State):
     def update(self, dt):
         super().update()
 
-        if not self.game_over:
+        if not self.game_over and not self.paused:
             self.level += 0.001 * dt
             self.score += self.level * dt
 
@@ -156,42 +199,54 @@ class Gameplay(State):
         self.particles.update(self.scroll, dt, 2, 0.1)
         self.particles.draw(self.screen)
 
-        if not self.game_over:
-            # Player
-            self.player.update(self.scroll, dt)
+        # Player
+        try:
+            if not self.paused:
+                self.player.update(self.scroll, dt)
+                self.bullets.update(self.scroll, dt)
+
             self.player.draw(self.screen)
-            if time() - self.last_shot >= SHOOTING_INTERVAL:
-                self.shoot_sound.play()
-                Bullet(
-                    self.bullets,
-                    self.player.sprite.rect.center,
-                    self.player.sprite.angle,
-                )
-                self.last_shot = time()
-            self.bullets.update(self.scroll, dt)
             self.bullets.draw(self.screen)
+        except AttributeError as e:
+            # Handle the AttributeError
+            print("AttributeError occurred:", e)
+        except TypeError as e:
+            # Handle the TypeError
+            print("TypeError occurred:", e)
+        except Exception as e:
+            # Catch any other unexpected exceptions
+            print("Unexpected exception occurred:", e)
 
         # Asteroids
-        self.explosions.update(self.scroll, dt)
+        if not self.paused:
+            self.explosions.update(self.scroll, dt)
+            if time() - self.last_asteroid >= 1:
+                for _ in range(
+                    random.randint(0, int(self.level * ASTEROID_SPAWN_INTERVAL))
+                ):
+                    Asteroid(self.asteroids)
+                    self.last_asteroid = time()
+            self.asteroids.update(self.scroll, dt)
         self.explosions.draw(self.screen)
-        if time() - self.last_asteroid >= 1:
-            for _ in range(
-                random.randint(0, int(self.level * ASTEROID_SPAWN_INTERVAL))
-            ):
-                Asteroid(self.asteroids)
-                self.last_asteroid = time()
-        self.asteroids.update(self.scroll, dt)
         self.asteroids.draw(self.screen)
 
         # UI
         self.score_text.update(self.font, int(self.score))
-        if not self.game_over:
+        level = self.font.render(f"Level: {self.level:.1f}", False, "white")
+        self.screen.blit(level, level.get_frect(center=(SCREEN_WIDTH / 2, 30)))
+        try:
             self.arrow.update(self.player.sprite.target_angle)
+        except AttributeError:
+            ...
         self.ui.draw(self.screen)
 
-        # Game Over
+        # Game states
+        if self.paused:
+            self.scroll = (0, 0)
+            self.screen.blit(self.paused_text, self.paused_text_rect)
         if self.game_over:
-            ...
+            self.screen.blit(self.game_over_text1, (self.line1_x, self.line1_y))
+            self.screen.blit(self.game_over_text2, (self.line2_x, self.line2_y))
 
         # Debugging
         # pygame.draw.rect(self.screen, "green", self.player.sprite.hit_box, 1)
