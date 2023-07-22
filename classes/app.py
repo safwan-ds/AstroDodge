@@ -1,4 +1,5 @@
 from array import array
+import json
 import math
 from time import time
 import pygame
@@ -54,6 +55,9 @@ class App:
             cursor_img,
         )
         pygame.mouse.set_cursor(cursor)
+
+        # User data
+        self.load_data()
 
         # Game states
         self.state_stack = []
@@ -126,6 +130,14 @@ class App:
                 self.mouse_buttons[2] = event.button == 2
                 self.mouse_buttons[3] = event.button == 3
 
+    def load_data(self):
+        try:
+            with open("data/user.json") as f:
+                data = json.load(f)
+                self.highest_score = data.get("highest_score", 0)
+        except (IOError, json.JSONDecodeError):
+            self.highest_score = 0
+
     def shaders_init(self, vertex_shader, fragment_shader):
         self.ctx = moderngl.create_context()
         quad_buffer = self.ctx.buffer(
@@ -163,7 +175,7 @@ class App:
 
     def render(self):
         mouse_pos = pygame.mouse.get_pos()
-        onscreen_debug(self.screen, mouse_pos, y=210)
+        # onscreen_debug(self.screen, mouse_pos, y=210)
         frame_tex = self.surface_to_texture(self.screen)
         frame_tex.use()
         self.program["tex"] = 0

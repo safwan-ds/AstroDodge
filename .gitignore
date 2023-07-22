@@ -30,3 +30,6 @@ build/
 
 # Virtual environment
 venv/
+
+# User data
+user*

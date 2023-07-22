@@ -1,3 +1,4 @@
+import json
 from typing import Any
 import random
 from time import time
@@ -37,10 +38,13 @@ class Gameplay(State):
         self.shake = 0
 
         self.font = pygame.Font(DEFAULT_FONT, 40)
+        self.s_font = pygame.Font(DEFAULT_FONT, 30)
 
         # Gameplay states
         self.paused = False
-        self.paused_text = self.font.render("Paused", False, "white")
+        self.paused_text = self.font.render(
+            "Paused! Press any key to continue", False, "white"
+        )
         self.paused_text_rect = self.paused_text.get_frect(
             center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         )
@@ -83,16 +87,11 @@ class Gameplay(State):
         pygame.mixer.music.fadeout(500)
 
     def get_input(self):
-        if self.app.keys["esc"]:
-            if self.game_over:
-                self.remove()
-            else:
-                self.paused = not self.paused
-
         if (
             self.app.mouse_buttons[1]
             and time() - self.last_shot >= SHOOTING_INTERVAL
             and not self.game_over
+            and not self.paused
         ):
             self.shoot_sound.play()
             Bullet(
@@ -102,13 +101,24 @@ class Gameplay(State):
             )
             self.last_shot = time()
 
-        if self.game_over and (self.app.keydown or self.app.mousebuttondown):
+        if self.game_over and self.app.keys["esc"]:
+            self.save_data()
+            self.remove()
+
+        elif self.game_over and (self.app.keydown or self.app.mousebuttondown):
+            self.save_data()
             Player(self.player, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
             self.arrow = Arrow(self.ui, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
             self.level = 1
             self.score = 0
             self.asteroids.empty()
             self.game_over = False
+
+        if self.paused:
+            if self.app.keydown or self.app.mousebuttondown:
+                self.paused = False
+        elif not self.game_over and self.app.keys["esc"]:
+            self.paused = True
 
     def move_camera(self, dt):
         self.scroll = Vector2(
@@ -126,6 +136,7 @@ class Gameplay(State):
         for asteroid in self.asteroids:
             if not self.game_over:
                 if self.player.sprite.hit_box.colliderect(asteroid.rect):
+                    self.save_data()
                     self.hit_sound.play()
                     Explosion(self.explosions, self.player.sprite.hit_box.center, 10)
                     self.player.sprite.kill()
@@ -171,6 +182,17 @@ class Gameplay(State):
                     Explosion(self.explosions, asteroid2.rect.center, asteroid2.scale)
                     self.shake = SHAKE
                     break  # Exit the inner loop since each asteroid can only collide with one other asteroid
+
+    def save_data(self):
+        try:
+            if self.score > self.app.highest_score:
+                data = {"highest_score": int(self.score)}
+                with open("data/user.json", "w") as f:
+                    json.dump(data, f)
+                self.app.load_data()
+
+        except IOError as e:
+            print(f"Error saving high score: {e}")
 
     def update(self, dt):
         super().update()
@@ -231,9 +253,15 @@ class Gameplay(State):
         self.asteroids.draw(self.screen)
 
         # UI
-        self.score_text.update(self.font, int(self.score))
         level = self.font.render(f"Level: {self.level:.1f}", False, "white")
         self.screen.blit(level, level.get_frect(center=(SCREEN_WIDTH / 2, 30)))
+        self.score_text.update(self.font, int(self.score))
+        highest_score = self.s_font.render(
+            f"Highest Score: {self.app.highest_score}", False, "white"
+        )
+        self.screen.blit(
+            highest_score, highest_score.get_frect(center=(SCREEN_WIDTH / 2, 70))
+        )
         try:
             self.arrow.update(self.player.sprite.target_angle)
         except AttributeError:
@@ -251,11 +279,11 @@ class Gameplay(State):
         # Debugging
         # pygame.draw.rect(self.screen, "green", self.player.sprite.hit_box, 1)
 
-        onscreen_debug(self.screen, f"Bullets: {len(self.bullets.sprites())}", y=50)
+        # onscreen_debug(self.screen, f"Bullets: {len(self.bullets.sprites())}", y=50)
         # onscreen_debug(
         #     self.screen,
         #     f"Cached rotations: {len(self.player.sprite.rotated_images)}",
         #     y=70,
         # )
-        onscreen_debug(self.screen, f"Asteroids: {len(self.asteroids.sprites())}", y=90)
-        onscreen_debug(self.screen, f"Level: {self.level:.2f}", y=110)
+        # onscreen_debug(self.screen, f"Asteroids: {len(self.asteroids.sprites())}", y=90)
+        # onscreen_debug(self.screen, f"Level: {self.level:.2f}", y=110)
