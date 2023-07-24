@@ -4,7 +4,7 @@ import pygame
 from pygame.locals import *
 from pygame.math import Vector2
 
-from debug import console_debug
+from utils import console_debug
 
 from config import *
 

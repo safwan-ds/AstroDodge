@@ -1,48 +1,91 @@
-#version 330
+#version 330 core
 
 uniform vec2 u_resolution;
 uniform float u_time;
 uniform vec2 u_mouse;
+uniform float glitch_intensity;
 
 uniform sampler2D tex;
 
 in vec2 uv;
 out vec4 FragColor;
 
-const int kernelSize = 9;
-const float blurSize = 2.0 / 512.0;
-const float intensity = 0.5;
-
-// Gaussian kernel for 9x9 blur
-const float kernel[kernelSize * kernelSize] = float[](
-    1.0,  4.0,  6.0,  8.0,  10.0, 8.0,  6.0,  4.0,  1.0,
-    4.0, 16.0, 24.0, 32.0, 40.0, 32.0, 24.0, 16.0, 4.0,
-    6.0, 24.0, 36.0, 48.0, 60.0, 48.0, 36.0, 24.0, 6.0,
-    8.0, 32.0, 48.0, 64.0, 80.0, 64.0, 48.0, 32.0, 8.0,
-    10.0, 40.0, 60.0, 80.0, 100.0, 80.0, 60.0, 40.0, 10.0,
-    8.0, 32.0, 48.0, 64.0, 80.0, 64.0, 48.0, 32.0, 8.0,
-    6.0, 24.0, 36.0, 48.0, 60.0, 48.0, 36.0, 24.0, 6.0,
-    4.0, 16.0, 24.0, 32.0, 40.0, 32.0, 24.0, 16.0, 4.0,
-    1.0,  4.0,  6.0,  8.0,  10.0, 8.0,  6.0,  4.0,  1.0
-);
+vec3 samplef(vec2 tc);
+vec3 blur(vec2 tc, float offs);
+vec3 highlights(vec3 pixel, float thres);
 
 void main()
 {
-    vec4 sum = vec4(0);
+	vec2 tc = uv.xy;
+	vec3 color = blur(tc, 2.0);
+	color += blur(tc, 3.0);
+	color += blur(tc, 5.0);
+	color += blur(tc, 7.0);
+	color /= 3.0;
+	
+	color += samplef(tc);
+	
+	float div_pos = u_mouse.x / u_resolution.x;
+	if(u_mouse.x < 2.0) {
+		div_pos = 0.5;
+	}
+    vec3 image = texture(tex, uv).rgb;
+	FragColor.xyz = mix(samplef(tc), color, 1.0);
+	FragColor.w = 1.0;
+}
 
-    // Apply Gaussian blur in both x and y directions
-    for (int i = -kernelSize / 2; i <= kernelSize / 2; i++)
-    {
-        for (int j = -kernelSize / 2; j <= kernelSize / 2; j++)
-        {
-            vec2 offset = vec2(float(i), float(j)) * blurSize;
-            sum += texture(tex, uv + offset) * kernel[(i + kernelSize / 2) * kernelSize + j + kernelSize / 2];
-        }
-    }
+vec3 samplef(vec2 tc)
+{
+	float factor = 1.5;
+	return pow(texture(tex, tc).xyz, vec3(factor, factor, factor));
+}
 
-    // Normalize the sum by dividing with the sum of kernel weights
-    sum /= 1024.0;
+vec3 hsample(vec2 tc)
+{
+	return highlights(samplef(tc), 0.6);
+}
 
-    // Adjust intensity and add original texture for mixing
-    FragColor = sum * intensity + texture(tex, uv);
+vec3 blur(vec2 tc, float offs)
+{
+	vec4 xoffs = offs * vec4(-2.0, -1.0, 1.0, 2.0) / u_resolution.x;
+	vec4 yoffs = offs * vec4(-2.0, -1.0, 1.0, 2.0) / u_resolution.y;
+	
+	vec3 color = vec3(0.0, 0.0, 0.0);
+	color += hsample(tc + vec2(xoffs.x, yoffs.x)) * 0.00366;
+	color += hsample(tc + vec2(xoffs.y, yoffs.x)) * 0.01465;
+	color += hsample(tc + vec2(    0.0, yoffs.x)) * 0.02564;
+	color += hsample(tc + vec2(xoffs.z, yoffs.x)) * 0.01465;
+	color += hsample(tc + vec2(xoffs.w, yoffs.x)) * 0.00366;
+	
+	color += hsample(tc + vec2(xoffs.x, yoffs.y)) * 0.01465;
+	color += hsample(tc + vec2(xoffs.y, yoffs.y)) * 0.05861;
+	color += hsample(tc + vec2(    0.0, yoffs.y)) * 0.09524;
+	color += hsample(tc + vec2(xoffs.z, yoffs.y)) * 0.05861;
+	color += hsample(tc + vec2(xoffs.w, yoffs.y)) * 0.01465;
+	
+	color += hsample(tc + vec2(xoffs.x, 0.0)) * 0.02564;
+	color += hsample(tc + vec2(xoffs.y, 0.0)) * 0.09524;
+	color += hsample(tc + vec2(    0.0, 0.0)) * 0.15018;
+	color += hsample(tc + vec2(xoffs.z, 0.0)) * 0.09524;
+	color += hsample(tc + vec2(xoffs.w, 0.0)) * 0.02564;
+	
+	color += hsample(tc + vec2(xoffs.x, yoffs.z)) * 0.01465;
+	color += hsample(tc + vec2(xoffs.y, yoffs.z)) * 0.05861;
+	color += hsample(tc + vec2(    0.0, yoffs.z)) * 0.09524;
+	color += hsample(tc + vec2(xoffs.z, yoffs.z)) * 0.05861;
+	color += hsample(tc + vec2(xoffs.w, yoffs.z)) * 0.01465;
+	
+	color += hsample(tc + vec2(xoffs.x, yoffs.w)) * 0.00366;
+	color += hsample(tc + vec2(xoffs.y, yoffs.w)) * 0.01465;
+	color += hsample(tc + vec2(    0.0, yoffs.w)) * 0.02564;
+	color += hsample(tc + vec2(xoffs.z, yoffs.w)) * 0.01465;
+	color += hsample(tc + vec2(xoffs.w, yoffs.w)) * 0.00366;
+
+	return color;
+}
+
+vec3 highlights(vec3 pixel, float thres)
+{
+	float val = (pixel.x + pixel.y + pixel.z) / 0.1;
+	return pixel * smoothstep(thres - 0.1, thres + 0.1, val);
 }

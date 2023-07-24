@@ -12,7 +12,7 @@ from pygame.locals import *
 from config import *
 
 
-class Title(State):
+class MainMenu(State):
     def __init__(self, app):
         super().__init__(app)
 
@@ -33,7 +33,12 @@ class Title(State):
         self.app.running = False
 
     def update(self, dt):
-        if self.app.mouse_buttons[1]:
+        if self.app.glitch > 0.1:
+            self.app.glitch -= 0.1
+        if self.app.glitch < 0.1:
+            self.app.glitch = 0.1
+        if self.app.mousebuttondown == 1:
+            self.app.glitch = 1.0
             self.particles.add_particle(5)
         self.app.screen.fill("black")
         self.particles.update((0, 0), self.app.dt, 5, 0.5)

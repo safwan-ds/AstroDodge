@@ -15,7 +15,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.original_image.get_frect(center=pos)
         self.hit_box = self.rect.inflate(-20, -20)
 
-        self.speed = Vector2(PLAYER_SPEED, 0)
+        self.velocity = PLAYER_VELOCITY
+        self.speed = Vector2(PLAYER_VELOCITY, 0)
         self.cache = {}
 
         self.angle = 0
@@ -25,16 +26,16 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
 
         if keys[K_d]:
-            self.speed.x = PLAYER_SPEED
+            self.speed.x = PLAYER_VELOCITY
         elif keys[K_a]:
-            self.speed.x = -PLAYER_SPEED
+            self.speed.x = -PLAYER_VELOCITY
         else:
             self.speed.x = 0
 
         if keys[K_s]:
-            self.speed.y = PLAYER_SPEED
+            self.speed.y = PLAYER_VELOCITY
         elif keys[K_w]:
-            self.speed.y = -PLAYER_SPEED
+            self.speed.y = -PLAYER_VELOCITY
         else:
             self.speed.y = 0
 
@@ -67,16 +68,16 @@ class Player(pygame.sprite.Sprite):
             elif angle_difference < -180:
                 angle_difference += 360
 
-            # Set the maximum rotation speed (in degrees per frame)
-            max_rotation_speed = int(5 * dt)
-
             # Gradually rotate the player towards the target angle
-            rotation_amount = min(abs(angle_difference), max_rotation_speed)
+            rotation_amount = min(
+                abs(angle_difference),
+                self.velocity / PLAYER_VELOCITY * MAX_ROTATION_SPEED,
+            )
             rotation_sign = -1 if angle_difference < 0 else 1
-            self.angle += rotation_sign * rotation_amount
+            self.angle += rotation_sign * rotation_amount * dt
 
-            self.speed.x = math.cos(math.radians(self.angle)) * PLAYER_SPEED
-            self.speed.y = math.sin(math.radians(self.angle)) * PLAYER_SPEED
+            self.speed.x = math.cos(math.radians(self.angle)) * self.velocity
+            self.speed.y = math.sin(math.radians(self.angle)) * self.velocity
 
             # Rotate the spaceship image
             if self.angle > 359:
@@ -102,7 +103,7 @@ class Player(pygame.sprite.Sprite):
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, group, pos, angle):
+    def __init__(self, group, pos, angle, player_velocity):
         super().__init__(group)
 
         self.image = pygame.image.load(IMGS_DIR + "misc/bullet.png")
@@ -110,7 +111,9 @@ class Bullet(pygame.sprite.Sprite):
 
         self.image = pygame.transform.rotate(self.image, -angle - 90)
         self.speed = Vector2(
-            math.cos(math.radians(angle)) * BULLET_SPEED,
+            math.cos(math.radians(angle))
+            * (player_velocity / PLAYER_VELOCITY)
+            * BULLET_SPEED,
             math.sin(math.radians(angle)) * BULLET_SPEED,
         )
 

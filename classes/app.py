@@ -3,10 +3,11 @@ import json
 import math
 from time import time
 import pygame
+from pygame.math import Vector2
 import moderngl
 
-from states.title import Title
-from debug import onscreen_debug
+from states.main_menu import MainMenu
+from utils import onscreen_debug, console_debug
 
 from pygame.locals import *
 from config import *
@@ -22,10 +23,10 @@ class App:
 
         self.clock = pygame.time.Clock()
         self.fps = FPS
-        self.screen_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
+        self.screen_size = Vector2(SCREEN_WIDTH, SCREEN_HEIGHT)
         self.screen = pygame.Surface(self.screen_size, depth=32)
         # self.display_dimensions = SCREEN_WIDTH / SCREEN_HEIGHT
-        self.display_size = (
+        self.display_size = Vector2(
             self.screen_size[0] * DISPLAY_SCALE,
             self.screen_size[1] * DISPLAY_SCALE,
         )
@@ -37,9 +38,10 @@ class App:
         self.fullscreen = False
 
         # Shaders
-        with open("shaders/vertex_shader.vert", "r") as f:
+        self.glitch = 0.1
+        with open(f"shaders/{VERTEX_SHADER_NAME}.vert", "r") as f:
             self.vertex_shader = f.read()
-        with open("shaders/post_processing.frag", "r") as f:
+        with open(f"shaders/{FRAGMENT_SHADER_NAME}.frag", "r") as f:
             fragment_shader = f.read()
         self.shaders_init(self.vertex_shader, fragment_shader)
 
@@ -61,35 +63,18 @@ class App:
 
         # Game states
         self.state_stack = []
-        Title(self).add()
+        MainMenu(self).add()
 
     def handle_events(self):
-        self.keydown = False
-        self.keys = {
-            "esc": False,
-            "shift": False,
-            "space": False,
-            "d": False,
-            "a": False,
-            "f3": False,
-        }
-        self.mousebuttondown = False
-        self.mouse_buttons = {1: False, 2: False, 3: False}
+        self.keydown = None
+        self.mousebuttondown = None
 
         for event in pygame.event.get():
             if event.type == QUIT:
                 self.running = False
 
             if event.type == KEYDOWN:
-                self.keydown = True
-                self.keys = {
-                    "esc": event.key == K_ESCAPE,
-                    "shift": event.key == K_LSHIFT,
-                    "space": event.key == K_SPACE,
-                    "d": event.key == K_d,
-                    "a": event.key == K_a,
-                    "f3": event.key == K_F3,
-                }
+                self.keydown = event.key
 
                 if event.key == K_F1:
                     self.fps = 0 if self.fps else FPS
@@ -125,10 +110,7 @@ class App:
                         self.fullscreen = True
 
             if event.type == MOUSEBUTTONDOWN:
-                self.mousebuttondown = True
-                self.mouse_buttons[1] = event.button == 1
-                self.mouse_buttons[2] = event.button == 2
-                self.mouse_buttons[3] = event.button == 3
+                self.mousebuttondown = event.button
 
     def load_data(self):
         try:
@@ -179,12 +161,20 @@ class App:
         frame_tex = self.surface_to_texture(self.screen)
         frame_tex.use()
         self.program["tex"] = 0
-        try:
-            self.program["u_resolution"] = self.display_size
-            self.program["u_time"] = self.elapsed_time
-            self.program["u_mouse"] = mouse_pos
-        except KeyError:
-            ...
+
+        uniform_values = {
+            "u_resolution": self.display_size,
+            "u_time": self.elapsed_time,
+            "u_mouse": mouse_pos,
+            "glitch_intensity": self.glitch,
+        }
+
+        for uniform_name, value in uniform_values.items():
+            try:
+                self.program[uniform_name] = value
+            except KeyError:
+                pass
+
         self.renderer.render(moderngl.TRIANGLE_STRIP)
         pygame.display.flip()
         frame_tex.release()
@@ -199,12 +189,9 @@ class App:
 
         fps = self.clock.get_fps()
 
-        onscreen_debug(
-            self.screen,
-            f"FPS: {fps:.2f} " + ("locked" if self.fps else "unlocked"),
-            f_color="green" if fps >= FPS else "red",
-        )
-        onscreen_debug(self.screen, f"DT: {self.dt:.2f}", y=30)
+        # console_debug(f"FPS: {fps:.2f} " + ("locked" if self.fps else "unlocked"))
+        # onscreen_debug(self.screen, f"DT: {self.dt:.2f}", y=30)
+        pygame.display.set_caption(f"AstroDodge || FPS: {fps:.2f}")
 
         self.render()
 
