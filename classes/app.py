@@ -1,6 +1,7 @@
 from array import array
 import json
 import math
+import sys
 from time import time
 import pygame
 from pygame.math import Vector2
@@ -38,12 +39,13 @@ class App:
         self.fullscreen = False
 
         # Shaders
-        self.glitch = 0.1
-        with open(f"shaders/{VERTEX_SHADER_NAME}.vert", "r") as f:
+        self.glitch = GLITCH
+        with open(f"shaders/{VERTEX_SHADER}.vert", "r") as f:
             self.vertex_shader = f.read()
-        with open(f"shaders/{FRAGMENT_SHADER_NAME}.frag", "r") as f:
+        with open(f"shaders/{FRAGMENT_SHADER1}.frag", "r") as f:
             fragment_shader = f.read()
         self.shaders_init(self.vertex_shader, fragment_shader)
+        self.current_shader = 0
 
         # DT
         self.last_frame = time()
@@ -77,7 +79,14 @@ class App:
                 self.keydown = event.key
 
                 if event.key == K_F1:
-                    self.fps = 0 if self.fps else FPS
+                    if self.current_shader == 0:
+                        with open(f"shaders/{FRAGMENT_SHADER2}.frag", "r") as f:
+                            self.shaders_init(self.vertex_shader, f.read())
+                            self.current_shader = 1
+                    else:
+                        with open(f"shaders/{FRAGMENT_SHADER1}.frag", "r") as f:
+                            self.shaders_init(self.vertex_shader, f.read())
+                            self.current_shader = 0
 
                 if event.key == K_F11:
                     if self.fullscreen:
@@ -153,7 +162,7 @@ class App:
     def get_dt(self):
         dt = time() - self.last_frame
         self.last_frame = time()
-        return min(dt * 60, 1.5)
+        return min(dt * 60, 10.0)
 
     def render(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -203,4 +212,4 @@ class App:
             self.game_loop()
 
         pygame.quit()
-        exit()
+        sys.exit()

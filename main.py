@@ -1,3 +1,4 @@
+import traceback
 from classes.app import App
 
 

@@ -71,12 +71,14 @@ class Asteroid(pygame.sprite.Sprite):
 
 
 class Explosion(pygame.sprite.Sprite):
-    def __init__(self, group, pos, scale):
+    def __init__(self, group, pos, scale, color=None):
         super().__init__(group)
 
         self.frames = get_animations(IMGS_DIR + "asteroids", 16)["explosion"]
         for i, frame in enumerate(self.frames):
             self.frames[i] = pygame.transform.scale_by(frame, scale)
+            if color:
+                self.frames[i].fill(color, special_flags=BLEND_MULT)
         self.frame = 0
 
         self.image = self.frames[self.frame]
@@ -87,8 +89,8 @@ class Explosion(pygame.sprite.Sprite):
         self.image = self.frames[int(self.frame)]
 
     def update(self, scroll, dt):
-        if self.frame >= len(self.frames) - 1:
-            self.kill()
-
         self.rect.move_ip(scroll)
-        self.animate(dt)
+        try:
+            self.animate(dt)
+        except IndexError:
+            self.kill()

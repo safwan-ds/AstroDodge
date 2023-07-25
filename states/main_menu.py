@@ -21,8 +21,8 @@ class MainMenu(State):
         self.logo = pygame.sprite.GroupSingle(Logo((pos_x, 100)))
 
         self.buttons = pygame.sprite.Group()
-        Button("start", self.start, (pos_x, 215), self.buttons)
-        Button("quit", self.quit, (pos_x, 280), self.buttons)
+        Button("start", self.start, (pos_x, 180), self.buttons)
+        Button("quit", self.quit, (pos_x, 250), self.buttons)
 
         self.particles = Emitter(SCREEN_HEIGHT)
 
@@ -33,10 +33,10 @@ class MainMenu(State):
         self.app.running = False
 
     def update(self, dt):
-        if self.app.glitch > 0.1:
-            self.app.glitch -= 0.1
-        if self.app.glitch < 0.1:
-            self.app.glitch = 0.1
+        if self.app.glitch > GLITCH:
+            self.app.glitch -= 0.1 * dt
+        if self.app.glitch < GLITCH:
+            self.app.glitch = GLITCH
         if self.app.mousebuttondown == 1:
             self.app.glitch = 1.0
             self.particles.add_particle(5)
@@ -53,7 +53,7 @@ class Logo(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
 
-        self.image = pygame.image.load(IMGS_DIR + "ui/title_logo.png")
+        self.image = pygame.image.load(IMGS_DIR + "ui/logo.png")
         self.image = pygame.transform.scale_by(self.image, 3)
         self.rect = self.image.get_frect(center=pos)
         self.y = self.rect.y
@@ -67,7 +67,7 @@ class Button(pygame.sprite.Sprite):
         super().__init__(group)
         self.method = method
 
-        self.animations = get_animations(IMGS_DIR + "ui", 96)[name + "_button"]
+        self.animations = get_animations(IMGS_DIR + "ui", 90)[name + "_button"]
         for index, animation in enumerate(self.animations):
             self.animations[index] = pygame.transform.scale_by(animation, 2)
         self.frame = 0

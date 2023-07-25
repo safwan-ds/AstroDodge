@@ -29,7 +29,7 @@ void main()
 	if(u_mouse.x < 2.0) {
 		div_pos = 0.5;
 	}
-    vec3 image = texture(tex, uv).rgb;
+    // vec3 image = texture(tex, uv).rgb;
 	FragColor.xyz = mix(samplef(tc), color, 1.0);
 	FragColor.w = 1.0;
 }

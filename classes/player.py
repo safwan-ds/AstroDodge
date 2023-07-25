@@ -40,7 +40,11 @@ class Player(pygame.sprite.Sprite):
             self.speed.y = 0
 
     def move(self, scroll, dt):
-        self.hit_box.move_ip(self.speed * dt + scroll)
+        speed = (
+            (self.speed.x * dt + scroll.x),
+            (self.speed.y * dt + scroll.y),
+        )
+        self.hit_box.move_ip(speed)
 
     def rotate(self, dt):
         screen_size = pygame.display.get_window_size()
@@ -110,11 +114,10 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = self.image.get_frect(center=pos)
 
         self.image = pygame.transform.rotate(self.image, -angle - 90)
-        self.speed = Vector2(
-            math.cos(math.radians(angle))
+        self.speed = (
+            Vector2(math.cos(math.radians(angle)), math.sin(math.radians(angle)))
             * (player_velocity / PLAYER_VELOCITY)
-            * BULLET_SPEED,
-            math.sin(math.radians(angle)) * BULLET_SPEED,
+            * BULLET_SPEED
         )
 
     def update(self, scroll, dt):

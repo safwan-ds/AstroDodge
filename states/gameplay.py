@@ -8,7 +8,7 @@ from pygame.math import Vector2
 from classes.player import Player, Bullet
 from classes.asteroid import Asteroid, Explosion
 from classes.particles import Emitter
-from classes.ui import Score, Arrow
+from classes.ui import Score, Arrow, IntervalBar
 from classes.state import State
 from utils import onscreen_debug, console_debug
 
@@ -27,7 +27,9 @@ class Gameplay(State):
         self.player = pygame.sprite.GroupSingle()
         Player(self.player, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
         self.bullets = pygame.sprite.Group()
+        self.shooting_interval = SHOOTING_INTERVAL
         self.last_shot = 0
+        self.auto_fire = False
         self.asteroids = pygame.sprite.Group()
         self.gained_points = GainedPoints()
         self.explosions = pygame.sprite.Group()
@@ -67,6 +69,8 @@ class Gameplay(State):
         self.ui = pygame.sprite.Group()
         self.score_text = Score(self.ui, (SCREEN_WIDTH / 2, 50))
         self.arrow = Arrow(self.ui, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        self.shooting_bar = IntervalBar(self.ui, (SCREEN_WIDTH / 2, SCREEN_HEIGHT - 40))
+        self.auto_text = self.font.render("Auto", False, "white")
 
         # Sounds
         pygame.mixer.music.load(MUSIC_DIR + "gameplay.wav")
@@ -91,35 +95,39 @@ class Gameplay(State):
         pygame.mixer.music.fadeout(500)
 
     def get_input(self):
+        if self.app.mousebuttondown == 3:
+            self.auto_fire = not self.auto_fire
+
         if (
-            self.app.mousebuttondown == 1
-            and time() - self.last_shot >= SHOOTING_INTERVAL
+            time() - self.last_shot >= self.shooting_interval
             and not self.game_over
             and not self.paused
         ):
-            self.shoot_sound.play()
-            Bullet(
-                self.bullets,
-                self.player.sprite.rect.center,
-                self.player.sprite.target_angle,
-                self.player.sprite.velocity,
-            )
-            self.last_shot = time()
-            self.shake = SHAKE / 3
+            if self.auto_fire or self.app.mousebuttondown == 1:
+                self.shoot_sound.play()
+                Bullet(
+                    self.bullets,
+                    self.player.sprite.rect.center,
+                    self.player.sprite.target_angle,
+                    self.player.sprite.velocity,
+                )
+                self.last_shot = time()
+                self.shake = SHAKE / 3
 
-        if self.game_over and self.app.keydown == K_ESCAPE:
-            self.save_data()
-            self.remove()
+        if self.game_over:
+            if self.app.keydown == K_ESCAPE:
+                self.save_data()
+                self.remove()
 
-        elif self.game_over and self.app.mousebuttondown:
-            self.save_data()
-            self.asteroids.empty()
-            Player(self.player, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
-            self.arrow = Arrow(self.ui, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
-            self.level = LEVEL
-            self.score = 0
-            self.asteroids.empty()
-            self.game_over = False
+            elif self.app.mousebuttondown == 1:
+                self.save_data()
+                Player(self.player, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+                self.arrow = Arrow(self.ui, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+                self.level = LEVEL
+                self.score = 0
+                self.asteroids.empty()
+                self.auto_fire = False
+                self.game_over = False
 
         if self.paused:
             if self.app.mousebuttondown:
@@ -147,7 +155,9 @@ class Gameplay(State):
                 if self.player.sprite.hit_box.colliderect(asteroid.rect):
                     self.save_data()
                     self.player_explosion.play()
-                    Explosion(self.explosions, self.player.sprite.hit_box.center, 10)
+                    Explosion(
+                        self.explosions, self.player.sprite.hit_box.center, 10, "red"
+                    )
                     self.player.sprite.kill()
                     self.bullets.empty()
                     self.arrow.kill()
@@ -155,15 +165,20 @@ class Gameplay(State):
                     self.game_over = True
                     break
 
+            # Check for collisions with bullets
             if pygame.sprite.spritecollide(asteroid, self.bullets, True):
                 self.asteroid_kill.play()
-                added_points = SCORE * self.level * asteroid.scale
+                added_points = (
+                    SCORE * self.level * (ASTEROID_MAX_SCALE - asteroid.scale + 1)
+                )
                 self.score += added_points
                 self.gained_points.add_point(
                     asteroid.rect.center, self.font, int(added_points)
                 )
                 asteroid.kill()
-                Explosion(self.explosions, asteroid.rect.center, 5)
+                Explosion(
+                    self.explosions, asteroid.rect.center, asteroid.scale * 2, "green"
+                )
                 self.shake = SHAKE
                 break
 
@@ -231,7 +246,7 @@ class Gameplay(State):
 
         # Collisions
         self.collide()
-        self.app.glitch = self.shake / SHAKE + 0.05
+        self.app.glitch = self.shake / SHAKE + GLITCH
 
         # Background
         self.app.screen.fill("black")
@@ -243,6 +258,9 @@ class Gameplay(State):
             if not self.paused:
                 self.player.update(self.scroll, dt)
                 self.bullets.update(self.scroll, dt)
+                if not self.game_over:
+                    ratio = self.player.sprite.velocity / PLAYER_VELOCITY
+                    self.shooting_interval = SHOOTING_INTERVAL * (1 + (ratio - 1) / 2)
 
             self.player.draw(self.screen)
             self.bullets.draw(self.screen)
@@ -252,9 +270,6 @@ class Gameplay(State):
         except TypeError as e:
             # Handle the TypeError
             print("TypeError occurred:", e)
-        except Exception as e:
-            # Catch any other unexpected exceptions
-            print("Unexpected exception occurred:", e)
 
         # Asteroids
         if not self.paused:
@@ -286,7 +301,11 @@ class Gameplay(State):
         self.gained_points.draw(self.screen)
 
         # UI
-        level = self.font.render(f"Level: {self.level:.1f}", False, "white")
+        level = self.font.render(
+            f"Level: {int(self.level)}",
+            False,
+            "white" if self.level <= MAX_LEVEL else "red",
+        )
         self.screen.blit(level, level.get_frect(center=(SCREEN_WIDTH / 2, 30)))
         self.score_text.update(self.font, int(self.score))
         highest_score = self.s_font.render(
@@ -299,6 +318,12 @@ class Gameplay(State):
             self.arrow.update(self.player.sprite.target_angle)
         except AttributeError:
             pass
+        self.shooting_bar.update((time() - self.last_shot) / self.shooting_interval)
+        if self.auto_fire and not self.game_over:
+            self.screen.blit(
+                self.auto_text,
+                self.auto_text.get_frect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 70)),
+            )
         self.ui.draw(self.screen)
 
         # Game states
@@ -327,7 +352,7 @@ class GainedPoints(pygame.sprite.Group):
         super().__init__()
 
     def add_point(self, pos, font: pygame.Font, points):
-        text = font.render(f"+{points}", False, "green")
+        text = font.render(f"+{points}", False, "white")
         rect = text.get_frect(midbottom=pos)
         sprite = pygame.sprite.Sprite(self)
         sprite.image = text
