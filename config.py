@@ -3,13 +3,15 @@ SCREEN_HEIGHT = 360
 DISPLAY_SCALE = 2
 FPS = 60
 
-DEFAULT_FONT = "assets/fonts/EchoesOfZyra.ttf"
-IMGS_DIR = "assets/imgs/"
-SFX_DIR = "assets/sfx/"
-MUSIC_DIR = "assets/music/"
+DEFAULT_FONT = "assets\\fonts\\EchoesOfZyra.ttf"
+IMGS_DIR = "assets\\imgs\\"
+SFX_DIR = "assets\\sfx\\"
+MUSIC_DIR = "assets\\music\\"
 VERTEX_SHADER = "vertex_shader"
 FRAGMENT_SHADER1 = "fragment_shader"
 FRAGMENT_SHADER2 = "post_processing"
+
+TRANSITION_SPEED = 0.05
 
 LEVEL_INCREASE_SPEED = 0.001
 MAX_LEVEL = 4

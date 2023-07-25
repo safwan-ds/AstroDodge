@@ -42,7 +42,7 @@ class Particle(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
 
-        self.image = pygame.image.load(IMGS_DIR + "misc/particle.png")
+        self.image = pygame.image.load(IMGS_DIR + "misc\\particle.png")
         self.image = pygame.transform.rotate(self.image, random.randint(0, 360))
         self.original_image = self.image.copy()
         self.rect = self.image.get_frect(center=pos)

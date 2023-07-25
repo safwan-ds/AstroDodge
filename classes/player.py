@@ -1,7 +1,10 @@
 import math
+from time import time
 from typing import Any
 import pygame
 from pygame.math import Vector2
+
+from classes.trail import Trail
 
 from pygame.locals import *
 from config import *
@@ -18,6 +21,8 @@ class Player(pygame.sprite.Sprite):
         self.velocity = PLAYER_VELOCITY
         self.speed = Vector2(PLAYER_VELOCITY, 0)
         self.cache = {}
+
+        self.last_trail = time()
 
         self.angle = 0
         self.target_angle = 0
@@ -99,28 +104,34 @@ class Player(pygame.sprite.Sprite):
 
             self.rect = self.image.get_frect(center=self.rect.center)
 
-    def update(self, scroll, dt):
+    def update(self, scroll, dt, trail_group, trail_color):
         # self.get_input()
         self.rotate(dt)
         self.move(scroll, dt)
         self.rect.center = self.hit_box.center
+
+        if time() - self.last_trail >= 0.01:
+            Trail(trail_group, self.image, self.rect.center, trail_color)
+            self.last_trail = time()
 
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, group, pos, angle, player_velocity):
         super().__init__(group)
 
-        self.image = pygame.image.load(IMGS_DIR + "misc/bullet.png")
-        self.rect = self.image.get_frect(center=pos)
-
+        self.image = pygame.image.load(IMGS_DIR + "misc\\bullet.png")
         self.image = pygame.transform.rotate(self.image, -angle - 90)
+
         self.speed = (
             Vector2(math.cos(math.radians(angle)), math.sin(math.radians(angle)))
             * (player_velocity / PLAYER_VELOCITY)
             * BULLET_SPEED
         )
+        self.rect = self.image.get_frect(center=pos)
 
-    def update(self, scroll, dt):
+        self.last_trail = time()
+
+    def update(self, scroll, dt, trail_group, trail_color):
         if (
             self.rect.centerx > SCREEN_WIDTH
             or self.rect.centerx < 0
@@ -129,3 +140,7 @@ class Bullet(pygame.sprite.Sprite):
         ):
             self.kill()
         self.rect.move_ip(self.speed * dt + scroll)
+
+        if time() - self.last_trail >= 0.01:
+            Trail(trail_group, self.image, self.rect.center, trail_color)
+            self.last_trail = time()

@@ -1,12 +1,14 @@
 from typing import Any
-from time import time
 from math import sin
+import sys
+from time import time
 import pygame
 
 from classes.particles import Emitter
+from classes.trail import Trail
 from classes.state import State
 from states.gameplay import Gameplay
-from utils import get_animations
+from utils import get_animations, resource_path
 
 from pygame.locals import *
 from config import *
@@ -15,10 +17,15 @@ from config import *
 class MainMenu(State):
     def __init__(self, app):
         super().__init__(app)
+        self.screen: pygame.Surface = self.app.screen
 
-        pos_x = app.screen_size[0] / 2
+        self.starting = False
+        self.quitting = False
+
+        pos_x = self.app.screen_size[0] / 2
 
         self.logo = pygame.sprite.GroupSingle(Logo((pos_x, 100)))
+        self.trails = pygame.sprite.Group()
 
         self.buttons = pygame.sprite.Group()
         Button("start", self.start, (pos_x, 180), self.buttons)
@@ -27,12 +34,16 @@ class MainMenu(State):
         self.particles = Emitter(SCREEN_HEIGHT)
 
     def start(self):
-        Gameplay(self.app).add()
+        self.fade_out = True
+        self.starting = True
 
     def quit(self):
-        self.app.running = False
+        self.fade_out = True
+        self.quitting = True
 
     def update(self, dt):
+        super().update(dt)
+
         if self.app.glitch > GLITCH:
             self.app.glitch -= 0.1 * dt
         if self.app.glitch < GLITCH:
@@ -40,26 +51,43 @@ class MainMenu(State):
         if self.app.mousebuttondown == 1:
             self.app.glitch = 1.0
             self.particles.add_particle(5)
-        self.app.screen.fill("black")
+        self.screen.fill("black")
         self.particles.update((0, 0), self.app.dt, 5, 0.5)
-        self.particles.draw(self.app.screen)
-        self.logo.update()
-        self.logo.draw(self.app.screen)
+        self.particles.draw(self.screen)
+        self.trails.update((0, 0), dt, 5)
+        self.trails.draw(self.screen)
+        self.logo.update(self.trails, (59, 101, 143))
+        self.logo.draw(self.screen)
         self.buttons.update(self.app)
-        self.buttons.draw(self.app.screen)
+        self.buttons.draw(self.screen)
+
+        self.screen.blit(self.transition, (0, 0))
+        if self.transition_progress >= 1 and self.fade_out:
+            if self.starting:
+                self.fade_out = False
+                self.fade_in = True
+                Gameplay(self.app).add()
+            if self.quitting:
+                self.app.running = False
 
 
 class Logo(pygame.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
 
-        self.image = pygame.image.load(IMGS_DIR + "ui/logo.png")
+        self.image = pygame.image.load(resource_path(IMGS_DIR + "ui\\logo.png"))
         self.image = pygame.transform.scale_by(self.image, 3)
         self.rect = self.image.get_frect(center=pos)
         self.y = self.rect.y
 
-    def update(self):
+        self.last_trail = time()
+
+    def update(self, trail_group, trail_color):
         self.rect.y = self.y + sin(time() * 2) * 7
+
+        if time() - self.last_trail >= 0.1:
+            Trail(trail_group, self.image, self.rect.center, trail_color)
+            self.last_trail = time()
 
 
 class Button(pygame.sprite.Sprite):
@@ -67,7 +95,9 @@ class Button(pygame.sprite.Sprite):
         super().__init__(group)
         self.method = method
 
-        self.animations = get_animations(IMGS_DIR + "ui", 90)[name + "_button"]
+        self.animations = get_animations(resource_path(IMGS_DIR + "ui"), 90)[
+            name + "_button"
+        ]
         for index, animation in enumerate(self.animations):
             self.animations[index] = pygame.transform.scale_by(animation, 2)
         self.frame = 0
@@ -78,9 +108,9 @@ class Button(pygame.sprite.Sprite):
         self.clicked = False
         self.hovered = False
 
-        self.hover_sound = pygame.mixer.Sound(SFX_DIR + "button_hover")
+        self.hover_sound = pygame.mixer.Sound(resource_path(SFX_DIR + "button_hover"))
         self.hover_sound.set_volume(0.3)
-        self.click_sound = pygame.mixer.Sound(SFX_DIR + "button_click")
+        self.click_sound = pygame.mixer.Sound(resource_path(SFX_DIR + "button_click"))
 
     def get_state(self):
         if self.hovered:

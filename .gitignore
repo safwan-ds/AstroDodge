@@ -27,6 +27,8 @@ __pycache__/
 dist/
 build/
 *.egg-info/
+*.spec
+*.iss
 
 # Virtual environment
 venv/

@@ -40,9 +40,9 @@ class App:
 
         # Shaders
         self.glitch = GLITCH
-        with open(f"shaders/{VERTEX_SHADER}.vert", "r") as f:
+        with open(f"shaders\\{VERTEX_SHADER}.vert", "r") as f:
             self.vertex_shader = f.read()
-        with open(f"shaders/{FRAGMENT_SHADER1}.frag", "r") as f:
+        with open(f"shaders\\{FRAGMENT_SHADER1}.frag", "r") as f:
             fragment_shader = f.read()
         self.shaders_init(self.vertex_shader, fragment_shader)
         self.current_shader = 0
@@ -52,7 +52,7 @@ class App:
         self.elapsed_time = 0.0
 
         # Cursor
-        cursor_img = pygame.image.load(IMGS_DIR + "cursors/crosshair.png")
+        cursor_img = pygame.image.load(IMGS_DIR + "cursors\\crosshair.png")
         cursor_img = pygame.transform.scale_by(cursor_img, 2)
         cursor = pygame.Cursor(
             (cursor_img.get_width() // 2 + 1, cursor_img.get_height() // 2 + 1),
@@ -80,11 +80,11 @@ class App:
 
                 if event.key == K_F1:
                     if self.current_shader == 0:
-                        with open(f"shaders/{FRAGMENT_SHADER2}.frag", "r") as f:
+                        with open(f"shaders\\{FRAGMENT_SHADER2}.frag", "r") as f:
                             self.shaders_init(self.vertex_shader, f.read())
                             self.current_shader = 1
                     else:
-                        with open(f"shaders/{FRAGMENT_SHADER1}.frag", "r") as f:
+                        with open(f"shaders\\{FRAGMENT_SHADER1}.frag", "r") as f:
                             self.shaders_init(self.vertex_shader, f.read())
                             self.current_shader = 0
 
@@ -123,7 +123,7 @@ class App:
 
     def load_data(self):
         try:
-            with open("data/user.json") as f:
+            with open("data\\user.json") as f:
                 data = json.load(f)
                 self.highest_score = data.get("highest_score", 0)
         except (IOError, json.JSONDecodeError):
