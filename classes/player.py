@@ -80,10 +80,10 @@ class Player(pygame.sprite.Sprite):
             # Gradually rotate the player towards the target angle
             rotation_amount = min(
                 abs(angle_difference),
-                self.velocity / PLAYER_VELOCITY * MAX_ROTATION_SPEED,
+                self.velocity / PLAYER_VELOCITY * MAX_ROTATION_SPEED * dt,
             )
             rotation_sign = -1 if angle_difference < 0 else 1
-            self.angle += rotation_sign * rotation_amount * dt
+            self.angle += rotation_sign * rotation_amount
 
             self.speed.x = math.cos(math.radians(self.angle)) * self.velocity
             self.speed.y = math.sin(math.radians(self.angle)) * self.velocity

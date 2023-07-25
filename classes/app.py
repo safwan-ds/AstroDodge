@@ -1,6 +1,5 @@
 from array import array
 import json
-import math
 import sys
 from time import time
 import pygame
@@ -8,7 +7,7 @@ from pygame.math import Vector2
 import moderngl
 
 from states.main_menu import MainMenu
-from utils import onscreen_debug, console_debug
+from utils import load_data
 
 from pygame.locals import *
 from config import *
@@ -61,7 +60,14 @@ class App:
         pygame.mouse.set_cursor(cursor)
 
         # User data
-        self.load_data()
+        data = load_data()
+        if data:
+            try:
+                self.highest_score = data["highest_score"]
+            except KeyError:
+                self.highest_score = 0
+        else:
+            self.highest_score = 0
 
         # Game states
         self.state_stack = []
@@ -120,14 +126,6 @@ class App:
 
             if event.type == MOUSEBUTTONDOWN:
                 self.mousebuttondown = event.button
-
-    def load_data(self):
-        try:
-            with open("data\\user.json") as f:
-                data = json.load(f)
-                self.highest_score = data.get("highest_score", 0)
-        except (IOError, json.JSONDecodeError):
-            self.highest_score = 0
 
     def shaders_init(self, vertex_shader, fragment_shader):
         self.ctx = moderngl.create_context()

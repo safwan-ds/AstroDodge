@@ -10,7 +10,7 @@ from classes.asteroid import Asteroid, Explosion
 from classes.particles import Emitter
 from classes.ui import Score, Arrow, Bar
 from classes.state import State
-from utils import resource_path
+from utils import resource_path, save_data, load_data
 
 from pygame.locals import *
 from config import *
@@ -129,11 +129,11 @@ class Gameplay(State):
 
         if self.game_over:
             if self.app.keydown == K_ESCAPE:
-                self.save_data()
+                self.save_highest_score()
                 self.remove()
 
             elif self.app.mousebuttondown == 1:
-                self.save_data()
+                self.save_highest_score()
                 Player(self.player, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
                 self.arrow = Arrow(self.ui, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
                 self.level = LEVEL
@@ -166,7 +166,7 @@ class Gameplay(State):
         for asteroid in self.asteroids:
             if not self.game_over:
                 if self.player.sprite.hit_box.colliderect(asteroid.rect):
-                    self.save_data()
+                    self.save_highest_score()
                     self.player_explosion.play()
                     Explosion(
                         self.explosions, self.player.sprite.hit_box.center, 10, "red"
@@ -219,16 +219,11 @@ class Gameplay(State):
                     self.shake = SHAKE / 2
                     break  # Exit the inner loop since each asteroid can only collide with one other asteroid
 
-    def save_data(self):
-        try:
-            if self.score > self.app.highest_score:
-                data = {"highest_score": int(self.score)}
-                with open("data\\user.json", "w") as f:
-                    json.dump(data, f)
-                self.app.load_data()
-
-        except IOError as e:
-            print(f"Error saving high score: {e}")
+    def save_highest_score(self):
+        if self.score > self.app.highest_score:
+            data = {"highest_score": int(self.score)}
+            save_data(data)
+            self.app.highest_score = load_data()["highest_score"]
 
     def update(self, dt):
         super().update(dt)
@@ -324,8 +319,11 @@ class Gameplay(State):
         self.app.screen.fill("black")
         self.particles.draw(self.screen)
         self.trails.draw(self.screen)
-        self.bullets.draw(self.screen)
-        self.player.draw(self.screen)
+        try:
+            self.bullets.draw(self.screen)
+            self.player.draw(self.screen)
+        except TypeError as e:
+            print("TypeError occurred:", e)
         self.asteroids.draw(self.screen)
         self.explosions.draw(self.screen)
         self.gained_points.draw(self.screen)

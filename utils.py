@@ -1,5 +1,7 @@
 import os
 import sys
+from appdirs import user_data_dir
+import json
 import pygame
 
 from config import *
@@ -14,6 +16,28 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
+
+
+def save_data(data):
+    data_dir = user_data_dir(APP_NAME)
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+    try:
+        with open(os.path.join(data_dir, "user.json"), "w") as f:
+            json.dump(data, f)
+    except IOError as e:
+        raise f"Error saving data: {e}"
+
+
+def load_data():
+    data_dir = user_data_dir(APP_NAME)
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+    try:
+        with open(os.path.join(data_dir, "user.json"), "r") as f:
+            return json.load(f)
+    except (IOError, json.JSONDecodeError):
+        return None
 
 
 def import_sprite_sheets(path):
