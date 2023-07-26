@@ -18,21 +18,17 @@ class Asteroid(pygame.sprite.Sprite):
         # Randomly select an edge of the screen
         edge = random.choice(["top", "bottom", "left", "right"])
         if edge == "top":
-            x = random.randint(-ASTEROID_SPAWN_AREA, SCREEN_WIDTH + ASTEROID_SPAWN_AREA)
-            y = -ASTEROID_SPAWN_AREA
+            x = random.randint(-OUTSIDE_MARGIN, SCREEN_WIDTH + OUTSIDE_MARGIN)
+            y = -OUTSIDE_MARGIN
         elif edge == "bottom":
-            x = random.randint(-ASTEROID_SPAWN_AREA, SCREEN_WIDTH + ASTEROID_SPAWN_AREA)
-            y = SCREEN_HEIGHT + ASTEROID_SPAWN_AREA
+            x = random.randint(-OUTSIDE_MARGIN, SCREEN_WIDTH + OUTSIDE_MARGIN)
+            y = SCREEN_HEIGHT + OUTSIDE_MARGIN
         elif edge == "left":
-            x = -ASTEROID_SPAWN_AREA
-            y = random.randint(
-                -ASTEROID_SPAWN_AREA, SCREEN_HEIGHT + ASTEROID_SPAWN_AREA
-            )
+            x = -OUTSIDE_MARGIN
+            y = random.randint(-OUTSIDE_MARGIN, SCREEN_HEIGHT + OUTSIDE_MARGIN)
         else:  # edge == "right"
-            x = SCREEN_WIDTH + ASTEROID_SPAWN_AREA
-            y = random.randint(
-                -ASTEROID_SPAWN_AREA, SCREEN_HEIGHT + ASTEROID_SPAWN_AREA
-            )
+            x = SCREEN_WIDTH + OUTSIDE_MARGIN
+            y = random.randint(-OUTSIDE_MARGIN, SCREEN_HEIGHT + OUTSIDE_MARGIN)
 
         # Randomly select a size
         self.scale = random.uniform(ASTEROID_MIN_SCALE, ASTEROID_MAX_SCALE)
@@ -64,18 +60,17 @@ class Asteroid(pygame.sprite.Sprite):
     def update(self, scroll, dt, trail_group, trail_color):
         age = time() - self.born
         if (
-            self.rect.centerx > SCREEN_WIDTH + ASTEROID_SPAWN_AREA
-            or self.rect.centerx < -ASTEROID_SPAWN_AREA
-            or self.rect.centery > SCREEN_HEIGHT + ASTEROID_SPAWN_AREA
-            or self.rect.centery < -ASTEROID_SPAWN_AREA
+            self.rect.centerx > SCREEN_WIDTH + OUTSIDE_MARGIN
+            or self.rect.centerx < -OUTSIDE_MARGIN
+            or self.rect.centery > SCREEN_HEIGHT + OUTSIDE_MARGIN
+            or self.rect.centery < -OUTSIDE_MARGIN
         ) and age > 5:
             self.kill()
-
-        self.rect.move_ip(self.speed * dt + scroll)
 
         if time() - self.last_trail >= 0.05:
             Trail(trail_group, self.image, self.rect.center, trail_color)
             self.last_trail = time()
+        self.rect.move_ip(self.speed * dt + scroll)
 
 
 class Explosion(pygame.sprite.Sprite):

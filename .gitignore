@@ -29,6 +29,8 @@ build/
 *.egg-info/
 *.spec
 *.iss
+*.exe
+license.txt
 
 # Virtual environment
 venv/

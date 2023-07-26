@@ -15,8 +15,8 @@ class Score(pygame.sprite.Sprite):
         self.image = pygame.Surface((0, 0))
         self.rect = self.image.get_frect(center=self.pos)
 
-    def update(self, font: pygame.Font, score):
-        self.image = font.render(str(score), False, "white")
+    def update(self, font: pygame.Font, score, color="white"):
+        self.image = font.render(str(score), False, color)
         self.rect = self.image.get_frect(center=self.pos)
 
 

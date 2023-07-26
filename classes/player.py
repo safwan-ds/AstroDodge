@@ -108,11 +108,11 @@ class Player(pygame.sprite.Sprite):
         # self.get_input()
         self.rotate(dt)
         self.move(scroll, dt)
-        self.rect.center = self.hit_box.center
 
         if time() - self.last_trail >= 0.01:
             Trail(trail_group, self.image, self.rect.center, trail_color)
             self.last_trail = time()
+        self.rect.center = self.hit_box.center
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -133,14 +133,14 @@ class Bullet(pygame.sprite.Sprite):
 
     def update(self, scroll, dt, trail_group, trail_color):
         if (
-            self.rect.centerx > SCREEN_WIDTH
-            or self.rect.centerx < 0
-            or self.rect.centery > SCREEN_HEIGHT
-            or self.rect.centery < 0
+            self.rect.centerx > SCREEN_WIDTH + OUTSIDE_MARGIN
+            or self.rect.centerx < -OUTSIDE_MARGIN
+            or self.rect.centery > SCREEN_HEIGHT + OUTSIDE_MARGIN
+            or self.rect.centery < -OUTSIDE_MARGIN
         ):
             self.kill()
-        self.rect.move_ip(self.speed * dt + scroll)
 
         if time() - self.last_trail >= 0.01:
             Trail(trail_group, self.image, self.rect.center, trail_color)
             self.last_trail = time()
+        self.rect.move_ip(self.speed * dt + scroll)

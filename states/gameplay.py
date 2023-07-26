@@ -153,11 +153,11 @@ class Gameplay(State):
     def move_camera(self, dt, x, y):
         self.scroll = Vector2(
             -round(
-                ((x - SCREEN_WIDTH / 2) / 5 * dt)
+                (x - SCREEN_WIDTH / 2)
                 + (random.uniform(-self.shake, self.shake) if self.shake > 0 else 0)
             ),
             -round(
-                ((y - SCREEN_HEIGHT / 2) / 5 * dt)
+                (y - SCREEN_HEIGHT / 2)
                 + (random.uniform(-self.shake, self.shake) if self.shake > 0 else 0)
             ),
         )
@@ -167,6 +167,7 @@ class Gameplay(State):
             if not self.game_over:
                 if self.player.sprite.hit_box.colliderect(asteroid.rect):
                     self.save_highest_score()
+                    self.app.time_speed = 20
                     self.player_explosion.play()
                     Explosion(
                         self.explosions, self.player.sprite.hit_box.center, 10, "red"
@@ -181,6 +182,7 @@ class Gameplay(State):
             # Check for collisions with bullets
             if pygame.sprite.spritecollide(asteroid, self.bullets, True):
                 self.asteroid_kill.play()
+                self.last_kill = time()
                 added_points = (
                     SCORE * self.level * (ASTEROID_MAX_SCALE - asteroid.scale + 1)
                 )
@@ -193,6 +195,7 @@ class Gameplay(State):
                     self.explosions, asteroid.rect.center, asteroid.scale * 2, "green"
                 )
                 self.shake = SHAKE
+                self.app.time_speed = asteroid.scale * 15
                 break
 
             # Check for collisions between asteroids
@@ -223,7 +226,8 @@ class Gameplay(State):
         if self.score > self.app.highest_score:
             data = {"highest_score": int(self.score)}
             save_data(data)
-            self.app.highest_score = load_data()["highest_score"]
+            self.app.highest_score = load_data()["highest_score"]  # type: ignore
+            Explosion(self.explosions, self.score_text.rect.center, 5, "yellow")
 
     def update(self, dt):
         super().update(dt)
@@ -313,13 +317,16 @@ class Gameplay(State):
         self.gained_points.update(self.scroll, dt)
 
         # Trails
-        self.trails.update(self.scroll, dt, 20)
+        try:
+            self.trails.update(self.scroll, dt, 20)
+        except AttributeError:
+            pass
 
         # Drawing
         self.app.screen.fill("black")
         self.particles.draw(self.screen)
-        self.trails.draw(self.screen)
         try:
+            self.trails.draw(self.screen)
             self.bullets.draw(self.screen)
             self.player.draw(self.screen)
         except TypeError as e:
@@ -338,7 +345,11 @@ class Gameplay(State):
             "white" if self.level <= MAX_LEVEL else "red",
         )
         self.screen.blit(level, level.get_frect(center=(SCREEN_WIDTH / 2, 30)))
-        self.score_text.update(self.font, int(self.score))
+        self.score_text.update(
+            self.font,
+            int(self.score),
+            "white" if self.score <= self.app.highest_score else "yellow",
+        )
         highest_score = self.s_font.render(
             f"Highest Score: {self.app.highest_score}", False, "white"
         )

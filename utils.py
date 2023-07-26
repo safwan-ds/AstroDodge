@@ -19,7 +19,7 @@ def resource_path(relative_path):
 
 
 def save_data(data):
-    data_dir = user_data_dir(APP_NAME)
+    data_dir = user_data_dir(APP_NAME, False)
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
     try:
@@ -30,7 +30,7 @@ def save_data(data):
 
 
 def load_data():
-    data_dir = user_data_dir(APP_NAME)
+    data_dir = user_data_dir(APP_NAME, False)
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
     try:

@@ -7,7 +7,7 @@ from pygame.math import Vector2
 import moderngl
 
 from states.main_menu import MainMenu
-from utils import load_data
+from utils import load_data, onscreen_debug
 
 from pygame.locals import *
 from config import *
@@ -46,9 +46,10 @@ class App:
         self.shaders_init(self.vertex_shader, fragment_shader)
         self.current_shader = 0
 
-        # DT
+        # Time
         self.last_frame = time()
         self.elapsed_time = 0.0
+        self.time_speed = 60
 
         # Cursor
         cursor_img = pygame.image.load(IMGS_DIR + "cursors\\crosshair.png")
@@ -160,7 +161,7 @@ class App:
     def get_dt(self):
         dt = time() - self.last_frame
         self.last_frame = time()
-        return min(dt * 60, 10.0)
+        return dt * self.time_speed
 
     def render(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -188,6 +189,10 @@ class App:
 
     def game_loop(self):
         self.dt = self.get_dt()
+        if self.time_speed < 60:
+            self.time_speed += 2 * self.dt
+        else:
+            self.time_speed = 60
         self.elapsed_time += self.dt * 60
 
         self.handle_events()
@@ -196,7 +201,7 @@ class App:
 
         fps = self.clock.get_fps()
 
-        # console_debug(f"FPS: {fps:.2f} " + ("locked" if self.fps else "unlocked"))
+        onscreen_debug(self.screen, f"FPS: {fps:.2f}")
         # onscreen_debug(self.screen, f"DT: {self.dt:.2f}", y=30)
         pygame.display.set_caption(f"AstroDodge || FPS: {fps:.2f}")
 

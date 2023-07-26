@@ -1,8 +1,8 @@
 from typing import Any
 from math import sin
-import sys
 from time import time
 import pygame
+from pygame.math import Vector2
 
 from classes.particles import Emitter
 from classes.trail import Trail
@@ -54,7 +54,7 @@ class MainMenu(State):
         self.screen.fill("black")
         self.particles.update((0, 0), self.app.dt, 5, 0.5)
         self.particles.draw(self.screen)
-        self.trails.update((0, 0), dt, 5)
+        self.trails.update(Vector2(0, 0), dt, 5)
         self.trails.draw(self.screen)
         self.logo.update(self.trails, (59, 101, 143))
         self.logo.draw(self.screen)
