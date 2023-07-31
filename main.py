@@ -1,10 +1,8 @@
-import traceback
 from classes.app import App
 
 
 def main():
-    app = App()
-    app.run()
+    App().run()
 
 
 if __name__ == "__main__":

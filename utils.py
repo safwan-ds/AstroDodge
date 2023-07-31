@@ -4,7 +4,7 @@ from appdirs import user_data_dir
 import json
 import pygame
 
-from config import *
+from globals import *
 
 
 def resource_path(relative_path):
@@ -111,7 +111,7 @@ def console_debug(
 
 
 pygame.font.init()
-font = pygame.Font(DEFAULT_FONT, 30)
+font = pygame.Font(DEFAULT_FONT, 20)
 
 
 def onscreen_debug(

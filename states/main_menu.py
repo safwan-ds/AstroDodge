@@ -1,4 +1,3 @@
-from typing import Any
 from math import sin
 from time import time
 import pygame
@@ -11,7 +10,7 @@ from states.gameplay import Gameplay
 from utils import get_animations, resource_path
 
 from pygame.locals import *
-from config import *
+from globals import *
 
 
 class MainMenu(State):
@@ -58,7 +57,8 @@ class MainMenu(State):
         self.trails.draw(self.screen)
         self.logo.update(self.trails, (59, 101, 143))
         self.logo.draw(self.screen)
-        self.buttons.update(self.app)
+        if not self.fade_in:
+            self.buttons.update(self.app)
         self.buttons.draw(self.screen)
 
         self.screen.blit(self.transition, (0, 0))

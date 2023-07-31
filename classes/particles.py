@@ -6,7 +6,7 @@ from pygame.math import Vector2
 
 from utils import console_debug
 
-from config import *
+from globals import *
 
 
 class Emitter(pygame.sprite.Group):

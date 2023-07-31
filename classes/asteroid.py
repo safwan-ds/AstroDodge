@@ -8,7 +8,7 @@ from classes.trail import Trail
 from utils import get_animations, resource_path
 
 from pygame.locals import *
-from config import *
+from globals import *
 
 
 class Asteroid(pygame.sprite.Sprite):

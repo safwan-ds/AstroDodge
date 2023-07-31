@@ -1,5 +1,3 @@
-import json
-from typing import Any
 import random
 from time import time
 import pygame
@@ -13,7 +11,7 @@ from classes.state import State
 from utils import resource_path, save_data, load_data
 
 from pygame.locals import *
-from config import *
+from globals import *
 
 
 class Gameplay(State):
@@ -41,8 +39,8 @@ class Gameplay(State):
 
         self.shake = 0
 
-        self.font = pygame.Font(resource_path(DEFAULT_FONT), 40)
-        self.s_font = pygame.Font(resource_path(DEFAULT_FONT), 30)
+        self.font = pygame.Font(resource_path(DEFAULT_FONT), 30)
+        self.s_font = pygame.Font(resource_path(DEFAULT_FONT), 20)
 
         # Gameplay states
         self.paused = False
@@ -69,7 +67,7 @@ class Gameplay(State):
         # UI
         self.ui = pygame.sprite.Group()
         self.level_bar = Bar(self.ui, (SCREEN_WIDTH / 2, 15), 100, 10)
-        self.score_text = Score(self.ui, (SCREEN_WIDTH / 2, 50))
+        self.score_text = Score(self.ui, (SCREEN_WIDTH / 2, 65))
         self.arrow = Arrow(self.ui, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
         self.shooting_bar = Bar(
             self.ui,
@@ -77,35 +75,32 @@ class Gameplay(State):
             SHOOTING_BAR_WIDTH,
             SHOOTING_BAR_HEIGHT,
         )
-        self.auto_text = self.font.render("Auto", False, "white")
+        self.auto_text = self.font.render("Auto", False, "yellow")
 
         # Sounds
         pygame.mixer.music.load(resource_path(MUSIC_DIR + "gameplay.wav"))
         self.music_volume = 0
         pygame.mixer.music.set_volume(self.music_volume)
+
         self.shoot_sound = pygame.mixer.Sound(resource_path(SFX_DIR + "shoot"))
-        self.shoot_sound.set_volume(0.1)
         self.player_explosion = pygame.mixer.Sound(
             resource_path(SFX_DIR + "heavy_explosion")
         )
-        self.asteroid_kill = pygame.mixer.Sound(
-            resource_path(SFX_DIR + "mid_explosion")
-        )
-        self.asteroid_kill.set_volume(0.7)
+        self.asteroid_kill = pygame.mixer.Sound(resource_path(SFX_DIR + "kill"))
         self.asteroid_collision = pygame.mixer.Sound(
             resource_path(SFX_DIR + "explosion")
         )
-        self.asteroid_collision.set_volume(0.2)
+        self.exit_sound = pygame.mixer.Sound(SFX_DIR + "exit")
 
     def add(self):
         super().add()
 
-        # pygame.mixer.music.play(-1)
+        pygame.mixer.music.play(-1)
 
     def remove(self):
         super().remove()
 
-        pygame.mixer.music.fadeout(500)
+        pygame.mixer.music.fadeout(1000)
 
     def get_input(self):
         if self.app.mousebuttondown == 3:
@@ -118,34 +113,43 @@ class Gameplay(State):
         ):
             if self.auto_fire or self.app.mousebuttondown == 1:
                 self.shoot_sound.play()
-                Bullet(
-                    self.bullets,
-                    self.player.sprite.rect.center,
-                    self.player.sprite.target_angle,
-                    self.player.sprite.velocity,
-                )
+
+                num_bullets = int(self.level // MAX_LEVEL + 1)
+                angle_spacing = 5 * (num_bullets - 1)
+                if num_bullets > 1:
+                    angles = range(
+                        -angle_spacing,
+                        angle_spacing + 1,
+                        angle_spacing // (num_bullets - 1) * 2,
+                    )
+                else:
+                    angles = [0]
+
+                for angle in angles:
+                    Bullet(
+                        self.bullets,
+                        self.player.sprite.rect.center,
+                        self.player.sprite.target_angle + angle,
+                        self.player.sprite.velocity,
+                    )
+
                 self.last_shot = time()
                 self.shake = SHAKE / 3
 
         if self.game_over:
             if self.app.keydown == K_ESCAPE:
+                self.exit_sound.play()
                 self.save_highest_score()
                 self.remove()
 
             elif self.app.mousebuttondown == 1:
-                self.save_highest_score()
-                Player(self.player, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
-                self.arrow = Arrow(self.ui, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
-                self.level = LEVEL
-                self.score = 0
-                self.asteroids.empty()
-                self.auto_fire = False
-                self.game_over = False
+                self.reset()
 
         if self.paused:
             if self.app.mousebuttondown:
                 self.paused = False
             elif self.app.keydown == K_ESCAPE:
+                self.exit_sound.play()
                 self.remove()
         elif not self.game_over and self.app.keydown == K_ESCAPE:
             self.paused = True
@@ -162,6 +166,19 @@ class Gameplay(State):
             ),
         )
 
+    def reset(self):
+        self.save_highest_score()
+        self.music_volume = 0
+        pygame.mixer.music.set_volume(self.music_volume)
+        pygame.mixer.music.play(-1)
+        Player(self.player, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        self.arrow = Arrow(self.ui, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        self.level = LEVEL
+        self.score = 0
+        self.asteroids.empty()
+        self.auto_fire = False
+        self.game_over = False
+
     def collide(self):
         for asteroid in self.asteroids:
             if not self.game_over:
@@ -169,6 +186,7 @@ class Gameplay(State):
                     self.save_highest_score()
                     self.app.time_speed = 20
                     self.player_explosion.play()
+                    pygame.mixer.music.fadeout(1000)
                     Explosion(
                         self.explosions, self.player.sprite.hit_box.center, 10, "red"
                     )
@@ -192,7 +210,7 @@ class Gameplay(State):
                 )
                 asteroid.kill()
                 Explosion(
-                    self.explosions, asteroid.rect.center, asteroid.scale * 2, "green"
+                    self.explosions, asteroid.rect.center, asteroid.scale * 2, "white"
                 )
                 self.shake = SHAKE
                 self.app.time_speed = asteroid.scale * 15
@@ -202,7 +220,7 @@ class Gameplay(State):
             for asteroid2 in self.asteroids.copy():
                 if (
                     asteroid != asteroid2
-                    and pygame.sprite.collide_rect(asteroid, asteroid2)
+                    and pygame.sprite.collide_mask(asteroid, asteroid2)
                     and (
                         (
                             0 <= asteroid.rect.centerx <= SCREEN_WIDTH
@@ -220,7 +238,7 @@ class Gameplay(State):
                     Explosion(self.explosions, asteroid.rect.center, asteroid.scale)
                     Explosion(self.explosions, asteroid2.rect.center, asteroid2.scale)
                     self.shake = SHAKE / 2
-                    break  # Exit the inner loop since each asteroid can only collide with one other asteroid
+                    break
 
     def save_highest_score(self):
         if self.score > self.app.highest_score:
@@ -240,8 +258,8 @@ class Gameplay(State):
                 self.score += self.level * dt
 
                 # Music
-                if pygame.mixer.music.get_volume() < 0.1:
-                    self.music_volume += 0.001 * self.app.dt
+                if pygame.mixer.music.get_volume() < 1:
+                    self.music_volume += 0.01 * dt
                     pygame.mixer.music.set_volume(self.music_volume)
 
             # Camera
@@ -302,7 +320,7 @@ class Gameplay(State):
                         self.last_asteroid = time()
                 else:
                     for _ in range(
-                        random.randint(0, ASTEROID_SPAWN_INTERVAL * MAX_LEVEL)
+                        random.randint(0, int(ASTEROID_SPAWN_INTERVAL * self.level / 2))
                     ):
                         Asteroid(self.asteroids)
                         self.last_asteroid = time()
@@ -344,7 +362,7 @@ class Gameplay(State):
             False,
             "white" if self.level <= MAX_LEVEL else "red",
         )
-        self.screen.blit(level, level.get_frect(center=(SCREEN_WIDTH / 2, 30)))
+        self.screen.blit(level, level.get_frect(center=(SCREEN_WIDTH / 2, 40)))
         self.score_text.update(
             self.font,
             int(self.score),
@@ -354,13 +372,16 @@ class Gameplay(State):
             f"Highest Score: {self.app.highest_score}", False, "white"
         )
         self.screen.blit(
-            highest_score, highest_score.get_frect(center=(SCREEN_WIDTH / 2, 70))
+            highest_score, highest_score.get_frect(center=(SCREEN_WIDTH / 2, 85))
         )
         try:
             self.arrow.update(self.player.sprite.target_angle)
         except AttributeError:
             pass
-        self.shooting_bar.update((time() - self.last_shot) / self.shooting_interval)
+        self.shooting_bar.update(
+            (time() - self.last_shot) / self.shooting_interval,
+            color="yellow" if self.auto_fire else "white",
+        )
         if self.auto_fire and not self.game_over:
             self.screen.blit(
                 self.auto_text,
@@ -376,6 +397,9 @@ class Gameplay(State):
             self.screen.blit(self.game_over_text1, (self.line1_x, self.line1_y))
             self.screen.blit(self.game_over_text2, (self.line2_x, self.line2_y))
 
+        # Transition
+        self.screen.blit(self.transition, (0, 0))
+
         # Debugging
         # pygame.draw.rect(self.screen, "green", self.player.sprite.hit_box, 1)
 
@@ -388,16 +412,13 @@ class Gameplay(State):
         # onscreen_debug(self.screen, f"Asteroids: {len(self.asteroids.sprites())}", y=90)
         # onscreen_debug(self.screen, f"Level: {self.level:.2f}", y=110)
 
-        # Transition
-        self.screen.blit(self.transition, (0, 0))
-
 
 class GainedPoints(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
 
     def add_point(self, pos, font: pygame.Font, points):
-        text = font.render(f"+{points}", False, "white")
+        text = font.render(f"+{points}", False, "green")
         rect = text.get_frect(midbottom=pos)
         sprite = pygame.sprite.Sprite(self)
         sprite.image = text

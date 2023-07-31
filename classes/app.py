@@ -1,6 +1,5 @@
-from array import array
-import json
 import sys
+from array import array
 from time import time
 import pygame
 from pygame.math import Vector2
@@ -10,7 +9,7 @@ from states.main_menu import MainMenu
 from utils import load_data, onscreen_debug
 
 from pygame.locals import *
-from config import *
+from globals import *
 
 
 class App:

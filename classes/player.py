@@ -1,13 +1,12 @@
 import math
 from time import time
-from typing import Any
 import pygame
 from pygame.math import Vector2
 
 from classes.trail import Trail
 
 from pygame.locals import *
-from config import *
+from globals import *
 
 
 class Player(pygame.sprite.Sprite):
@@ -143,4 +142,5 @@ class Bullet(pygame.sprite.Sprite):
         if time() - self.last_trail >= 0.01:
             Trail(trail_group, self.image, self.rect.center, trail_color)
             self.last_trail = time()
+
         self.rect.move_ip(self.speed * dt + scroll)

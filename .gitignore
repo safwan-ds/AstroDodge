@@ -34,6 +34,3 @@ license.txt
 
 # Virtual environment
 venv/
-
-# User data
-user*

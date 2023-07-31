@@ -3,7 +3,7 @@ from time import time
 import pygame
 
 from pygame.locals import *
-from config import *
+from globals import *
 
 
 class State:

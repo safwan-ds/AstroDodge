@@ -4,7 +4,7 @@ import pygame
 from utils import resource_path
 
 from pygame.locals import *
-from config import *
+from globals import *
 
 
 class Score(pygame.sprite.Sprite):
