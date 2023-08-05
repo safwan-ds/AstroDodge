@@ -2,6 +2,7 @@ from math import sin
 from time import time
 import pygame
 from pygame.math import Vector2
+from pygame.locals import *
 
 from classes.particles import Emitter
 from classes.trail import Trail
@@ -9,7 +10,6 @@ from classes.state import State
 from states.gameplay import Gameplay
 from utils import get_animations, resource_path
 
-from pygame.locals import *
 from globals import *
 
 
@@ -30,7 +30,7 @@ class MainMenu(State):
         Button("start", self.start, (pos_x, 180), self.buttons)
         Button("quit", self.quit, (pos_x, 250), self.buttons)
 
-        self.particles = Emitter(SCREEN_HEIGHT)
+        self.particles = Emitter()
 
     def start(self):
         self.fade_out = True
@@ -43,10 +43,10 @@ class MainMenu(State):
     def update(self, dt):
         super().update(dt)
 
-        if self.app.glitch > GLITCH:
+        if self.app.glitch > GLITCH_AMOUNT:
             self.app.glitch -= 0.1 * dt
-        if self.app.glitch < GLITCH:
-            self.app.glitch = GLITCH
+        if self.app.glitch < GLITCH_AMOUNT:
+            self.app.glitch = GLITCH_AMOUNT
         if self.app.mousebuttondown == 1:
             self.app.glitch = 1.0
             self.particles.add_particle(5)

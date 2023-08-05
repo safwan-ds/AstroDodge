@@ -6,25 +6,29 @@ from pygame.math import Vector2
 
 from utils import console_debug
 
-from globals import *
+from globals import (
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    OUTSIDE_MARGIN,
+    IMGS_DIR,
+    PARTICLE_LIFETIME,
+    PARTICLE_VELOCITY,
+)
 
 
 class Emitter(pygame.sprite.Group):
-    def __init__(self, y):
+    def __init__(self):
         super().__init__()
 
         self.last_addition = 0
-
-        self.y = y + 20
-        # self.PARTICLE_EVENT = USEREVENT + 1
 
     def add_particle(self, amount):
         for _ in range(random.randint(1, amount)):
             self.add(
                 Particle(
                     (
-                        random.uniform(0, SCREEN_WIDTH) - 20,
-                        random.uniform(0, self.y),
+                        random.uniform(-OUTSIDE_MARGIN, SCREEN_WIDTH + OUTSIDE_MARGIN),
+                        random.uniform(-OUTSIDE_MARGIN, SCREEN_HEIGHT + OUTSIDE_MARGIN),
                     )
                 )
             )

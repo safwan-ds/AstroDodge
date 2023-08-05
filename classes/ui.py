@@ -1,10 +1,9 @@
 from typing import Any
 import pygame
+from pygame.locals import *
 
 from utils import resource_path
-
-from pygame.locals import *
-from globals import *
+from globals import IMGS_DIR
 
 
 class Score(pygame.sprite.Sprite):
@@ -24,14 +23,13 @@ class Arrow(pygame.sprite.Sprite):
     def __init__(self, group, pos):
         super().__init__(group)
 
-        self.original_image = pygame.image.load(
-            resource_path(IMGS_DIR + "misc\\arrow.png")
-        )
+        self.image = pygame.image.load(resource_path(IMGS_DIR + "misc\\arrow.png"))
+        self.original_image = self.image.copy()
         self.rect = self.original_image.get_frect(center=pos)
 
         self.cache = {}
 
-    def update(self, angle):
+    def rotate(self, angle):
         try:
             if self.image != self.cache[angle]:
                 self.image = self.cache[angle]
@@ -40,7 +38,11 @@ class Arrow(pygame.sprite.Sprite):
                 self.original_image, -angle - 90
             )
             self.image = self.cache[angle]
+
         self.rect = self.image.get_frect(center=self.rect.center)
+
+    def update(self, angle):
+        self.rotate(angle)
 
 
 class Bar(pygame.sprite.Sprite):

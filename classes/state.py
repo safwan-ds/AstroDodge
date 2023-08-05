@@ -1,8 +1,8 @@
 import math
 from time import time
 import pygame
-
 from pygame.locals import *
+
 from globals import *
 
 

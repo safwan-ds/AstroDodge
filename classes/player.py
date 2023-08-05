@@ -2,10 +2,10 @@ import math
 from time import time
 import pygame
 from pygame.math import Vector2
+from pygame.locals import *
 
 from classes.trail import Trail
 
-from pygame.locals import *
 from globals import *
 
 
@@ -13,7 +13,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, group, pos):
         super().__init__(group)
 
-        self.original_image = pygame.image.load(IMGS_DIR + "player.png")
+        self.image = pygame.image.load(IMGS_DIR + "player.png")
+        self.original_image = self.image.copy()
         self.rect = self.original_image.get_frect(center=pos)
         self.hit_box = self.rect.inflate(-20, -20)
 

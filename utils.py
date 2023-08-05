@@ -1,10 +1,11 @@
 import os
+import json
 import sys
 from appdirs import user_data_dir
-import json
+from cryptography import fernet
 import pygame
 
-from globals import *
+from globals import APP_NAME, DEFAULT_FONT
 
 
 def resource_path(relative_path):
@@ -19,6 +20,7 @@ def resource_path(relative_path):
 
 
 def save_data(data):
+    # TODO data encryption
     data_dir = user_data_dir(APP_NAME, False)
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)

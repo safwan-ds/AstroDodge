@@ -2,6 +2,7 @@ import random
 from time import time
 import pygame
 from pygame.math import Vector2
+from pygame.locals import *
 
 from classes.player import Player, Bullet
 from classes.asteroid import Asteroid, Explosion
@@ -10,8 +11,25 @@ from classes.ui import Score, Arrow, Bar
 from classes.state import State
 from utils import resource_path, save_data, load_data
 
-from pygame.locals import *
-from globals import *
+from globals import (
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    SFX_DIR,
+    MUSIC_DIR,
+    DEFAULT_FONT,
+    PLAYER_VELOCITY,
+    SHOOTING_INTERVAL,
+    SHOOTING_BAR_WIDTH,
+    SHOOTING_BAR_HEIGHT,
+    MAX_LEVEL,
+    LEVEL_INCREASE_SPEED,
+    ASTEROID_SPAWN_INTERVAL,
+    ASTEROID_MAX_SCALE,
+    SCORE,
+    SHAKE,
+    GLITCH_AMOUNT,
+    LEVEL,
+)
 
 
 class Gameplay(State):
@@ -35,7 +53,7 @@ class Gameplay(State):
         self.last_asteroid = time()
         self.score = 0
 
-        self.particles = Emitter(SCREEN_HEIGHT)
+        self.particles = Emitter()
 
         self.shake = 0
 
@@ -278,7 +296,7 @@ class Gameplay(State):
 
         # Collisions
         self.collide()
-        self.app.glitch = self.shake / SHAKE + GLITCH
+        self.app.glitch = self.shake / SHAKE + GLITCH_AMOUNT
 
         # Background
         self.particles.update(self.scroll, dt, 2, 0.1)
@@ -316,7 +334,10 @@ class Gameplay(State):
                     for _ in range(
                         random.randint(0, int(ASTEROID_SPAWN_INTERVAL * self.level))
                     ):
-                        Asteroid(self.asteroids)
+                        try:
+                            Asteroid(self.asteroids, self.player.sprite.angle)
+                        except AttributeError:
+                            Asteroid(self.asteroids)
                         self.last_asteroid = time()
                 else:
                     for _ in range(
