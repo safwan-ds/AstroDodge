@@ -1,16 +1,14 @@
-from math import sin
-from time import time
 import pygame
 from pygame.math import Vector2
 from pygame.locals import *
 
 from classes.particles import Emitter
-from classes.trail import Trail
+from classes.ui import Logo, Button
 from classes.state import State
 from states.gameplay import Gameplay
-from utils import get_animations, resource_path
+from utils import resource_path
 
-from globals import *
+from globals import MUSIC_DIR, GLITCH_AMOUNT
 
 
 class MainMenu(State):
@@ -27,12 +25,24 @@ class MainMenu(State):
         self.trails = pygame.sprite.Group()
 
         self.buttons = pygame.sprite.Group()
-        Button("start", self.start, (pos_x, 180), self.buttons)
-        Button("quit", self.quit, (pos_x, 250), self.buttons)
+        Button("start", self.start, (pos_x, 220), self.buttons)
+        Button("quit", self.quit, (pos_x, 290), self.buttons)
 
         self.particles = Emitter()
 
+        self.main_menu_music = pygame.mixer.Sound(
+            resource_path(MUSIC_DIR + "main_menu.wav")
+        )
+        self.music_volume = 0
+        self.main_menu_music.set_volume(self.music_volume)
+
+    def add(self):
+        super().add()
+
+        self.music_channel = self.main_menu_music.play(-1)
+
     def start(self):
+        self.main_menu_music.fadeout(1000)
         self.fade_out = True
         self.starting = True
 
@@ -42,6 +52,16 @@ class MainMenu(State):
 
     def update(self, dt):
         super().update(dt)
+
+        # Music
+        if not self.music_channel.get_busy():
+            self.music_volume = 0
+            self.main_menu_music.set_volume(self.music_volume)
+            self.main_menu_music.play(-1)
+
+        if self.main_menu_music.get_volume() < 1:
+            self.music_volume += 0.01 * dt
+            self.main_menu_music.set_volume(self.music_volume)
 
         if self.app.glitch > GLITCH_AMOUNT:
             self.app.glitch -= 0.1 * dt
@@ -69,92 +89,3 @@ class MainMenu(State):
                 Gameplay(self.app).add()
             if self.quitting:
                 self.app.running = False
-
-
-class Logo(pygame.sprite.Sprite):
-    def __init__(self, pos):
-        super().__init__()
-
-        self.image = pygame.image.load(resource_path(IMGS_DIR + "ui\\logo.png"))
-        self.image = pygame.transform.scale_by(self.image, 3)
-        self.rect = self.image.get_frect(center=pos)
-        self.y = self.rect.y
-
-        self.last_trail = time()
-
-    def update(self, trail_group, trail_color):
-        self.rect.y = self.y + sin(time() * 2) * 7
-
-        if time() - self.last_trail >= 0.1:
-            Trail(trail_group, self.image, self.rect.center, trail_color)
-            self.last_trail = time()
-
-
-class Button(pygame.sprite.Sprite):
-    def __init__(self, name, method, pos, group):
-        super().__init__(group)
-        self.method = method
-
-        self.animations = get_animations(resource_path(IMGS_DIR + "ui"), 90)[
-            name + "_button"
-        ]
-        for index, animation in enumerate(self.animations):
-            self.animations[index] = pygame.transform.scale_by(animation, 2)
-        self.frame = 0
-
-        self.image = self.animations[self.frame]
-        self.rect = self.image.get_frect(midtop=pos)
-
-        self.clicked = False
-        self.hovered = False
-
-        self.hover_sound = pygame.mixer.Sound(resource_path(SFX_DIR + "button_hover"))
-        self.hover_sound.set_volume(0.3)
-        self.click_sound = pygame.mixer.Sound(resource_path(SFX_DIR + "button_click"))
-
-    def get_state(self):
-        if self.hovered:
-            self.frame = 1
-        elif self.clicked:
-            self.frame = 1
-        else:
-            self.frame = 0
-
-        self.image = self.animations[self.frame]
-
-    def update(self, game):
-        mouse_pressed = pygame.mouse.get_pressed()[0]
-        mouse_pos = (
-            pygame.mouse.get_pos()[0] / (game.display_size[0] / SCREEN_WIDTH),
-            pygame.mouse.get_pos()[1] / (game.display_size[1] / SCREEN_HEIGHT),
-        )
-        button_hovered = self.rect.collidepoint(mouse_pos)
-
-        if (
-            button_hovered
-            and not mouse_pressed
-            and not self.hovered
-            and not self.clicked
-        ):
-            self.hover_sound.play()
-            self.frame = 1
-            self.hovered = True
-        else:
-            self.frame = 0
-
-        if self.hovered and mouse_pressed:
-            self.clicked = True
-            self.hovered = False
-
-        if self.clicked and not mouse_pressed:
-            if button_hovered:
-                self.click_sound.play()
-                self.method()
-                self.clicked = False
-            else:
-                self.clicked = False
-
-        if not button_hovered:
-            self.hovered = False
-
-        self.get_state()

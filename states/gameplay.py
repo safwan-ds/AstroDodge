@@ -9,6 +9,7 @@ from classes.asteroid import Asteroid, Explosion
 from classes.particles import Emitter
 from classes.ui import Score, Arrow, Bar
 from classes.state import State
+from states.pause import PauseMenu
 from utils import resource_path, save_data, load_data
 
 from globals import (
@@ -62,11 +63,21 @@ class Gameplay(State):
 
         # Gameplay states
         self.paused = False
-        self.paused_text = self.font.render(
-            "Paused! Click the mouse to continue", False, "white"
+        self.pause_menu = PauseMenu(app, self)
+        # Create a transparent surface for the rectangle
+        self.dark_overlay = pygame.Surface(
+            (SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA
         )
-        self.paused_text_rect = self.paused_text.get_frect(
-            center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        transparent_color = (
+            0,
+            0,
+            0,
+            180,
+        )  # Change alpha value as needed (0: fully transparent, 255: fully opaque)
+        pygame.draw.rect(
+            self.dark_overlay,
+            transparent_color,
+            (0, 0, SCREEN_WIDTH, SCREEN_HEIGHT),
         )
 
         self.game_over = False
@@ -96,9 +107,9 @@ class Gameplay(State):
         self.auto_text = self.font.render("Auto", False, "yellow")
 
         # Sounds
-        pygame.mixer.music.load(resource_path(MUSIC_DIR + "gameplay.wav"))
+        self.music = pygame.mixer.Sound(resource_path(MUSIC_DIR + "gameplay.wav"))
         self.music_volume = 0
-        pygame.mixer.music.set_volume(self.music_volume)
+        self.music.set_volume(self.music_volume)
 
         self.shoot_sound = pygame.mixer.Sound(resource_path(SFX_DIR + "shoot"))
         self.player_explosion = pygame.mixer.Sound(
@@ -113,12 +124,12 @@ class Gameplay(State):
     def add(self):
         super().add()
 
-        pygame.mixer.music.play(-1)
+        self.music.play(-1)
 
     def remove(self):
         super().remove()
 
-        pygame.mixer.music.fadeout(1000)
+        self.music.fadeout(1000)
 
     def get_input(self):
         if self.app.mousebuttondown == 3:
@@ -164,11 +175,8 @@ class Gameplay(State):
                 self.reset()
 
         if self.paused:
-            if self.app.mousebuttondown:
+            if self.app.keydown == K_ESCAPE:
                 self.paused = False
-            elif self.app.keydown == K_ESCAPE:
-                self.exit_sound.play()
-                self.remove()
         elif not self.game_over and self.app.keydown == K_ESCAPE:
             self.paused = True
 
@@ -187,8 +195,8 @@ class Gameplay(State):
     def reset(self):
         self.save_highest_score()
         self.music_volume = 0
-        pygame.mixer.music.set_volume(self.music_volume)
-        pygame.mixer.music.play(-1)
+        self.music.set_volume(self.music_volume)
+        self.music.play(-1)
         Player(self.player, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
         self.arrow = Arrow(self.ui, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
         self.level = LEVEL
@@ -204,7 +212,7 @@ class Gameplay(State):
                     self.save_highest_score()
                     self.app.time_speed = 20
                     self.player_explosion.play()
-                    pygame.mixer.music.fadeout(1000)
+                    self.music.fadeout(1000)
                     Explosion(
                         self.explosions, self.player.sprite.hit_box.center, 10, "red"
                     )
@@ -224,7 +232,14 @@ class Gameplay(State):
                 )
                 self.score += added_points
                 self.gained_points.add_point(
-                    asteroid.rect.center, self.font, int(added_points)
+                    Vector2(
+                        (
+                            random.uniform(asteroid.rect.left, asteroid.rect.right),
+                            random.uniform(asteroid.rect.top, asteroid.rect.bottom),
+                        )
+                    ),
+                    self.font,
+                    int(added_points),
                 )
                 asteroid.kill()
                 Explosion(
@@ -276,9 +291,9 @@ class Gameplay(State):
                 self.score += self.level * dt
 
                 # Music
-                if pygame.mixer.music.get_volume() < 1:
+                if self.music.get_volume() < 1:
                     self.music_volume += 0.01 * dt
-                    pygame.mixer.music.set_volume(self.music_volume)
+                    self.music.set_volume(self.music_volume)
 
             # Camera
             try:
@@ -413,7 +428,11 @@ class Gameplay(State):
         # Game states
         if self.paused:
             self.scroll = (0, 0)
-            self.screen.blit(self.paused_text, self.paused_text_rect)
+
+            # Blit the transparent surface onto the screen
+            self.screen.blit(self.dark_overlay, (0, 0))
+            self.pause_menu.update()
+
         if self.game_over:
             self.screen.blit(self.game_over_text1, (self.line1_x, self.line1_y))
             self.screen.blit(self.game_over_text2, (self.line2_x, self.line2_y))
@@ -440,7 +459,7 @@ class GainedPoints(pygame.sprite.Group):
 
     def add_point(self, pos, font: pygame.Font, points):
         text = font.render(f"+{points}", False, "green")
-        rect = text.get_frect(midbottom=pos)
+        rect = text.get_frect(center=pos)
         sprite = pygame.sprite.Sprite(self)
         sprite.image = text
         sprite.rect = rect
