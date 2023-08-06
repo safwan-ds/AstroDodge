@@ -8,7 +8,7 @@ from classes.state import State
 from states.gameplay import Gameplay
 from utils import resource_path
 
-from globals import MUSIC_DIR, GLITCH_AMOUNT
+from globals import MUSIC_DIR, GLITCH_AMOUNT, PARTICLE_AMOUNT
 
 
 class MainMenu(State):
@@ -69,9 +69,9 @@ class MainMenu(State):
             self.app.glitch = GLITCH_AMOUNT
         if self.app.mousebuttondown == 1:
             self.app.glitch = 1.0
-            self.particles.add_particle(5)
+            self.particles.add_particle(PARTICLE_AMOUNT)
         self.screen.fill("black")
-        self.particles.update((0, 0), self.app.dt, 5, 0.5)
+        self.particles.update((0, 0), self.app.dt, PARTICLE_AMOUNT, 0.5)
         self.particles.draw(self.screen)
         self.trails.update(Vector2(0, 0), dt, 5)
         self.trails.draw(self.screen)

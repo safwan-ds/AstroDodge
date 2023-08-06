@@ -23,7 +23,7 @@ class PauseMenu(State):
         Button("quit", self.quit, (pos_x, SCREEN_HEIGHT / 2 + 35), self.buttons)
 
     def start(self):
-        self.gameplay.paused = False
+        self.gameplay.unpause()
 
     def quit(self):
         self.gameplay.exit_sound.play()

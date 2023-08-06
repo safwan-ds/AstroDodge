@@ -29,6 +29,7 @@ from globals import (
     SCORE,
     SHAKE,
     GLITCH_AMOUNT,
+    PARTICLE_AMOUNT,
     LEVEL,
 )
 
@@ -176,9 +177,14 @@ class Gameplay(State):
 
         if self.paused:
             if self.app.keydown == K_ESCAPE:
-                self.paused = False
+                self.unpause()
         elif not self.game_over and self.app.keydown == K_ESCAPE:
             self.paused = True
+            self.music.set_volume(self.pause_music_volume)
+
+    def unpause(self):
+        self.paused = False
+        self.music.set_volume(self.music_volume)
 
     def move_camera(self, dt, x, y):
         self.scroll = Vector2(
@@ -291,8 +297,9 @@ class Gameplay(State):
                 self.score += self.level * dt
 
                 # Music
-                if self.music.get_volume() < 1:
+                if self.music_volume < 1:
                     self.music_volume += 0.01 * dt
+                    self.pause_music_volume = self.music_volume / 2
                     self.music.set_volume(self.music_volume)
 
             # Camera
@@ -314,7 +321,7 @@ class Gameplay(State):
         self.app.glitch = self.shake / SHAKE + GLITCH_AMOUNT
 
         # Background
-        self.particles.update(self.scroll, dt, 2, 0.1)
+        self.particles.update(self.scroll, dt, PARTICLE_AMOUNT, 0.1)
 
         # Player
         try:

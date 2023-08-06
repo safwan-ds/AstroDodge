@@ -72,7 +72,7 @@ class Asteroid(pygame.sprite.Sprite):
 
         x = SCREEN_WIDTH / 2 - self.rect.centerx
         y = SCREEN_HEIGHT / 2 - self.rect.centery
-        randomness = 500
+        randomness = 100
         direction = Vector2(
             x + random.randint(-randomness, randomness),
             y + random.randint(-randomness, randomness),
