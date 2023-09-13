@@ -27,7 +27,7 @@ class PauseMenu(State):
 
     def quit(self):
         self.gameplay.exit_sound.play()
-        self.gameplay.save_highest_score()
+        self.gameplay.save_data()
         self.gameplay.remove()
 
     def update(self):

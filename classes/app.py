@@ -31,21 +31,41 @@ class App:
         pygame.display.set_caption(APP_NAME)
         pygame.display.set_icon(pygame.image.load(IMGS_DIR + "icon.png"))
 
+        # User data
+        data = load_data()
+        if data:
+            try:
+                self.highest_score = data["highest_score"]
+            except KeyError:
+                self.highest_score = 0
+
+            try:
+                self.fullscreen = data["fullscreen"]
+            except KeyError:
+                self.fullscreen = False
+        else:
+            self.highest_score = 0
+
         self.clock = pygame.time.Clock()
         self.font = pygame.Font(DEFAULT_FONT)
+
+        # Screen
         self.screen_size = Vector2(SCREEN_WIDTH, SCREEN_HEIGHT)
         self.screen = pygame.Surface(self.screen_size, depth=32)
         # self.display_dimensions = SCREEN_WIDTH / SCREEN_HEIGHT
-        self.display_size = Vector2(
-            self.screen_size[0] * DISPLAY_SCALE,
-            self.screen_size[1] * DISPLAY_SCALE,
-        )
-        self.display = pygame.display.set_mode(
-            self.display_size,
-            OPENGL | OPENGLBLIT | DOUBLEBUF | HWSURFACE,
-            32,
-        )
-        self.fullscreen = False
+        self.display_size = Vector2(self.screen_size * DISPLAY_SCALE)
+        if self.fullscreen:
+            self.display = pygame.display.set_mode(
+                flags=FULLSCREEN | OPENGL | OPENGLBLIT | DOUBLEBUF | HWSURFACE,
+                depth=32,
+            )
+            self.display_size = pygame.display.get_window_size()
+        else:
+            self.display = pygame.display.set_mode(
+                self.display_size,
+                OPENGL | OPENGLBLIT | DOUBLEBUF | HWSURFACE,
+                32,
+            )
 
         # Shaders
         self.glitch = GLITCH_AMOUNT
@@ -70,16 +90,6 @@ class App:
             cursor_img,
         )
         pygame.mouse.set_cursor(cursor)
-
-        # User data
-        data = load_data()
-        if data:
-            try:
-                self.highest_score = data["highest_score"]
-            except KeyError:
-                self.highest_score = 0
-        else:
-            self.highest_score = 0
 
         # Input
         self.keydown = None

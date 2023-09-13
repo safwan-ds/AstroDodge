@@ -42,8 +42,8 @@ class Gameplay(State):
         self.start_time = time()
         self.level = LEVEL
 
-        self.player = pygame.sprite.GroupSingle()
-        Player(self.player, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        self.player = Player((SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        self.player_sprite = pygame.sprite.GroupSingle(self.player)
         self.bullets = pygame.sprite.Group()
         self.trails = pygame.sprite.Group()
         self.shooting_interval = SHOOTING_INTERVAL
@@ -158,9 +158,9 @@ class Gameplay(State):
                 for angle in angles:
                     Bullet(
                         self.bullets,
-                        self.player.sprite.rect.center,
-                        self.player.sprite.target_angle + angle,
-                        self.player.sprite.velocity,
+                        self.player.rect.center,
+                        self.player.target_angle + angle,
+                        self.player.velocity,
                     )
 
                 self.last_shot = time()
@@ -169,7 +169,7 @@ class Gameplay(State):
         if self.game_over:
             if self.app.keydown == K_ESCAPE:
                 self.exit_sound.play()
-                self.save_highest_score()
+                self.save_data()
                 self.remove()
 
             elif self.app.mousebuttondown == 1:
@@ -199,11 +199,12 @@ class Gameplay(State):
         )
 
     def reset(self):
-        self.save_highest_score()
+        self.save_data()
         self.music_volume = 0
         self.music.set_volume(self.music_volume)
         self.music.play(-1)
-        Player(self.player, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        self.player = Player((SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        self.player_sprite = pygame.sprite.GroupSingle(self.player)
         self.arrow = Arrow(self.ui, (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
         self.level = LEVEL
         self.score = 0
@@ -214,15 +215,13 @@ class Gameplay(State):
     def collide(self):
         for asteroid in self.asteroids:
             if not self.game_over:
-                if self.player.sprite.hit_box.colliderect(asteroid.rect):
-                    self.save_highest_score()
+                if self.player.hit_box.colliderect(asteroid.rect):
+                    self.save_data()
                     self.app.time_speed = 20
                     self.player_explosion.play()
-                    self.music.fadeout(1000)
-                    Explosion(
-                        self.explosions, self.player.sprite.hit_box.center, 10, "red"
-                    )
-                    self.player.sprite.kill()
+                    self.music.fadeout(500)
+                    Explosion(self.explosions, self.player.hit_box.center, 10, "red")
+                    self.player.kill()
                     self.bullets.empty()
                     self.arrow.kill()
                     self.shake = SHAKE * 1.5
@@ -279,12 +278,16 @@ class Gameplay(State):
                     self.shake = SHAKE / 2
                     break
 
-    def save_highest_score(self):
-        if self.score > self.app.highest_score:
-            data = {"highest_score": int(self.score)}
-            save_data(data)
-            self.app.highest_score = load_data()["highest_score"]  # type: ignore
-            Explosion(self.explosions, self.score_text.rect.center, 5, "yellow")
+    def save_data(self):
+        data = {
+            "highest_score": int(self.score)
+            if self.score > self.app.highest_score
+            else self.app.highest_score,
+            "fullscreen": self.app.fullscreen,
+        }
+        save_data(data)
+        self.app.highest_score = load_data()["highest_score"]  # type: ignore
+        Explosion(self.explosions, self.score_text.rect.center, 5, "yellow")
 
     def update(self, dt):
         super().update(dt)
@@ -297,18 +300,18 @@ class Gameplay(State):
                 self.score += self.level * dt
 
                 # Music
-                if self.music_volume < 1:
+                if self.music_volume < 0.5:
                     self.music_volume += 0.01 * dt
                     self.pause_music_volume = self.music_volume / 2
                     self.music.set_volume(self.music_volume)
 
             # Camera
-            try:
-                self.player_x = self.player.sprite.rect.centerx
-                self.player_y = self.player.sprite.rect.centery
-            except AttributeError:
+            if self.game_over:
                 self.player_x += self.scroll.x
                 self.player_y += self.scroll.y
+            else:
+                self.player_x = self.player.rect.centerx
+                self.player_y = self.player.rect.centery
             self.move_camera(dt, self.player_x, self.player_y)
 
         if self.shake > 0:
@@ -326,7 +329,7 @@ class Gameplay(State):
         # Player
         try:
             if not (self.paused or self.game_over):
-                ratio = self.player.sprite.velocity / PLAYER_VELOCITY
+                ratio = self.player.velocity / PLAYER_VELOCITY
                 self.shooting_interval = SHOOTING_INTERVAL * (1 + (ratio - 1) / 2)
                 trail_color = (
                     (59, 101, 143)
@@ -357,7 +360,7 @@ class Gameplay(State):
                         random.randint(0, int(ASTEROID_SPAWN_INTERVAL * self.level))
                     ):
                         try:
-                            Asteroid(self.asteroids, self.player.sprite.angle)
+                            Asteroid(self.asteroids, self.player.angle)
                         except AttributeError:
                             Asteroid(self.asteroids)
                         self.last_asteroid = time()
@@ -368,9 +371,7 @@ class Gameplay(State):
                         Asteroid(self.asteroids)
                         self.last_asteroid = time()
                     try:
-                        self.player.sprite.velocity = (
-                            PLAYER_VELOCITY * self.level / MAX_LEVEL
-                        )
+                        self.player.velocity = PLAYER_VELOCITY * self.level / MAX_LEVEL
                     except AttributeError:
                         pass
 
@@ -389,7 +390,7 @@ class Gameplay(State):
         try:
             self.trails.draw(self.screen)
             self.bullets.draw(self.screen)
-            self.player.draw(self.screen)
+            self.player_sprite.draw(self.screen)
         except TypeError as e:
             print("TypeError occurred:", e)
         self.asteroids.draw(self.screen)
@@ -418,7 +419,7 @@ class Gameplay(State):
             highest_score, highest_score.get_frect(center=(SCREEN_WIDTH / 2, 85))
         )
         try:
-            self.arrow.update(self.player.sprite.target_angle)
+            self.arrow.update(self.player.target_angle)
         except AttributeError:
             pass
         self.shooting_bar.update(
@@ -434,7 +435,7 @@ class Gameplay(State):
 
         # Game states
         if self.paused:
-            self.scroll = (0, 0)
+            self.scroll = Vector2(0, 0)
 
             # Blit the transparent surface onto the screen
             self.screen.blit(self.dark_overlay, (0, 0))
@@ -448,12 +449,12 @@ class Gameplay(State):
         self.screen.blit(self.transition, (0, 0))
 
         # Debugging
-        # pygame.draw.rect(self.screen, "green", self.player.sprite.hit_box, 1)
+        # pygame.draw.rect(self.screen, "green", self.player.hit_box, 1)
 
         # onscreen_debug(self.screen, f"Bullets: {len(self.bullets.sprites())}", y=50)
         # onscreen_debug(
         #     self.screen,
-        #     f"Cached rotations: {len(self.player.sprite.rotated_images)}",
+        #     f"Cached rotations: {len(self.player.rotated_images)}",
         #     y=70,
         # )
         # onscreen_debug(self.screen, f"Asteroids: {len(self.asteroids.sprites())}", y=90)
@@ -465,11 +466,9 @@ class GainedPoints(pygame.sprite.Group):
         super().__init__()
 
     def add_point(self, pos, font: pygame.Font, points):
-        text = font.render(f"+{points}", False, "green")
-        rect = text.get_frect(center=pos)
         sprite = pygame.sprite.Sprite(self)
-        sprite.image = text
-        sprite.rect = rect
+        sprite.image = font.render(f"+{points}", False, "green")
+        sprite.rect = sprite.image.get_frect(center=pos)
         sprite.alpha = 255
 
     def update(self, scroll, dt):

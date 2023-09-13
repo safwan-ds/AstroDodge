@@ -2,7 +2,6 @@ import os
 import json
 import sys
 from appdirs import user_data_dir
-from cryptography import fernet  # TODO data encryption
 import pygame
 
 from globals import APP_NAME, DEFAULT_FONT
@@ -38,7 +37,7 @@ def load_data():
         with open(os.path.join(data_dir, "user.json"), "r") as f:
             return json.load(f)
     except (IOError, json.JSONDecodeError):
-        return None
+        return
 
 
 def import_sprite_sheets(path):

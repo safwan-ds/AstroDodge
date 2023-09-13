@@ -10,8 +10,8 @@ from globals import *
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, group, pos):
-        super().__init__(group)
+    def __init__(self, pos):
+        super().__init__()
 
         self.image = pygame.image.load(IMGS_DIR + "player.png")
         self.original_image = self.image.copy()
