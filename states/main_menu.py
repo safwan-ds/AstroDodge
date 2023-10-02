@@ -1,6 +1,7 @@
 import pygame
 from pygame.math import Vector2
 from pygame.locals import *
+import pygame_gui as gui
 
 from classes.particles import Emitter
 from classes.ui import Logo, Button
@@ -8,7 +9,13 @@ from classes.state import State
 from states.gameplay import Gameplay
 from utils import resource_path
 
-from globals import MUSIC_DIR, GLITCH_AMOUNT, PARTICLE_AMOUNT
+from globals import (
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    MUSIC_DIR,
+    GLITCH_AMOUNT,
+    PARTICLE_AMOUNT,
+)
 
 
 class MainMenu(State):
@@ -19,7 +26,7 @@ class MainMenu(State):
         self.starting = False
         self.quitting = False
 
-        pos_x = self.app.screen_size[0] / 2
+        pos_x: float = self.app.screen_size.x / 2
 
         self.logo = pygame.sprite.GroupSingle(Logo((pos_x, 100)))
         self.trails = pygame.sprite.Group()
@@ -27,6 +34,10 @@ class MainMenu(State):
         self.buttons = pygame.sprite.Group()
         Button("start", self.start, (pos_x, 220), self.buttons)
         Button("quit", self.quit, (pos_x, 290), self.buttons)
+        self.ui_manager = gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.start_button = gui.elements.UIButton(
+            (pos_x, 220), "Start", self.ui_manager
+        )
 
         self.particles = Emitter()
 
@@ -50,7 +61,7 @@ class MainMenu(State):
         self.fade_out = True
         self.quitting = True
 
-    def update(self, dt):
+    def update(self, dt: float):
         super().update(dt)
 
         # Music
@@ -80,6 +91,8 @@ class MainMenu(State):
         if not self.fade_in:
             self.buttons.update(self.app)
         self.buttons.draw(self.screen)
+        # self.ui_manager.update(dt)
+        # self.ui_manager.draw_ui(self.screen)
 
         self.screen.blit(self.transition, (0, 0))
         if self.transition_progress >= 1 and self.fade_out:
@@ -88,4 +101,4 @@ class MainMenu(State):
                 self.fade_in = True
                 Gameplay(self.app).add()
             if self.quitting:
-                self.app.running = False
+                self.app.quit()

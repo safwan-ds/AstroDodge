@@ -6,8 +6,9 @@ from pygame.math import Vector2
 from pygame.locals import *
 import moderngl
 
+from classes.state import State
 from states.main_menu import MainMenu
-from utils import load_data
+from utils import save_data, load_data
 
 from globals import (
     APP_NAME,
@@ -98,7 +99,7 @@ class App:
         self.running = True
 
         # Game states
-        self.state_stack = []
+        self.state_stack: list[State] = []
         MainMenu(self).add()
 
     def handle_events(self):
@@ -107,7 +108,7 @@ class App:
 
         for event in pygame.event.get():
             if event.type == QUIT:
-                self.running = False
+                self.quit()
 
             if event.type == KEYDOWN:
                 self.keydown = event.key
@@ -129,6 +130,7 @@ class App:
                             32,
                         )
                         self.fullscreen = False
+
                     else:
                         self.display = pygame.display.set_mode(
                             flags=FULLSCREEN
@@ -144,6 +146,19 @@ class App:
 
             if event.type == MOUSEBUTTONDOWN:
                 self.mousebuttondown = event.button
+
+            if isinstance(self.state_stack[-1], MainMenu):
+                main_menu = self.state_stack[-1]
+                main_menu.ui_manager.process_events(event)
+
+    def quit(self):
+        save_data(
+            {
+                "highest_score": int(self.highest_score),
+                "fullscreen": self.fullscreen,
+            }
+        )
+        self.running = False
 
     def shaders_init(self, vertex_shader, fragment_shader):
         self.ctx = moderngl.create_context()

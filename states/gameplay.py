@@ -287,7 +287,7 @@ class Gameplay(State):
         }
         save_data(data)
         self.app.highest_score = load_data()["highest_score"]  # type: ignore
-        Explosion(self.explosions, self.score_text.rect.center, 5, "yellow")
+        # Explosion(self.explosions, self.score_text.rect.center, 5, "yellow")
 
     def update(self, dt):
         super().update(dt)

@@ -34,3 +34,6 @@ license.txt
 
 # Virtual environment
 venv/
+
+# Test
+test/

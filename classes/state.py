@@ -57,7 +57,7 @@ class State:
         )
         pygame.draw.circle(
             self.transition,
-            (59 / 2, 101 / 2, 143 / 2),
+            (26, 50, 71),
             (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2),
             self.transition_radius * 1.5,
             50,
