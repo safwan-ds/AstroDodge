@@ -113,16 +113,16 @@ class App:
     def toggle_fullscreen(self):
         self.fullscreen = not self.fullscreen
         flags = OPENGL | OPENGLBLIT | DOUBLEBUF | HWSURFACE
+
         if self.fullscreen:
             self.display = pygame.display.set_mode((0, 0), FULLSCREEN | flags)
-            self.display_size = pygame.display.get_window_size()
+            self.display_size = Vector2(pygame.display.get_window_size())
         else:
-            self.display = pygame.display.set_mode(
-                self.screen_size * DISPLAY_SCALE, flags
-            )
+            self.display_size = Vector2(self.screen_size * DISPLAY_SCALE)
+            self.display = pygame.display.set_mode(self.display_size, flags)
 
         # Update viewport for ModernGL
-        self.ctx.viewport = (0, 0, *self.display_size)
+        self.ctx.viewport = (0, 0, int(self.display_size.x), int(self.display_size.y))
 
     def quit(self):
         save_data(
