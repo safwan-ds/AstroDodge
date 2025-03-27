@@ -280,9 +280,11 @@ class Gameplay(State):
 
     def save_data(self):
         data = {
-            "highest_score": int(self.score)
-            if self.score > self.app.highest_score
-            else self.app.highest_score,
+            "highest_score": (
+                int(self.score)
+                if self.score > self.app.highest_score
+                else self.app.highest_score
+            ),
             "fullscreen": self.app.fullscreen,
         }
         save_data(data)

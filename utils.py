@@ -1,6 +1,7 @@
 import os
 import json
 import sys
+from typing import Any
 from appdirs import user_data_dir
 import pygame
 
@@ -26,10 +27,10 @@ def save_data(data):
         with open(os.path.join(data_dir, "user.json"), "w") as f:
             json.dump(data, f)
     except IOError as e:
-        raise f"Error saving data: {e}"
+        raise IOError(f"Error saving data: {e}")
 
 
-def load_data():
+def load_data() -> dict[str, Any] | None:
     data_dir = user_data_dir(APP_NAME, False)
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)

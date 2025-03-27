@@ -1,7 +1,6 @@
 import pygame
 from pygame.math import Vector2
 from pygame.locals import *
-import pygame_gui as gui
 
 from classes.particles import Emitter
 from classes.ui import Logo, Button
@@ -34,10 +33,6 @@ class MainMenu(State):
         self.buttons = pygame.sprite.Group()
         Button("start", self.start, (pos_x, 220), self.buttons)
         Button("quit", self.quit, (pos_x, 290), self.buttons)
-        self.ui_manager = gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.start_button = gui.elements.UIButton(
-            (pos_x, 220), "Start", self.ui_manager
-        )
 
         self.particles = Emitter()
 
@@ -81,6 +76,7 @@ class MainMenu(State):
         if self.app.mousebuttondown == 1:
             self.app.glitch = 1.0
             self.particles.add_particle(PARTICLE_AMOUNT)
+
         self.screen.fill("black")
         self.particles.update((0, 0), self.app.dt, PARTICLE_AMOUNT, 0.5)
         self.particles.draw(self.screen)
@@ -91,8 +87,6 @@ class MainMenu(State):
         if not self.fade_in:
             self.buttons.update(self.app)
         self.buttons.draw(self.screen)
-        # self.ui_manager.update(dt)
-        # self.ui_manager.draw_ui(self.screen)
 
         self.screen.blit(self.transition, (0, 0))
         if self.transition_progress >= 1 and self.fade_out:
