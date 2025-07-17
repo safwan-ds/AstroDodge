@@ -1,0 +1,67 @@
+[gd_scene load_steps=9 format=3 uid="uid://dkywyhvbi881a"]
+
+[ext_resource type="Script" uid="uid://cq0qntcts8cab" path="res://entities/player/player.gd" id="1_abrql"]
+[ext_resource type="SpriteFrames" uid="uid://b00oh7m38h44a" path="res://entities/player/player.aseprite" id="1_symyc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_symyc"]
+size = Vector2(20, 19)
+
+[sub_resource type="Gradient" id="Gradient_abrql"]
+colors = PackedColorArray(1, 1, 1, 1, 0, 0.792157, 0.0745098, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_sglur"]
+gradient = SubResource("Gradient_abrql")
+
+[sub_resource type="Curve" id="Curve_bls4j"]
+_data = [Vector2(0, 0.460674), 0.0, 3.38363, 0, 0, Vector2(1, 0), -2.32852, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_fkugw"]
+curve = SubResource("Curve_bls4j")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_abrql"]
+lifetime_randomness = 0.72
+particle_flag_align_y = true
+particle_flag_rotate_y = true
+particle_flag_disable_z = true
+direction = Vector3(0, 0.275, 0)
+spread = 15.0
+initial_velocity_min = 74.71
+initial_velocity_max = 74.71
+gravity = Vector3(0, 0, 0)
+linear_accel_min = -67.85
+linear_accel_max = 67.85
+tangential_accel_min = -28.11
+tangential_accel_max = 28.11
+damping_min = 32.184
+damping_max = 79.885
+scale_max = 3.0
+scale_curve = SubResource("CurveTexture_fkugw")
+color_ramp = SubResource("GradientTexture1D_sglur")
+turbulence_noise_strength = 0.45
+turbulence_noise_scale = 0.815
+turbulence_influence_min = 0.0
+turbulence_influence_max = 0.138
+turbulence_initial_displacement_min = -16.5
+turbulence_initial_displacement_max = 16.5
+
+[node name="Player" type="Area2D" node_paths=PackedStringArray("sprite")]
+script = ExtResource("1_abrql")
+sprite = NodePath("Sprite")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_symyc")
+
+[node name="Engine" type="GPUParticles2D" parent="."]
+position = Vector2(0, 6.115)
+amount = 200
+lifetime = 2.0
+randomness = 0.34
+process_material = SubResource("ParticleProcessMaterial_abrql")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("1_symyc")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.0158842

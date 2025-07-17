@@ -1,0 +1,169 @@
+[gd_scene load_steps=14 format=3 uid="uid://cw014nevwfvi4"]
+
+[ext_resource type="Script" uid="uid://b4ee4gr4c5ssj" path="res://states/main_menu/main_menu.gd" id="1_ldv0f"]
+[ext_resource type="Theme" uid="uid://bvaghou14ty2x" path="res://themes/primary/primary.tres" id="1_pwybm"]
+[ext_resource type="Texture2D" uid="uid://cmt2visei7bj3" path="res://states/main_menu/logo.aseprite" id="3_pd6do"]
+[ext_resource type="PackedScene" uid="uid://b3115dt7ltsfb" path="res://components/animation_component.tscn" id="4_hvp4n"]
+[ext_resource type="PackedScene" uid="uid://ct5y0mr6ibk83" path="res://states/main_menu/quit_popup.tscn" id="5_u0hdh"]
+
+[sub_resource type="Animation" id="Animation_u0hdh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_hvp4n"]
+resource_name = "logo_loop"
+length = 3.0
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("..:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, -50), Vector2(0, 50)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xle8m"]
+_data = {
+&"RESET": SubResource("Animation_u0hdh"),
+&"logo_loop": SubResource("Animation_hvp4n")
+}
+
+[sub_resource type="Curve" id="Curve_hvp4n"]
+_data = [Vector2(0, 1), 0.0, -0.0154352, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_u0hdh"]
+curve = SubResource("Curve_hvp4n")
+
+[sub_resource type="Curve" id="Curve_u0hdh"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.898876), 0.325992, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_xle8m"]
+curve = SubResource("Curve_u0hdh")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xle8m"]
+particle_flag_disable_z = true
+gravity = Vector3(0, 0, 0)
+scale_min = 1.9
+scale_max = 1.9
+scale_curve = SubResource("CurveTexture_xle8m")
+color = Color(0.188235, 0.188235, 0.345098, 1)
+alpha_curve = SubResource("CurveTexture_u0hdh")
+
+[node name="MainMenu" type="Control" node_paths=PackedStringArray("continue_button", "animation_player")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_pwybm")
+script = ExtResource("1_ldv0f")
+quit_popup = ExtResource("5_u0hdh")
+continue_button = NodePath("Panel/CenterContainer/VBoxContainer/ContinueButton")
+animation_player = NodePath("AnimationPlayer")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../CenterContainer/TextureRect")
+libraries = {
+&"": SubResource("AnimationLibrary_xle8m")
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_top = -7.91129
+offset_right = 300.0
+offset_bottom = -7.91129
+grow_vertical = 2
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="CenterContainer"]
+position = Vector2(150, 180)
+amount = 16
+texture = ExtResource("3_pd6do")
+lifetime = 0.6
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_xle8m")
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer"]
+custom_minimum_size = Vector2(225.235, 93.545)
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("3_pd6do")
+stretch_mode = 5
+
+[node name="Panel" type="Panel" parent="."]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 323.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ContinueButton" type="Button" parent="Panel/CenterContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+focus_mode = 0
+text = "Continue"
+
+[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/ContinueButton" instance=ExtResource("4_hvp4n")]
+hovered_scale = Vector2(1.3, 1.1)
+
+[node name="NewGameButton" type="Button" parent="Panel/CenterContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "New Game"
+
+[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/NewGameButton" instance=ExtResource("4_hvp4n")]
+hovered_scale = Vector2(1.3, 1.1)
+
+[node name="SettingsButton" type="Button" parent="Panel/CenterContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Settings"
+
+[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/SettingsButton" instance=ExtResource("4_hvp4n")]
+hovered_scale = Vector2(1.3, 1.1)
+
+[node name="QuitButton" type="Button" parent="Panel/CenterContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Quit"
+
+[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/QuitButton" instance=ExtResource("4_hvp4n")]
+hovered_scale = Vector2(1.3, 1.1)
+
+[connection signal="pressed" from="Panel/CenterContainer/VBoxContainer/NewGameButton" to="." method="_on_new_game_button_pressed"]
+[connection signal="pressed" from="Panel/CenterContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

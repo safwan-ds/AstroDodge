@@ -1,0 +1,103 @@
+[gd_scene load_steps=10 format=3 uid="uid://c6dws4r4j113d"]
+
+[ext_resource type="Script" uid="uid://dlije8squ566x" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://cw014nevwfvi4" path="res://states/main_menu/main_menu.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://1dsi1j6wov3b" path="res://states/main_menu/main_menu_bg.tscn" id="3_h2yge"]
+[ext_resource type="Shader" uid="uid://5t73kbufuj3k" path="res://shaders/vhs.gdshader" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://bjtu0rprxq5m8" path="res://states/gameplay/gameplay.tscn" id="4_7mycd"]
+[ext_resource type="PackedScene" uid="uid://yfcq067tpxu4" path="res://states/gameplay/gameplay_gui.tscn" id="5_272bh"]
+[ext_resource type="PackedScene" uid="uid://lrifys76w5sp" path="res://transitions/dissolve_transition.tscn" id="6_272bh"]
+
+[sub_resource type="Environment" id="Environment_7dm0k"]
+background_mode = 3
+background_canvas_max_layer = 1
+glow_enabled = true
+glow_intensity = 1.95
+glow_bloom = 0.1
+glow_hdr_threshold = 0.0
+glow_hdr_scale = 2.2
+fog_light_energy = 5.38
+fog_sun_scatter = 0.38
+fog_height = 107.79
+adjustment_contrast = 1.42
+adjustment_saturation = 1.84
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lquwl"]
+shader = ExtResource("4_1bvp3")
+shader_parameter/overlay = true
+shader_parameter/scanlines_opacity = 0.4
+shader_parameter/scanlines_width = 0.25
+shader_parameter/grille_opacity = 0.3
+shader_parameter/resolution = Vector2(640, 360)
+shader_parameter/pixelate = true
+shader_parameter/roll = true
+shader_parameter/roll_speed = 1.5
+shader_parameter/roll_size = 15.0
+shader_parameter/roll_variation = 1.8
+shader_parameter/distort_intensity = 0.01
+shader_parameter/noise_opacity = 0.145
+shader_parameter/noise_speed = 1.855
+shader_parameter/static_noise_intensity = 0.089
+shader_parameter/aberration = 0.01
+shader_parameter/brightness = 1.4
+shader_parameter/discolor = true
+shader_parameter/warp_amount = 0.45
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/vignette_opacity = 0.5
+
+[node name="Main" type="Node" node_paths=PackedStringArray("world_2d", "gui", "transitions", "fps_label")]
+script = ExtResource("1_ig7tw")
+world_2d = NodePath("World2D")
+gui = NodePath("GUI")
+transitions = NodePath("Transitions")
+fps_label = NodePath("Overlays/FPSLabel")
+main_menu = ExtResource("2_0xm2m")
+main_menu_bg = ExtResource("3_h2yge")
+gameplay_scene = ExtResource("4_7mycd")
+gameplay_gui = ExtResource("5_272bh")
+transition_scene = ExtResource("6_272bh")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_7dm0k")
+
+[node name="World2D" type="Node2D" parent="."]
+
+[node name="MainMenuBG" parent="World2D" instance=ExtResource("3_h2yge")]
+
+[node name="GUI" type="CanvasLayer" parent="."]
+
+[node name="MainMenu" parent="GUI" instance=ExtResource("2_0xm2m")]
+
+[node name="Transitions" type="CanvasLayer" parent="."]
+
+[node name="Popups" type="CanvasLayer" parent="."]
+
+[node name="Overlays" type="CanvasLayer" parent="."]
+
+[node name="FPSLabel" type="Label" parent="Overlays"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -71.0
+offset_right = -17.0
+offset_bottom = 47.0
+grow_horizontal = 0
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 2
+
+[node name="UpdateInterval" type="Timer" parent="Overlays/FPSLabel"]
+autostart = true
+
+[node name="Shader" type="ColorRect" parent="Overlays"]
+material = SubResource("ShaderMaterial_lquwl")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[connection signal="timeout" from="Overlays/FPSLabel/UpdateInterval" to="." method="_on_update_interval_timeout"]

@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://1d8i7rx1nxvd"]
+
+[ext_resource type="Script" uid="uid://cp15s4bwg4fg1" path="res://audio/audio_manager.gd" id="1_5jhky"]
+[ext_resource type="AudioStream" uid="uid://da2g2d41cnqix" path="res://audio/sfx/Hover.wav" id="2_drlug"]
+[ext_resource type="AudioStream" uid="uid://oxin3yk6gakr" path="res://audio/sfx/Click.wav" id="3_0i2i4"]
+
+[node name="AudioManager" type="Node" node_paths=PackedStringArray("sfx")]
+script = ExtResource("1_5jhky")
+sfx = NodePath("SFX")
+hover = ExtResource("2_drlug")
+click = ExtResource("3_0i2i4")
+
+[node name="SFX" type="AudioStreamPlayer" parent="."]
+bus = &"SFX"
