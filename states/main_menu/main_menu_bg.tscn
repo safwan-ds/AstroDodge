@@ -1,4 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://1dsi1j6wov3b"]
+[gd_scene load_steps=5 format=3 uid="uid://1dsi1j6wov3b"]
+
+[ext_resource type="Texture2D" uid="uid://bws0tgak6lngw" path="res://entities/star/star.aseprite" id="1_cbev6"]
 
 [sub_resource type="Curve" id="Curve_dpe7l"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.514706, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -10,16 +12,17 @@ curve = SubResource("Curve_dpe7l")
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dpe7l"]
 lifetime_randomness = 0.25
 particle_flag_disable_z = true
+emission_shape_offset = Vector3(-100, 0, 0)
 emission_shape_scale = Vector3(360, 180, 0)
 emission_shape = 3
 emission_box_extents = Vector3(1, 1, 1)
-direction = Vector3(32.54, 0, 0)
 spread = 0.0
 flatness = 1.0
-initial_velocity_min = 8.36
-initial_velocity_max = 8.36
+initial_velocity_min = 19.31
+initial_velocity_max = 29.51
 gravity = Vector3(0, 0, 0)
-scale_max = 2.0
+scale_min = 0.2
+scale_max = 0.4
 scale_curve = SubResource("CurveTexture_cbev6")
 turbulence_noise_strength = 4.37
 turbulence_noise_speed_random = 0.6
@@ -28,8 +31,10 @@ turbulence_noise_speed_random = 0.6
 
 [node name="Stars" type="GPUParticles2D" parent="."]
 amount = 70
+texture = ExtResource("1_cbev6")
 lifetime = 10.0
 preprocess = 3.0
+speed_scale = 2.35
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_dpe7l")
 

@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.static-texture-split-layer"
+type="PortableCompressedTexture2D"
+uid="uid://cc422mac50s8i"
+path="res://.godot/imported/hud_bar_l_Progress.ase_layer_tex-2a4903fd08e6a708ed84c00bca6136d9.res"
+
+[deps]
+
+source_file="res://states/gameplay/gui/hud_bar_l_Progress.ase_layer_tex"
+dest_files=["res://.godot/imported/hud_bar_l_Progress.ase_layer_tex-2a4903fd08e6a708ed84c00bca6136d9.res"]
+
+[params]
+

@@ -3,9 +3,9 @@
 [ext_resource type="StyleBox" uid="uid://drnayqi71idy7" path="res://themes/primary/button_hover.tres" id="1_m6g8d"]
 [ext_resource type="StyleBox" uid="uid://dtmjypocdbitt" path="res://themes/primary/button_disabled.tres" id="1_u04b2"]
 [ext_resource type="StyleBox" uid="uid://c2gigi20ubo24" path="res://themes/primary/button_normal.tres" id="2_qiqsp"]
-[ext_resource type="FontFile" uid="uid://4lux8g6q8nxo" path="res://fonts/EchoesOfZyra.ttf" id="3_6swes"]
 [ext_resource type="StyleBox" uid="uid://34avgc3pkj1c" path="res://themes/primary/button_pressed.tres" id="3_qiqsp"]
 [ext_resource type="StyleBox" uid="uid://djh16ph0gunxr" path="res://themes/primary/panel_container.tres" id="4_6swes"]
+[ext_resource type="FontFile" uid="uid://bedbtc1axrevw" path="res://fonts/monobit.ttf" id="6_u04b2"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_qiqsp"]
 color = Color(1, 1, 1, 1)
@@ -13,7 +13,7 @@ color = Color(1, 1, 1, 1)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m8r8a"]
 
 [resource]
-default_font = ExtResource("3_6swes")
+default_font = ExtResource("6_u04b2")
 default_font_size = 48
 Button/colors/font_color = Color(1, 1, 1, 1)
 Button/colors/font_hover_color = Color(0.188235, 0.188235, 0.345098, 1)
@@ -23,5 +23,6 @@ Button/styles/hover = ExtResource("1_m6g8d")
 Button/styles/normal = ExtResource("2_qiqsp")
 Button/styles/pressed = ExtResource("3_qiqsp")
 HSeparator/styles/separator = SubResource("StyleBoxLine_qiqsp")
+Label/constants/line_spacing = -20
 Panel/styles/panel = SubResource("StyleBoxEmpty_m8r8a")
 PanelContainer/styles/panel = ExtResource("4_6swes")

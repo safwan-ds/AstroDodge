@@ -76,26 +76,24 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_pwybm")
 script = ExtResource("1_ldv0f")
-quit_popup = ExtResource("5_u0hdh")
+quit_popup_scene = ExtResource("5_u0hdh")
 continue_button = NodePath("Panel/CenterContainer/VBoxContainer/ContinueButton")
 animation_player = NodePath("AnimationPlayer")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-root_node = NodePath("../CenterContainer/TextureRect")
+root_node = NodePath("../Logo/LogoRect")
 libraries = {
 &"": SubResource("AnimationLibrary_xle8m")
 }
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="Logo" type="CenterContainer" parent="."]
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_top = -7.91129
 offset_right = 300.0
-offset_bottom = -7.91129
 grow_vertical = 2
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="CenterContainer"]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Logo"]
 position = Vector2(150, 180)
 amount = 16
 texture = ExtResource("3_pd6do")
@@ -103,7 +101,7 @@ lifetime = 0.6
 fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_xle8m")
 
-[node name="TextureRect" type="TextureRect" parent="CenterContainer"]
+[node name="LogoRect" type="TextureRect" parent="Logo"]
 custom_minimum_size = Vector2(225.235, 93.545)
 layout_mode = 2
 size_flags_vertical = 3

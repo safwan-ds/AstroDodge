@@ -1,9 +1,11 @@
 extends Control
 
-@export var quit_popup: PackedScene
+@export var quit_popup_scene: PackedScene
 
 @export var continue_button: Button # TODO: make it visible when there is a saved game
 @export var animation_player: AnimationPlayer
+
+var _quit_popup: QuitPopup
 
 
 func _ready():
@@ -27,10 +29,24 @@ func _ready():
 	animation_player.seek(random_start_time, true)
 
 
+func _input(event):
+	if event.is_action_pressed("back"):
+		_quit_popup_show()
+
+
 func _on_quit_button_pressed() -> void:
-	var popup := quit_popup.instantiate()
-	get_parent().get_parent().get_node("Popups").add_child(popup)
+	_quit_popup_show()
 
 
 func _on_new_game_button_pressed() -> void:
 	Global.change_state(Global.GameState.GAMEPLAY)
+
+
+func _quit_popup_show() -> void:
+	if not _quit_popup:
+		# Instantiate the quit popup scene if it hasn't been created yet
+		_quit_popup = quit_popup_scene.instantiate()
+		get_parent().get_parent().get_node("Popups").add_child(_quit_popup)
+	else:
+		# If it already exists, just show it
+		_quit_popup.close()

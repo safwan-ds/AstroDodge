@@ -1,23 +1,25 @@
-[gd_scene load_steps=9 format=3 uid="uid://dkywyhvbi881a"]
+[gd_scene load_steps=12 format=3 uid="uid://dkywyhvbi881a"]
 
 [ext_resource type="Script" uid="uid://cq0qntcts8cab" path="res://entities/player/player.gd" id="1_abrql"]
 [ext_resource type="SpriteFrames" uid="uid://b00oh7m38h44a" path="res://entities/player/player.aseprite" id="1_symyc"]
+[ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://vfx/particle.png" id="2_sglur"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_symyc"]
 size = Vector2(20, 19)
 
-[sub_resource type="Gradient" id="Gradient_abrql"]
-colors = PackedColorArray(1, 1, 1, 1, 0, 0.792157, 0.0745098, 1)
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_bls4j"]
+particles_animation = true
+particles_anim_h_frames = 10
+particles_anim_v_frames = 1
+particles_anim_loop = false
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_sglur"]
-gradient = SubResource("Gradient_abrql")
+[sub_resource type="Gradient" id="Gradient_4qh0a"]
+offsets = PackedFloat32Array(0, 0.557078)
+colors = PackedColorArray(0, 0.866667, 1, 1, 0, 1, 0, 1)
 
-[sub_resource type="Curve" id="Curve_bls4j"]
-_data = [Vector2(0, 0.460674), 0.0, 3.38363, 0, 0, Vector2(1, 0), -2.32852, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_fkugw"]
-curve = SubResource("Curve_bls4j")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_abrql"]
+gradient = SubResource("Gradient_4qh0a")
+use_hdr = true
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_abrql"]
 lifetime_randomness = 0.72
@@ -35,9 +37,13 @@ tangential_accel_min = -28.11
 tangential_accel_max = 28.11
 damping_min = 32.184
 damping_max = 79.885
-scale_max = 3.0
-scale_curve = SubResource("CurveTexture_fkugw")
-color_ramp = SubResource("GradientTexture1D_sglur")
+scale_min = 0.25
+scale_max = 0.75
+color_ramp = SubResource("GradientTexture1D_abrql")
+hue_variation_min = -0.1
+hue_variation_max = 0.1
+anim_speed_min = 1.0
+anim_speed_max = 1.0
 turbulence_noise_strength = 0.45
 turbulence_noise_scale = 0.815
 turbulence_influence_min = 0.0
@@ -45,23 +51,79 @@ turbulence_influence_max = 0.138
 turbulence_initial_displacement_min = -16.5
 turbulence_initial_displacement_max = 16.5
 
-[node name="Player" type="Area2D" node_paths=PackedStringArray("sprite")]
+[sub_resource type="Animation" id="Animation_sglur"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1.5, 1.5, 1.5, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_abrql"]
+resource_name = "damaged"
+length = 0.3
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1.5, 1.5, 1.5, 1), Color(5, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bls4j"]
+_data = {
+&"RESET": SubResource("Animation_sglur"),
+&"hit": SubResource("Animation_abrql")
+}
+
+[node name="Player" type="Area2D" node_paths=PackedStringArray("sprite", "engine_smoke", "animation_player", "engine_sound") groups=["player"]]
+collision_mask = 2
 script = ExtResource("1_abrql")
 sprite = NodePath("Sprite")
+engine_smoke = NodePath("EngineSmoke")
+animation_player = NodePath("AnimationPlayer")
+engine_sound = NodePath("EngineSound")
+invulnerability_time = 2.065
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_symyc")
 
-[node name="Engine" type="GPUParticles2D" parent="."]
+[node name="EngineSmoke" type="GPUParticles2D" parent="."]
+modulate = Color(1.25, 1.25, 1.25, 1)
+material = SubResource("CanvasItemMaterial_bls4j")
 position = Vector2(0, 6.115)
-amount = 200
-lifetime = 2.0
+amount = 300
+texture = ExtResource("2_sglur")
 randomness = 0.34
+fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_abrql")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
+modulate = Color(1.5, 1.5, 1.5, 1)
 sprite_frames = ExtResource("1_symyc")
 animation = &"idle"
 autoplay = "idle"
 frame_progress = 0.0158842
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_bls4j")
+}
+
+[node name="EngineSound" type="AudioStreamPlayer2D" parent="."]
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

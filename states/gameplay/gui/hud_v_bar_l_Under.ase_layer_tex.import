@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.static-texture-split-layer"
+type="PortableCompressedTexture2D"
+uid="uid://bmmapair3lvym"
+path="res://.godot/imported/hud_v_bar_l_Under.ase_layer_tex-63a77855366fa8e8b715da695982e954.res"
+
+[deps]
+
+source_file="res://states/gameplay/gui/hud_v_bar_l_Under.ase_layer_tex"
+dest_files=["res://.godot/imported/hud_v_bar_l_Under.ase_layer_tex-63a77855366fa8e8b715da695982e954.res"]
+
+[params]
+
