@@ -10,7 +10,7 @@ func _ready():
 
 func _on_quit_button_pressed() -> void:
 	if not canceled:
-		Global.quit_game()
+		Global.quit_game.emit()
 
 
 func _on_cancel_button_pressed() -> void:

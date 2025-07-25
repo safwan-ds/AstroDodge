@@ -1,24 +1,59 @@
 extends Control
 
-@export var velocity_label: Label
 @export var asteroids_label: Label
-@export var health_label: Label
 @export var score_label: Label
 @export var hp_bar: TextureProgressBar
 @export var velocity_bar: TextureProgressBar
+@export var game_over_label: Label
 
-@onready var player: Player = get_tree().get_first_node_in_group("player")
-@onready var gameplay: Node2D = get_node("/root/Main/World2D/Gameplay")
+@onready var gameplay: Node2D = Global.current_world
+@onready var player: Player = gameplay.player
+
+var tween: Tween
 
 
-func _process(_delta):
+func _ready() -> void:
+	player.connect("hit", _on_player_hit)
+	player.connect("healed", _on_player_healed)
+	player.connect("destroyed", _on_player_destroyed)
+
+	_set_values()
+	hp_bar.value = player.hp
+
+	game_over_label.hide()
+	game_over_label.visible_ratio = 0.0
+
+
+func _process(delta) -> void:
+	_set_values()
+
+
+func _set_values() -> void:
 	asteroids_label.set_deferred("text", "Asteroids: " + str(get_tree().get_node_count_in_group("asteroids")))
-	health_label.set_deferred("text", "Health: " + str(int(player.health)))
-	score_label.set_deferred("text", "Score: " + str(int(gameplay.score)) + "\n(x" + str(snapped(gameplay.score_multiplier, 0.01)) + ")")
-	hp_bar.set_deferred("value", player.health)
-	velocity_bar.set_deferred("value", player._velocity.length())
+	if not gameplay.game_over:
+		score_label.set_deferred("text", "Score: " + str(int(gameplay.score)) + "\n(x" + str(snapped(gameplay.score_multiplier, 0.01)) + ")")
+		velocity_bar.set_deferred("value", player.velocity.length())
 
 
-func _on_update_interval_timeout() -> void:
-	if player:
-		velocity_label.set_deferred("text", "Velocity: " + str(snapped(player._velocity.length(), 0.1)))
+func _on_player_hit(hp: float) -> void:
+	if tween:
+		tween.kill()
+	hp_bar.set_deferred("tint_progress", Color(1, 0, 0))
+	tween = create_tween().set_parallel()
+	tween.tween_property(hp_bar, "value", hp, 0.5).set_trans(Tween.TRANS_QUAD)
+	tween.tween_property(hp_bar, "tint_progress", Color(1, 1, 1), 0.5).set_trans(Tween.TRANS_QUAD)
+
+
+func _on_player_healed(hp: float) -> void:
+	if tween:
+		tween.kill()
+	hp_bar.set_deferred("tint_progress", Color(0, 1, 0))
+	tween = create_tween().set_parallel()
+	tween.tween_property(hp_bar, "value", hp, 0.5).set_trans(Tween.TRANS_QUAD)
+	tween.tween_property(hp_bar, "tint_progress", Color(1, 1, 1), 0.5).set_trans(Tween.TRANS_QUAD)
+
+
+func _on_player_destroyed() -> void:
+	score_label.set_deferred("text", "Score: " + str(int(gameplay.score)))
+	game_over_label.show()
+	create_tween().tween_property(game_over_label, "visible_ratio", 1.0, 1.0).set_trans(Tween.TRANS_QUAD)

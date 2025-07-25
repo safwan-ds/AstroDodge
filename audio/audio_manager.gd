@@ -12,21 +12,21 @@ extends Node
 
 var rng := RandomNumberGenerator.new()
 
-enum Sfx {HOVER, CLICK, LOSE, BOOM}
+enum SFX {HOVER, CLICK, LOSE, BOOM}
 enum Music {MAIN_MENU, GAMEPLAY}
 
 
-func play_sfx(sfx_type: Sfx, volume: float = 1.0) -> void:
+func play_sfx(sfx_type: SFX, volume: float = 1.0) -> void:
 	sfx.set_deferred("pitch_scale", rng.randf_range(0.9, 1.1))
 	sfx.set_deferred("volume_db", volume)
 	match sfx_type:
-		Sfx.HOVER:
+		SFX.HOVER:
 			sfx.stream = hover
-		Sfx.CLICK:
+		SFX.CLICK:
 			sfx.stream = click
-		Sfx.LOSE:
+		SFX.LOSE:
 			sfx.stream = lose
-		Sfx.BOOM:
+		SFX.BOOM:
 			sfx.stream = boom
 	sfx.play()
 

@@ -13,30 +13,31 @@ class_name Main extends Node
 @export var gameplay_gui: PackedScene
 @export var transition_scene: PackedScene
 
-var prev_window_mode: int = DisplayServer.WINDOW_MODE_WINDOWED
-var current_window_mode: int
-var current_world: PackedScene
-var current_gui: PackedScene
+var selected_world: PackedScene
+var selected_gui: PackedScene
+
+var current_world: Node2D:
+	set(node):
+		if current_world:
+			current_world.queue_free()
+		current_world = node
+		Global.current_world = current_world
+var current_gui: Control:
+	set(node):
+		if current_gui:
+			current_gui.queue_free()
+		current_gui = node
+		Global.current_gui = current_gui
 
 
 func _ready():
 	first_transition_in.get_node("AnimationPlayer").play_backwards("dissolve")
-	Global.change_state_sign.connect(_change_state)
-	Global.quit_game_signal.connect(_quit_game)
-	current_world = main_menu_bg
-	current_gui = main_menu
+	Global.change_state.connect(_change_state)
+	Global.quit_game.connect(_quit_game)
+	current_world = world_2d.get_child(0)
+	current_gui = gui.get_child(0)
 	await first_transition_in.get_node("AnimationPlayer").animation_finished
 	first_transition_in.queue_free()
-
-
-func _input(event):
-	if event.is_action_pressed("full_screen"):
-		current_window_mode = DisplayServer.window_get_mode()
-		if current_window_mode == DisplayServer.WINDOW_MODE_FULLSCREEN:
-			DisplayServer.window_set_mode(prev_window_mode)
-		else:
-			prev_window_mode = current_window_mode
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 
 
 func _on_update_interval_timeout() -> void:
@@ -51,16 +52,17 @@ func _change_state(state: Global.GameState):
 
 	match state:
 		Global.GameState.MAIN_MENU:
-			current_world = main_menu_bg
-			current_gui = main_menu
-			AudioManager.stop_music()
+			selected_world = main_menu_bg
+			selected_gui = main_menu
 		Global.GameState.GAMEPLAY:
-			current_world = gameplay_scene
-			current_gui = gameplay_gui
-			AudioManager.play_music(AudioManager.Music.GAMEPLAY)
+			selected_world = gameplay_scene
+			selected_gui = gameplay_gui
 
-	world_2d.add_child(current_world.instantiate())
-	gui.add_child(current_gui.instantiate())
+	current_world = selected_world.instantiate()
+	world_2d.add_child(current_world)
+	current_gui = selected_gui.instantiate()
+	gui.add_child(current_gui)
+	Global.current_state = state
 	_transition_out(transition_data)
 
 

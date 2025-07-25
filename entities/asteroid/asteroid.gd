@@ -2,7 +2,7 @@ class_name Asteroid extends Area2D
 
 @export var sprite: AnimatedSprite2D
 @export var trail: GPUParticles2D
-@export var collapse: GPUParticles2D
+@export var shatter: GPUParticles2D
 @export var explosion: GPUParticles2D
 @export var audio_player: AudioStreamPlayer2D
 
@@ -18,7 +18,7 @@ func _ready():
 	rotation = _direction.angle() + PI / 2
 	scale = Vector2(_random_scale, _random_scale)
 
-	var collapse_process_material: ShaderMaterial = collapse.process_material
+	var collapse_process_material: ShaderMaterial = shatter.process_material
 	collapse_process_material.set_shader_parameter("initial_linear_velocity_min", collapse_process_material.get_shader_parameter("initial_linear_velocity_min") / _random_scale)
 	collapse_process_material.set_shader_parameter("initial_linear_velocity_max", collapse_process_material.get_shader_parameter("initial_linear_velocity_max") / _random_scale)
 
@@ -27,7 +27,7 @@ func _ready():
 		trail_process_material.initial_velocity_min /= _random_scale
 		trail_process_material.initial_velocity_max /= _random_scale
 
-	for emitter in [trail, collapse, explosion]:
+	for emitter in [trail, shatter, explosion]:
 		emitter.amount *= _random_scale
 
 func _process(delta):
@@ -42,16 +42,17 @@ func _destroy() -> void:
 	if _destroyed:
 		return
 	_destroyed = true
+	Global.trigger_camera_shake.emit(1)
 	audio_player.play()
 	set_deferred("monitorable", false)
 	set_deferred("monitoring", false)
 	sprite.hide()
 	trail.emitting = false
-	collapse.emitting = true
+	shatter.emitting = true
 	explosion.emitting = true
 	set_process(false)
 	await explosion.finished
-	await collapse.finished
+	await shatter.finished
 	queue_free()
 
 

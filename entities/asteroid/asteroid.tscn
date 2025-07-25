@@ -161,7 +161,7 @@ tangential_accel_max = 28.11
 damping_min = 32.184
 damping_max = 79.885
 scale_min = 0.5
-scale_max = 0.75
+scale_max = 1.5
 scale_curve = SubResource("CurveTexture_xhm4x")
 color_ramp = SubResource("GradientTexture1D_xhm4x")
 hue_variation_min = -0.1
@@ -176,13 +176,13 @@ turbulence_initial_displacement_min = -16.5
 turbulence_initial_displacement_max = 16.5
 turbulence_influence_over_life = SubResource("CurveTexture_78yw1")
 
-[node name="Asteroid" type="Area2D" node_paths=PackedStringArray("sprite", "trail", "collapse", "explosion", "audio_player") groups=["asteroids", "enemies"]]
+[node name="Asteroid" type="Area2D" node_paths=PackedStringArray("sprite", "trail", "shatter", "explosion", "audio_player") groups=["asteroids", "enemies"]]
 collision_layer = 2
 collision_mask = 7
 script = ExtResource("1_20vrb")
 sprite = NodePath("Sprite")
 trail = NodePath("Trail")
-collapse = NodePath("Collapse")
+shatter = NodePath("Shatter")
 explosion = NodePath("Explosion")
 audio_player = NodePath("AudioStreamPlayer2D")
 
@@ -208,7 +208,7 @@ sprite_frames = ExtResource("2_4qh0a")
 autoplay = "default"
 frame_progress = 0.979719
 
-[node name="Collapse" type="GPUParticles2D" parent="."]
+[node name="Shatter" type="GPUParticles2D" parent="."]
 modulate = Color(1, 0.743833, 0.47, 1)
 emitting = false
 amount = 1000
@@ -222,7 +222,7 @@ process_material = SubResource("ShaderMaterial_go57s")
 modulate = Color(1, 1.75, 1, 1)
 material = SubResource("CanvasItemMaterial_go57s")
 emitting = false
-amount = 300
+amount = 500
 texture = ExtResource("3_ecv56")
 one_shot = true
 explosiveness = 1.0

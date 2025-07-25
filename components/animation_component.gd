@@ -29,7 +29,7 @@ func _init_pivot() -> void:
 func _entered():
 	if not button.disabled:
 		create_tween().tween_property(button, "scale", hovered_scale, duration).set_trans(Tween.TRANS_QUAD)
-		AudioManager.play_sfx(AudioManager.Sfx.HOVER)
+		AudioManager.play_sfx(AudioManager.SFX.HOVER)
 
 
 func _exited():
@@ -38,7 +38,7 @@ func _exited():
 
 
 func _pressed():
-	AudioManager.play_sfx(AudioManager.Sfx.CLICK)
+	AudioManager.play_sfx(AudioManager.SFX.CLICK)
 
 
 func _on_cancel_button_mouse_entered() -> void:

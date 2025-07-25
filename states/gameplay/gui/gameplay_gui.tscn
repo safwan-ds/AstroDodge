@@ -9,66 +9,32 @@
 [ext_resource type="Texture2D" uid="uid://0c545nil5vxk" path="res://states/gameplay/gui/hud_v_bar_l_Over.ase_layer_tex" id="7_l70dh"]
 [ext_resource type="Texture2D" uid="uid://c1wchy4hcy2bv" path="res://states/gameplay/gui/hud_v_bar_l_Progress.ase_layer_tex" id="8_6ar7c"]
 
-[node name="GameplayGUI" type="Control" node_paths=PackedStringArray("velocity_label", "asteroids_label", "health_label", "score_label", "hp_bar", "velocity_bar")]
+[node name="GameplayGUI" type="Control" node_paths=PackedStringArray("asteroids_label", "score_label", "hp_bar", "velocity_bar", "game_over_label")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme = ExtResource("1_ivni6")
 script = ExtResource("2_lc4p0")
-velocity_label = NodePath("Velociy")
 asteroids_label = NodePath("AsteroidsCounter")
-health_label = NodePath("Health")
-score_label = NodePath("Score")
+score_label = NodePath("ScoreLabel")
 hp_bar = NodePath("HPBar")
 velocity_bar = NodePath("VelocityBar")
+game_over_label = NodePath("GameOverLabel")
 metadata/_edit_horizontal_guides_ = [346.0]
 
-[node name="Velociy" type="Label" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -20.5
-offset_right = 168.0
-offset_bottom = 20.5
-grow_vertical = 2
-text = "Velocity: 0"
-vertical_alignment = 1
-
-[node name="UpdateInterval" type="Timer" parent="Velociy"]
-wait_time = 0.1
-autostart = true
-
 [node name="AsteroidsCounter" type="Label" parent="."]
-visible = false
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -97.5
-offset_top = -41.0
-offset_right = 97.5
-grow_horizontal = 2
-grow_vertical = 0
+offset_right = 195.0
+offset_bottom = 41.0
 text = "Asteroids: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Health" type="Label" parent="."]
-visible = false
-layout_mode = 1
-offset_right = 147.0
-offset_bottom = 41.0
-text = "Health: 100"
-vertical_alignment = 1
-
-[node name="Score" type="Label" parent="."]
+[node name="ScoreLabel" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -95,6 +61,7 @@ offset_right = -13.0
 offset_bottom = -14.0
 grow_horizontal = 0
 grow_vertical = 0
+value = 100.0
 radial_fill_degrees = 162.4
 nine_patch_stretch = true
 texture_under = ExtResource("3_j5dm2")
@@ -112,10 +79,31 @@ offset_right = 78.0
 offset_bottom = -14.0
 grow_vertical = 0
 max_value = 300.0
+value = 150.0
 fill_mode = 3
 nine_patch_stretch = true
 texture_under = ExtResource("6_228b6")
 texture_over = ExtResource("7_l70dh")
 texture_progress = ExtResource("8_6ar7c")
 
-[connection signal="timeout" from="Velociy/UpdateInterval" to="." method="_on_update_interval_timeout"]
+[node name="GameOverLabel" type="Label" parent="."]
+modulate = Color(1.5, 1, 1, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -159.0
+offset_top = -45.5
+offset_right = 159.0
+offset_bottom = 45.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Game Over!
+press w or up to try again
+Press esc to return to the main menu"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true

@@ -1,0 +1,71 @@
+[gd_scene load_steps=2 format=3 uid="uid://cfud1m1m3km2l"]
+
+[ext_resource type="Script" uid="uid://b86e5gbfj3s03" path="res://dev_console.gd" id="2_j7v83"]
+
+[node name="DevConsole" type="CanvasLayer" node_paths=PackedStringArray("input_text", "output_text", "auto_complete_list")]
+process_mode = 3
+layer = 2
+script = ExtResource("2_j7v83")
+input_text = NodePath("Control/VBoxContainer/InputText")
+output_text = NodePath("Control/VBoxContainer/OutputText")
+auto_complete_list = NodePath("Control/VBoxContainer/AutoCompleteList")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.745098)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -214.0
+offset_right = 212.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(213, 0)
+
+[node name="OutputText" type="RichTextLabel" parent="Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 2
+scroll_following = true
+selection_enabled = true
+
+[node name="AutoCompleteList" type="ItemList" parent="Control/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+allow_reselect = true
+allow_search = false
+auto_height = true
+
+[node name="InputText" type="LineEdit" parent="Control/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Type your command..."
+alignment = 1
+max_length = 32
+keep_editing_on_text_submit = true
+context_menu_enabled = false
+emoji_menu_enabled = false
+clear_button_enabled = true
+caret_blink = true
+language = "en"
+structured_text_bidi_override = 5
+
+[connection signal="item_selected" from="Control/VBoxContainer/AutoCompleteList" to="." method="_on_auto_complete_list_item_selected"]
+[connection signal="text_changed" from="Control/VBoxContainer/InputText" to="." method="_on_input_text_text_changed"]
+[connection signal="text_submitted" from="Control/VBoxContainer/InputText" to="." method="_on_input_text_text_submitted"]

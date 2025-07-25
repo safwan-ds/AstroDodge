@@ -1,9 +1,13 @@
 class_name Player extends Area2D
-signal hit
+signal hit(hp: float)
+signal healed(hp: float)
 signal destroyed
+
+const MAX_HP: float = 100.0
 
 @export var sprite: AnimatedSprite2D
 @export var engine_smoke: GPUParticles2D
+@export var explosion: GPUParticles2D
 @export var animation_player: AnimationPlayer
 @export var engine_sound: AudioStreamPlayer2D
 
@@ -21,9 +25,9 @@ var velocity:
 var target_angle:
 	get:
 		return _target_angle
-var health:
+var hp:
 	get:
-		return _health
+		return _hp
 
 var _velocity: Vector2 = Vector2(0.0, 0.0)
 var _target_angle: float = 0.0
@@ -31,13 +35,20 @@ var _angle: float = 0.0
 var _direction: Vector2 = Vector2.UP
 var _forward: float = 0.0
 var _distance_to_mouse: Vector2 = Vector2.ZERO
-var _health: float = 100.0:
+var _hp: float = MAX_HP:
 	set(value):
-		_health = max(0.0, value)
+		value = clamp(value, 0.0, MAX_HP)
+		if value < _hp:
+			emit_signal("hit", value)
+		if value > _hp:
+			emit_signal("healed", value)
+		if value <= 0.0:
+			_destroy()
+		_hp = value
 var _invulnerable: bool = false
 
 
-func _process(delta):
+func _process(delta) -> void:
 	_distance_to_mouse = (get_global_mouse_position() - position)
 	if _distance_to_mouse.length() >= mouse_tracehold:
 		_target_angle = _distance_to_mouse.angle() + PI / 2
@@ -60,24 +71,30 @@ func _process(delta):
 	engine_sound.set_deferred("pitch_scale", 1.0 + (_velocity.length() - min_speed) / (2 * (max_speed - min_speed)))
 
 
-func _hit(damage: float) -> void:
-	_health -= damage
-	if _health <= 0:
-		emit_signal("destroyed")
-	else:
-		emit_signal("hit")
-		_invulnerable = true
-		set_deferred("monitorable", false)
-		set_deferred("monitoring", false)
-		animation_player.play("hit")
-		await get_tree().create_timer(invulnerability_time).timeout
-		_invulnerable = false
-		set_deferred("monitorable", true)
-		set_deferred("monitoring", true)
-		animation_player.stop(true)
-		create_tween().tween_property(sprite, "modulate", Color.WHITE, 0.3)
-
-
 func _on_area_entered(area: Area2D) -> void:
 	if area.is_in_group("enemies") and not _invulnerable:
 		_hit(10)
+
+
+func _hit(damage: float) -> void:
+	_hp -= damage
+	_invulnerable = true
+	set_deferred("monitorable", false)
+	set_deferred("monitoring", false)
+	await get_tree().create_timer(invulnerability_time).timeout
+	_invulnerable = false
+	set_deferred("monitorable", true)
+	set_deferred("monitoring", true)
+	create_tween().tween_property(sprite, "modulate", Color.WHITE, 0.3)
+
+
+func _destroy() -> void:
+	emit_signal("destroyed")
+	Global.trigger_camera_shake.emit(5)
+	set_deferred("monitorable", false)
+	set_deferred("monitoring", false)
+	sprite.hide()
+	engine_smoke.emitting = false
+	explosion.emitting = true
+	set_process(false)
+	await explosion.finished

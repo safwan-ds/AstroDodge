@@ -15,7 +15,6 @@ hover = ExtResource("2_drlug")
 click = ExtResource("3_0i2i4")
 lose = ExtResource("4_mhfhn")
 boom = ExtResource("5_i1k7u")
-gameplay_music = ExtResource("6_i1k7u")
 
 [node name="SFX" type="AudioStreamPlayer" parent="."]
 max_polyphony = 2

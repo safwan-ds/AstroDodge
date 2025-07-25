@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dkywyhvbi881a"]
+[gd_scene load_steps=20 format=3 uid="uid://dkywyhvbi881a"]
 
 [ext_resource type="Script" uid="uid://cq0qntcts8cab" path="res://entities/player/player.gd" id="1_abrql"]
 [ext_resource type="SpriteFrames" uid="uid://b00oh7m38h44a" path="res://entities/player/player.aseprite" id="1_symyc"]
@@ -51,6 +51,67 @@ turbulence_influence_max = 0.138
 turbulence_initial_displacement_min = -16.5
 turbulence_initial_displacement_max = 16.5
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_sglur"]
+particles_animation = true
+particles_anim_h_frames = 10
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id="Gradient_sglur"]
+colors = PackedColorArray(1, 0.1, 0.1, 1, 1, 0.645, 0.29, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_bls4j"]
+gradient = SubResource("Gradient_sglur")
+
+[sub_resource type="Curve" id="Curve_fkugw"]
+_data = [Vector2(0, 0), 0.0, 4.7812, 0, 0, Vector2(0.457143, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_8fjmc"]
+curve = SubResource("Curve_fkugw")
+
+[sub_resource type="Curve" id="Curve_qiwj3"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_26q78"]
+curve = SubResource("Curve_qiwj3")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bectd"]
+resource_local_to_scene = true
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(0.2, 0.2, 0.2)
+emission_shape = 2
+emission_sphere_radius = 23.0
+spread = 180.0
+initial_velocity_min = 20.0
+initial_velocity_max = 50.0
+orbit_velocity_min = -0.754
+orbit_velocity_max = 0.754
+radial_velocity_min = -308.41
+radial_velocity_max = 308.41
+gravity = Vector3(0, 0, 0)
+tangential_accel_min = -100.0
+tangential_accel_max = 100.0
+damping_min = 32.184
+damping_max = 79.885
+scale_min = 0.5
+scale_max = 1.5
+scale_curve = SubResource("CurveTexture_8fjmc")
+color_ramp = SubResource("GradientTexture1D_bls4j")
+hue_variation_min = -0.1
+hue_variation_max = 0.1
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+turbulence_enabled = true
+turbulence_noise_strength = 1.24
+turbulence_influence_min = 0.6
+turbulence_influence_max = 1.0
+turbulence_initial_displacement_min = -16.5
+turbulence_initial_displacement_max = 16.5
+turbulence_influence_over_life = SubResource("CurveTexture_26q78")
+
 [sub_resource type="Animation" id="Animation_sglur"]
 length = 0.001
 tracks/0/type = "value"
@@ -89,11 +150,12 @@ _data = {
 &"hit": SubResource("Animation_abrql")
 }
 
-[node name="Player" type="Area2D" node_paths=PackedStringArray("sprite", "engine_smoke", "animation_player", "engine_sound") groups=["player"]]
+[node name="Player" type="Area2D" node_paths=PackedStringArray("sprite", "engine_smoke", "explosion", "animation_player", "engine_sound") groups=["entities", "player"]]
 collision_mask = 2
 script = ExtResource("1_abrql")
 sprite = NodePath("Sprite")
 engine_smoke = NodePath("EngineSmoke")
+explosion = NodePath("Explosion")
 animation_player = NodePath("AnimationPlayer")
 engine_sound = NodePath("EngineSound")
 invulnerability_time = 2.065
@@ -118,6 +180,16 @@ sprite_frames = ExtResource("1_symyc")
 animation = &"idle"
 autoplay = "idle"
 frame_progress = 0.0158842
+
+[node name="Explosion" type="GPUParticles2D" parent="."]
+modulate = Color(1, 1.75, 1, 1)
+material = SubResource("CanvasItemMaterial_sglur")
+emitting = false
+amount = 1000
+texture = ExtResource("2_sglur")
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_bectd")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

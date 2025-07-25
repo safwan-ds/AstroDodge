@@ -32,30 +32,9 @@ script = ExtResource("1_b11t3")
 player = NodePath("Player")
 star_field = NodePath("StarField")
 direction_arrow = NodePath("DirectionArrow")
-score_per_second = 15.0
-score_multiplier_per_second = 0.05
-
-[node name="Player" parent="." instance=ExtResource("2_mknij")]
-
-[node name="Camera" type="Camera2D" parent="Player"]
-position_smoothing_enabled = true
-rotation_smoothing_speed = 0.2
-script = ExtResource("3_kvqur")
-transition_duration = 0.75
-transition_type = 3
-
-[node name="AsteroidSpawner" parent="." node_paths=PackedStringArray("camera") instance=ExtResource("4_b2u6c")]
-entity = ExtResource("5_kvqur")
-camera = NodePath("../Player/Camera")
-spawn_count_max = 6
-
-[node name="DirectionArrow" type="Polygon2D" parent="."]
-modulate = Color(2, 0, 0, 1)
-color = Color(1, 0, 0, 1)
-polygon = PackedVector2Array(-5, -35, 5, -35, 0, -40)
-uv = PackedVector2Array(-45.258, 36.9323, 72.717, 39.7546, -9.69618, -24.0309)
 
 [node name="StarField" type="GPUParticles2D" parent="."]
+process_mode = 3
 modulate = Color(2, 2, 2, 1)
 amount = 500
 texture = ExtResource("3_bt3ji")
@@ -65,4 +44,27 @@ speed_scale = 2.0
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_mknij")
 
+[node name="AsteroidSpawner" parent="." instance=ExtResource("4_b2u6c")]
+wait_time = 2.0
+entity = ExtResource("5_kvqur")
+spawn_count_max = 3
+
+[node name="DirectionArrow" type="Polygon2D" parent="."]
+modulate = Color(2, 0, 0, 1)
+color = Color(1, 0, 0, 1)
+polygon = PackedVector2Array(-5, -35, 5, -35, 0, -40)
+uv = PackedVector2Array(-45.258, 36.9323, 72.717, 39.7546, -9.69618, -24.0309)
+
+[node name="Player" parent="." instance=ExtResource("2_mknij")]
+
+[node name="Camera" type="Camera2D" parent="Player"]
+offset = Vector2(-0.0164191, -2.58723)
+position_smoothing_enabled = true
+rotation_smoothing_speed = 0.2
+script = ExtResource("3_kvqur")
+transition_duration = 0.75
+transition_type = 5
+base_shake_strength = 5.0
+
+[connection signal="destroyed" from="Player" to="." method="_on_player_destroyed"]
 [connection signal="hit" from="Player" to="." method="_on_player_hit"]

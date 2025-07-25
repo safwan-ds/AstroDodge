@@ -3,28 +3,30 @@ class_name Spawner extends Timer
 @export var outside_viewport: bool = true
 @export var padding: float = 50.0
 @export var entity: PackedScene
-@export var camera: Camera2D
+
 @export_subgroup("Spawn Count")
 @export_range(1, 100) var spawn_count_min: int = 1
 @export_range(1, 100) var spawn_count_max: int = 4
 
+var camera: Camera2D
 var viewport_size: Vector2
 var spawn_count: int = 1
 
 
 func _ready():
-	viewport_size = get_viewport().get_visible_rect().size
+	camera = get_viewport().get_camera_2d()
 
 
 func _on_timeout() -> void:
 	spawn_count = randi_range(spawn_count_min, spawn_count_max)
+	if not camera:
+		camera = get_viewport().get_camera_2d()
+	viewport_size = camera.get_viewport_rect().size / camera.zoom # Adjust for zoom
 	for i in range(spawn_count):
 		_spawn_entity()
 
 
 func _spawn_entity() -> void:
-	viewport_size = camera.get_viewport_rect().size / camera.zoom # Adjust for zoom
-
 	if entity:
 		var instance = entity.instantiate()
 		var side = randi() % 4
