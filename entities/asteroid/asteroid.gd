@@ -1,16 +1,10 @@
-class_name Asteroid extends Area2D
+class_name Asteroid extends Entity
 
-@export var sprite: AnimatedSprite2D
-@export var trail: GPUParticles2D
 @export var shatter: GPUParticles2D
 @export var explosion: GPUParticles2D
-@export var audio_player: AudioStreamPlayer2D
 
-@export var speed: float = 100.0
-
-var _direction: Vector2
-var _destroyed: bool = false
-var _random_scale: int = randi_range(1, 4)
+var _died: bool = false
+var _random_scale: float = randf_range(1, 4)
 
 
 func _ready():
@@ -30,19 +24,16 @@ func _ready():
 	for emitter in [trail, shatter, explosion]:
 		emitter.amount *= _random_scale
 
-func _process(delta):
-	position += _direction * speed * delta
-
 
 func _on_area_entered(area: Area2D) -> void:
-	_destroy()
+	_die()
 
 
-func _destroy() -> void:
-	if _destroyed:
+func _die() -> void:
+	super ()
+	if _died:
 		return
-	_destroyed = true
-	Global.trigger_camera_shake.emit(1)
+	_died = true
 	audio_player.play()
 	set_deferred("monitorable", false)
 	set_deferred("monitoring", false)

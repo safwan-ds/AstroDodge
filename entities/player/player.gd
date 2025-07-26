@@ -1,22 +1,22 @@
 class_name Player extends Area2D
 signal hit(hp: float)
 signal healed(hp: float)
-signal destroyed
+signal died
 
 const MAX_HP: float = 100.0
 
 @export var sprite: AnimatedSprite2D
-@export var engine_smoke: GPUParticles2D
+@export var trail: GPUParticles2D
 @export var explosion: GPUParticles2D
 @export var animation_player: AnimationPlayer
 @export var engine_sound: AudioStreamPlayer2D
 
-@export var min_speed: int = 50
-@export var max_speed: int = 300
-@export var acceleration: int = 300
-@export var rotation_speed: int = 5
-@export var friction: int = 2
-@export var mouse_tracehold: int = 10
+@export var min_speed := 50
+@export var max_speed := 300
+@export var acceleration := 300
+@export var rotation_speed := 5
+@export var friction := 2
+@export var mouse_tracehold := 10
 @export var invulnerability_time: float = 1.0
 
 var velocity:
@@ -31,7 +31,6 @@ var hp:
 
 var _velocity: Vector2 = Vector2(0.0, 0.0)
 var _target_angle: float = 0.0
-var _angle: float = 0.0
 var _direction: Vector2 = Vector2.UP
 var _forward: float = 0.0
 var _distance_to_mouse: Vector2 = Vector2.ZERO
@@ -43,7 +42,7 @@ var _hp: float = MAX_HP:
 		if value > _hp:
 			emit_signal("healed", value)
 		if value <= 0.0:
-			_destroy()
+			_die()
 		_hp = value
 var _invulnerable: bool = false
 
@@ -52,8 +51,8 @@ func _process(delta) -> void:
 	_distance_to_mouse = (get_global_mouse_position() - position)
 	if _distance_to_mouse.length() >= mouse_tracehold:
 		_target_angle = _distance_to_mouse.angle() + PI / 2
-	_angle = lerp_angle(_angle, _target_angle, rotation_speed * delta)
-	_direction = Vector2.UP.rotated(_angle)
+	rotation = lerp_angle(rotation, _target_angle, rotation_speed * delta)
+	_direction = Vector2.UP.rotated(rotation)
 
 	_forward = Input.get_axis("down", "up")
 	if _forward:
@@ -66,8 +65,7 @@ func _process(delta) -> void:
 	_velocity = _velocity.limit_length(max_speed)
 	position += _velocity * delta
 
-	rotation = _angle
-	engine_smoke.set_deferred("amount_ratio", _velocity.length() / max_speed)
+	trail.set_deferred("amount_ratio", _velocity.length() / max_speed)
 	engine_sound.set_deferred("pitch_scale", 1.0 + (_velocity.length() - min_speed) / (2 * (max_speed - min_speed)))
 
 
@@ -88,13 +86,13 @@ func _hit(damage: float) -> void:
 	create_tween().tween_property(sprite, "modulate", Color.WHITE, 0.3)
 
 
-func _destroy() -> void:
-	emit_signal("destroyed")
+func _die() -> void:
+	emit_signal("died")
 	Global.trigger_camera_shake.emit(5)
 	set_deferred("monitorable", false)
 	set_deferred("monitoring", false)
 	sprite.hide()
-	engine_smoke.emitting = false
+	trail.emitting = false
 	explosion.emitting = true
 	set_process(false)
 	await explosion.finished

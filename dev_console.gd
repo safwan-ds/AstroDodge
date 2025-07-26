@@ -163,8 +163,8 @@ func reload_current_state() -> void:
 	Global.change_state.emit(Global.current_state)
 
 
-func shake_camera(strength: int = 1) -> void:
-	Global.trigger_camera_shake.emit(strength)
+func shake_camera(intensity: int = 1) -> void:
+	Global.trigger_camera_shake.emit(intensity)
 
 
 func pause() -> String:

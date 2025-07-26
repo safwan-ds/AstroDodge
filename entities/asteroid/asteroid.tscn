@@ -1,11 +1,20 @@
-[gd_scene load_steps=23 format=3 uid="uid://osdmu4njekb3"]
+[gd_scene load_steps=25 format=3 uid="uid://osdmu4njekb3"]
 
 [ext_resource type="Script" uid="uid://d025xcw3sundv" path="res://entities/asteroid/asteroid.gd" id="1_20vrb"]
 [ext_resource type="SpriteFrames" uid="uid://ddqj7lbvirpwv" path="res://entities/asteroid/asteroid.aseprite" id="2_4qh0a"]
+[ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats.gd" id="2_78yw1"]
 [ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://vfx/particle.png" id="3_ecv56"]
 [ext_resource type="Shader" uid="uid://ciletaxalhqm4" path="res://shaders/explosion.gdshader" id="4_go57s"]
 [ext_resource type="AudioStream" uid="uid://dk7frf6ie0cch" path="res://audio/sfx/boom.wav" id="4_useci"]
 [ext_resource type="Texture2D" uid="uid://bqc5o6oog7bl8" path="res://entities/asteroid/asteroid.png" id="5_6133j"]
+
+[sub_resource type="Resource" id="Resource_xhm4x"]
+script = ExtResource("2_78yw1")
+max_health = 100.0
+base_speed = 200.0
+hit_shake_intensity = 1
+death_shake_intensity = 1
+metadata/_custom_type_script = "uid://bjq253037nqv"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_go57s"]
 radius = 6.0
@@ -176,15 +185,17 @@ turbulence_initial_displacement_min = -16.5
 turbulence_initial_displacement_max = 16.5
 turbulence_influence_over_life = SubResource("CurveTexture_78yw1")
 
-[node name="Asteroid" type="Area2D" node_paths=PackedStringArray("sprite", "trail", "shatter", "explosion", "audio_player") groups=["asteroids", "enemies"]]
+[node name="Asteroid" type="Area2D" node_paths=PackedStringArray("shatter", "explosion", "sprite", "trail", "audio_player") groups=["asteroids", "enemies"]]
 collision_layer = 2
 collision_mask = 7
 script = ExtResource("1_20vrb")
-sprite = NodePath("Sprite")
-trail = NodePath("Trail")
 shatter = NodePath("Shatter")
 explosion = NodePath("Explosion")
+entity_stats = SubResource("Resource_xhm4x")
+sprite = NodePath("Sprite")
+trail = NodePath("Trail")
 audio_player = NodePath("AudioStreamPlayer2D")
+metadata/_custom_type_script = "uid://qy4n5oh6dqpx"
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 rect = Rect2(-500, -500, 1000, 1000)

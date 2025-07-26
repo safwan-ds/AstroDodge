@@ -150,11 +150,11 @@ _data = {
 &"hit": SubResource("Animation_abrql")
 }
 
-[node name="Player" type="Area2D" node_paths=PackedStringArray("sprite", "engine_smoke", "explosion", "animation_player", "engine_sound") groups=["entities", "player"]]
+[node name="Player" type="Area2D" node_paths=PackedStringArray("sprite", "trail", "explosion", "animation_player", "engine_sound") groups=["entities", "player"]]
 collision_mask = 2
 script = ExtResource("1_abrql")
 sprite = NodePath("Sprite")
-engine_smoke = NodePath("EngineSmoke")
+trail = NodePath("Trail")
 explosion = NodePath("Explosion")
 animation_player = NodePath("AnimationPlayer")
 engine_sound = NodePath("EngineSound")
@@ -164,7 +164,7 @@ invulnerability_time = 2.065
 position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_symyc")
 
-[node name="EngineSmoke" type="GPUParticles2D" parent="."]
+[node name="Trail" type="GPUParticles2D" parent="."]
 modulate = Color(1.25, 1.25, 1.25, 1)
 material = SubResource("CanvasItemMaterial_bls4j")
 position = Vector2(0, 6.115)

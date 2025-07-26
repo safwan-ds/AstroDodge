@@ -3,13 +3,13 @@ extends Node2D
 @export var player: Player
 @export var star_field: GPUParticles2D
 @export var direction_arrow: Polygon2D
-@export var d_score: float = 1.0
-@export var d2_score: float = 0.01
+@export var d_score := 1.0
+@export var d2_score := 0.01
 
-var score: float = 0.0
-var score_multiplier: float = 1.0
-var paused: bool = false
-var game_over: bool = false
+var score := 0.0
+var score_multiplier := 1.0
+var paused := false
+var game_over := false
 
 
 func _process(delta) -> void:
@@ -37,6 +37,6 @@ func _on_player_hit(hp: float) -> void:
 	score_multiplier = 1.0
 
 
-func _on_player_destroyed() -> void:
+func _on_player_died() -> void:
 	game_over = true
-	direction_arrow.queue_free()
+	direction_arrow.hide()

@@ -15,7 +15,7 @@ var tween: Tween
 func _ready() -> void:
 	player.connect("hit", _on_player_hit)
 	player.connect("healed", _on_player_healed)
-	player.connect("destroyed", _on_player_destroyed)
+	player.connect("died", _on_player_died)
 
 	_set_values()
 	hp_bar.value = player.hp
@@ -53,7 +53,7 @@ func _on_player_healed(hp: float) -> void:
 	tween.tween_property(hp_bar, "tint_progress", Color(1, 1, 1), 0.5).set_trans(Tween.TRANS_QUAD)
 
 
-func _on_player_destroyed() -> void:
+func _on_player_died() -> void:
 	score_label.set_deferred("text", "Score: " + str(int(gameplay.score)))
 	game_over_label.show()
 	create_tween().tween_property(game_over_label, "visible_ratio", 1.0, 1.0).set_trans(Tween.TRANS_QUAD)

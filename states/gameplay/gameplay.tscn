@@ -1,10 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://bjtu0rprxq5m8"]
+[gd_scene load_steps=11 format=3 uid="uid://bjtu0rprxq5m8"]
 
 [ext_resource type="Script" uid="uid://crolqalprt2j3" path="res://states/gameplay/gameplay.gd" id="1_b11t3"]
 [ext_resource type="PackedScene" uid="uid://dkywyhvbi881a" path="res://entities/player/player.tscn" id="2_mknij"]
-[ext_resource type="Texture2D" uid="uid://bws0tgak6lngw" path="res://entities/star/star.aseprite" id="3_bt3ji"]
+[ext_resource type="Texture2D" uid="uid://bws0tgak6lngw" path="res://vfx/star.aseprite" id="3_bt3ji"]
+[ext_resource type="Script" uid="uid://dtrgdfwlixqjg" path="res://entities/spawner.gd" id="3_crk4x"]
 [ext_resource type="Script" uid="uid://bbr8jv8jlcxs2" path="res://states/gameplay/camera.gd" id="3_kvqur"]
-[ext_resource type="PackedScene" uid="uid://h045pyxxebpp" path="res://entities/spawner.tscn" id="4_b2u6c"]
 [ext_resource type="PackedScene" uid="uid://osdmu4njekb3" path="res://entities/asteroid/asteroid.tscn" id="5_kvqur"]
 
 [sub_resource type="Curve" id="Curve_dpe7l"]
@@ -27,6 +27,11 @@ scale_curve = SubResource("CurveTexture_cbev6")
 turbulence_noise_strength = 4.37
 turbulence_noise_speed_random = 0.6
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_kvqur"]
+frequency = 0.05
+fractal_octaves = 4
+fractal_gain = 0.8
+
 [node name="Gameplay" type="Node2D" node_paths=PackedStringArray("player", "star_field", "direction_arrow")]
 script = ExtResource("1_b11t3")
 player = NodePath("Player")
@@ -44,10 +49,13 @@ speed_scale = 2.0
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_mknij")
 
-[node name="AsteroidSpawner" parent="." instance=ExtResource("4_b2u6c")]
+[node name="AsteroidSpawner" type="Timer" parent="."]
 wait_time = 2.0
+autostart = true
+script = ExtResource("3_crk4x")
 entity = ExtResource("5_kvqur")
 spawn_count_max = 3
+metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
 
 [node name="DirectionArrow" type="Polygon2D" parent="."]
 modulate = Color(2, 0, 0, 1)
@@ -64,7 +72,10 @@ rotation_smoothing_speed = 0.2
 script = ExtResource("3_kvqur")
 transition_duration = 0.75
 transition_type = 5
-base_shake_strength = 5.0
+noise = SubResource("FastNoiseLite_kvqur")
+base_shake_intensity = 20.0
+shake_decay_rate = 10.0
 
-[connection signal="destroyed" from="Player" to="." method="_on_player_destroyed"]
+[connection signal="timeout" from="AsteroidSpawner" to="AsteroidSpawner" method="_on_timeout"]
+[connection signal="died" from="Player" to="." method="_on_player_died"]
 [connection signal="hit" from="Player" to="." method="_on_player_hit"]

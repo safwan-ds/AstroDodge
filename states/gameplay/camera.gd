@@ -1,13 +1,21 @@
 extends Camera2D
 
-@export var initial_zoom: float = 50.0
-@export var transition_duration: float = 1.5
-@export var transition_type: Tween.TransitionType = Tween.TRANS_QUART
-# @export var normal_shake_strength: float = 10.0
-@export var base_shake_strength: float = 50.0
-@export var shake_decay_rate: float = 4.0
+# Camera zoom-out parameters
+@export var initial_zoom := 50.0
+@export var transition_duration := 1.5
+@export var transition_type := Tween.TRANS_QUART
 
-var _shake_strength: float = 0.0
+# Camera shake parameters
+@export var noise := FastNoiseLite.new()
+@export var max_noise_speed := 50.0
+@export var min_noise_speed := 0.0
+@export var min_shake_intensity := 10.0
+@export var base_shake_intensity := 50.0
+@export var shake_decay_rate := 4.0
+
+var _shake_intensity := min_shake_intensity
+var _time := 0.0
+var _noise_speed := max_noise_speed
 
 
 func _ready():
@@ -19,13 +27,21 @@ func _ready():
 
 
 func _process(delta):
-	if _shake_strength > 0.0:
-		_shake_strength = lerp(_shake_strength, 0.0, shake_decay_rate * delta)
+	_time += delta
+	if _shake_intensity > min_shake_intensity:
+		_shake_intensity = lerp(_shake_intensity, min_shake_intensity, shake_decay_rate * delta)
+		_noise_speed = lerp(_noise_speed, 5.0, shake_decay_rate * delta)
 		offset = Vector2(
-			randf_range(-_shake_strength, _shake_strength),
-			randf_range(-_shake_strength, _shake_strength)
+			_get_noise_from_seed(0) * _shake_intensity,
+			_get_noise_from_seed(1) * _shake_intensity
 		)
 
 
-func _trigger_shake(strength: int):
-	_shake_strength = max(strength * base_shake_strength, _shake_strength)
+func _trigger_shake(intensity: int):
+	_shake_intensity = max(intensity * base_shake_intensity, _shake_intensity)
+	_noise_speed = max(max_noise_speed, _noise_speed)
+
+
+func _get_noise_from_seed(_seed: int) -> float:
+	noise.seed = _seed
+	return noise.get_noise_1d(_time * _noise_speed)
