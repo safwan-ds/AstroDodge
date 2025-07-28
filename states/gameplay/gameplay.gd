@@ -3,6 +3,8 @@ extends Node2D
 @export var player: Player
 @export var star_field: GPUParticles2D
 @export var direction_arrow: Polygon2D
+
+@export_group("Score")
 @export var d_score := 1.0
 @export var d2_score := 0.01
 
@@ -27,10 +29,12 @@ func _process(delta) -> void:
 
 func _input(event) -> void:
 	if event.is_action_pressed("back"):
-		Global.change_state.emit(Global.GameState.MAIN_MENU)
-	
-	if event.is_action_pressed("up") and game_over:
-		Global.change_state.emit(Global.GameState.GAMEPLAY)
+		if paused or game_over:
+			Global.change_state.emit(Global.GameState.MAIN_MENU)
+
+	if event.is_action_pressed("up"):
+		if game_over:
+			Global.change_state.emit(Global.GameState.GAMEPLAY)
 
 
 func _on_player_hit(hp: float) -> void:

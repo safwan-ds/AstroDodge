@@ -1,13 +1,13 @@
 class_name Asteroid extends Entity
 
 @export var shatter: GPUParticles2D
-@export var explosion: GPUParticles2D
 
-var _died: bool = false
-var _random_scale: float = randf_range(1, 4)
+var _died := false
+var _random_scale := randf_range(1, 4)
 
 
 func _ready():
+	super ()
 	_direction = (get_tree().get_first_node_in_group("player").position - position).normalized().rotated(randf_range(-PI / 4, PI / 4))
 	rotation = _direction.angle() + PI / 2
 	scale = Vector2(_random_scale, _random_scale)
@@ -30,19 +30,11 @@ func _on_area_entered(area: Area2D) -> void:
 
 
 func _die() -> void:
-	super ()
 	if _died:
 		return
 	_died = true
 	audio_player.play()
-	set_deferred("monitorable", false)
-	set_deferred("monitoring", false)
-	sprite.hide()
-	trail.emitting = false
-	shatter.emitting = true
-	explosion.emitting = true
-	set_process(false)
-	await explosion.finished
+	super ()
 	await shatter.finished
 	queue_free()
 

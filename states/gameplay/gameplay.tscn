@@ -73,8 +73,9 @@ script = ExtResource("3_kvqur")
 transition_duration = 0.75
 transition_type = 5
 noise = SubResource("FastNoiseLite_kvqur")
-base_shake_intensity = 20.0
-shake_decay_rate = 10.0
+min_noise_speed = 1.005
+base_shake_intensity = 10.0
+shake_decay_rate = 15.0
 
 [connection signal="timeout" from="AsteroidSpawner" to="AsteroidSpawner" method="_on_timeout"]
 [connection signal="died" from="Player" to="." method="_on_player_died"]

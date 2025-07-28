@@ -9,7 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://0c545nil5vxk" path="res://states/gameplay/gui/hud_v_bar_l_Over.ase_layer_tex" id="7_l70dh"]
 [ext_resource type="Texture2D" uid="uid://c1wchy4hcy2bv" path="res://states/gameplay/gui/hud_v_bar_l_Progress.ase_layer_tex" id="8_6ar7c"]
 
-[node name="GameplayGUI" type="Control" node_paths=PackedStringArray("asteroids_label", "score_label", "hp_bar", "velocity_bar", "game_over_label")]
+[node name="GameplayGUI" type="Control" node_paths=PackedStringArray("asteroids_label", "score_label", "hp_bar", "speed_bar", "pause_label", "game_over_label")]
+process_mode = 3
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,7 +23,8 @@ script = ExtResource("2_lc4p0")
 asteroids_label = NodePath("AsteroidsCounter")
 score_label = NodePath("ScoreLabel")
 hp_bar = NodePath("HPBar")
-velocity_bar = NodePath("VelocityBar")
+speed_bar = NodePath("SpeedBar")
+pause_label = NodePath("PauseLabel")
 game_over_label = NodePath("GameOverLabel")
 metadata/_edit_horizontal_guides_ = [346.0]
 
@@ -68,7 +70,7 @@ texture_under = ExtResource("3_j5dm2")
 texture_over = ExtResource("4_y7ek3")
 texture_progress = ExtResource("5_v4wjf")
 
-[node name="VelocityBar" type="TextureProgressBar" parent="."]
+[node name="SpeedBar" type="TextureProgressBar" parent="."]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -86,7 +88,31 @@ texture_under = ExtResource("6_228b6")
 texture_over = ExtResource("7_l70dh")
 texture_progress = ExtResource("8_6ar7c")
 
+[node name="PauseLabel" type="Label" parent="."]
+visible = false
+modulate = Color(1.5, 1, 1, 1)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -265.5
+offset_top = -45.5
+offset_right = 265.5
+offset_bottom = 45.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+text = "Game Paused!
+Press w or up to continue
+press esc to return to the main menu"
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
 [node name="GameOverLabel" type="Label" parent="."]
+visible = false
 modulate = Color(1.5, 1, 1, 1)
 layout_mode = 1
 anchors_preset = 8

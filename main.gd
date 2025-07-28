@@ -2,11 +2,13 @@ class_name Main extends Node
 
 @export var world_2d: Node2D
 @export var gui: CanvasLayer
+@export var popups: CanvasLayer
 @export var transitions: CanvasLayer
 @export var fps_label: Label
 @export var first_transition_in: Control
 
 # All States
+@export_group("States")
 @export var main_menu: PackedScene
 @export var main_menu_bg: PackedScene
 @export var gameplay_scene: PackedScene
@@ -33,6 +35,7 @@ var current_gui: Control:
 func _ready():
 	first_transition_in.get_node("AnimationPlayer").play_backwards("dissolve")
 	Global.change_state.connect(_change_state)
+	Global.show_popup.connect(popups.add_child)
 	Global.quit_game.connect(_quit_game)
 	current_world = world_2d.get_child(0)
 	current_gui = gui.get_child(0)

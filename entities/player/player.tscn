@@ -1,8 +1,18 @@
-[gd_scene load_steps=20 format=3 uid="uid://dkywyhvbi881a"]
+[gd_scene load_steps=23 format=3 uid="uid://dkywyhvbi881a"]
 
 [ext_resource type="Script" uid="uid://cq0qntcts8cab" path="res://entities/player/player.gd" id="1_abrql"]
 [ext_resource type="SpriteFrames" uid="uid://b00oh7m38h44a" path="res://entities/player/player.aseprite" id="1_symyc"]
+[ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats.gd" id="2_bls4j"]
+[ext_resource type="PackedScene" uid="uid://be4yma7b7wmky" path="res://entities/bullet/bullet.tscn" id="2_fkugw"]
 [ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://vfx/particle.png" id="2_sglur"]
+
+[sub_resource type="Resource" id="Resource_fkugw"]
+script = ExtResource("2_bls4j")
+max_health = 100.0
+base_speed = 50.0
+hit_shake_intensity = 3
+death_shake_intensity = 5
+metadata/_custom_type_script = "uid://bjq253037nqv"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_symyc"]
 size = Vector2(20, 19)
@@ -150,15 +160,17 @@ _data = {
 &"hit": SubResource("Animation_abrql")
 }
 
-[node name="Player" type="Area2D" node_paths=PackedStringArray("sprite", "trail", "explosion", "animation_player", "engine_sound") groups=["entities", "player"]]
+[node name="Player" type="Area2D" node_paths=PackedStringArray("gun", "animation_player", "sprite", "trail", "explosion", "audio_player") groups=["entities", "player"]]
 collision_mask = 2
 script = ExtResource("1_abrql")
+bullet_scene = ExtResource("2_fkugw")
+gun = NodePath("Gun")
+animation_player = NodePath("AnimationPlayer")
+entity_stats = SubResource("Resource_fkugw")
 sprite = NodePath("Sprite")
 trail = NodePath("Trail")
 explosion = NodePath("Explosion")
-animation_player = NodePath("AnimationPlayer")
-engine_sound = NodePath("EngineSound")
-invulnerability_time = 2.065
+audio_player = NodePath("EngineSound")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -0.5)
@@ -198,4 +210,5 @@ libraries = {
 
 [node name="EngineSound" type="AudioStreamPlayer2D" parent="."]
 
-[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[node name="Gun" type="Marker2D" parent="."]
+position = Vector2(0, -11)

@@ -13,7 +13,7 @@ script = ExtResource("2_78yw1")
 max_health = 100.0
 base_speed = 200.0
 hit_shake_intensity = 1
-death_shake_intensity = 1
+death_shake_intensity = 2
 metadata/_custom_type_script = "uid://bjq253037nqv"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_go57s"]
@@ -185,15 +185,15 @@ turbulence_initial_displacement_min = -16.5
 turbulence_initial_displacement_max = 16.5
 turbulence_influence_over_life = SubResource("CurveTexture_78yw1")
 
-[node name="Asteroid" type="Area2D" node_paths=PackedStringArray("shatter", "explosion", "sprite", "trail", "audio_player") groups=["asteroids", "enemies"]]
+[node name="Asteroid" type="Area2D" node_paths=PackedStringArray("shatter", "sprite", "trail", "explosion", "audio_player") groups=["asteroids", "enemies"]]
 collision_layer = 2
 collision_mask = 7
 script = ExtResource("1_20vrb")
 shatter = NodePath("Shatter")
-explosion = NodePath("Explosion")
 entity_stats = SubResource("Resource_xhm4x")
 sprite = NodePath("Sprite")
 trail = NodePath("Trail")
+explosion = NodePath("Explosion")
 audio_player = NodePath("AudioStreamPlayer2D")
 metadata/_custom_type_script = "uid://qy4n5oh6dqpx"
 
@@ -243,5 +243,4 @@ process_material = SubResource("ParticleProcessMaterial_6133j")
 stream = ExtResource("4_useci")
 volume_db = -5.0
 
-[connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

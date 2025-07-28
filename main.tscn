@@ -46,10 +46,11 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.435
 shader_parameter/vignette_opacity = 1.0
 
-[node name="Main" type="Node" node_paths=PackedStringArray("world_2d", "gui", "transitions", "fps_label", "first_transition_in")]
+[node name="Main" type="Node" node_paths=PackedStringArray("world_2d", "gui", "popups", "transitions", "fps_label", "first_transition_in")]
 script = ExtResource("1_ig7tw")
 world_2d = NodePath("World2D")
 gui = NodePath("GUI")
+popups = NodePath("Popups")
 transitions = NodePath("Transitions")
 fps_label = NodePath("Overlays/FPSLabel")
 first_transition_in = NodePath("Transitions/DissolveTransition")

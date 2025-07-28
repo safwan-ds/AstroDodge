@@ -1,15 +1,19 @@
 class_name AnimationComponent extends Node
 
+@export_group("Hovering Animation")
 @export var hovered_scale := Vector2(1.1, 1.1)
 @export var pressed_scale := Vector2(0.9, 0.9)
 @export var duration := 0.25
+@export var hover_font: Font
 
-@onready var button: Button = get_parent()
-
-var tween: Tween = null
+@export_group("Rotation")
 @export var min_rotation_speed: float = 1.0 # Minimum duration for one rotation (seconds)
 @export var max_rotation_speed: float = 2.0 # Maximum duration for one rotation (seconds)
 @export var max_rotation_angle: float = 5.0 # Max degrees to rotate (e.g., 15 degrees for a subtle wobble)
+
+var tween: Tween = null
+
+@onready var button: Button = get_parent()
 
 
 func _ready():
@@ -30,11 +34,17 @@ func _entered():
 	if not button.disabled:
 		create_tween().tween_property(button, "scale", hovered_scale, duration).set_trans(Tween.TRANS_QUAD)
 		AudioManager.play_sfx(AudioManager.SFX.HOVER)
+		if hover_font:
+			button.set_deferred("theme_override_fonts/font", hover_font)
+			button.set_deferred("theme_override_font_sizes/font_size", 40.0)
 
 
 func _exited():
 	if not button.disabled:
 		create_tween().tween_property(button, "scale", Vector2.ONE, duration).set_trans(Tween.TRANS_QUAD)
+		if hover_font:
+			button.set_deferred("theme_override_fonts/font", null)
+			button.set_deferred("theme_override_font_sizes/font_size", null)
 
 
 func _pressed():

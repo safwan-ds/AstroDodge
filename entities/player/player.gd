@@ -1,50 +1,29 @@
-class_name Player extends Area2D
+class_name Player extends Entity
 signal hit(hp: float)
 signal healed(hp: float)
 signal died
 
-const MAX_HP: float = 100.0
-
-@export var sprite: AnimatedSprite2D
-@export var trail: GPUParticles2D
-@export var explosion: GPUParticles2D
+@export var bullet_scene: PackedScene
+@export var gun: Marker2D
 @export var animation_player: AnimationPlayer
-@export var engine_sound: AudioStreamPlayer2D
 
-@export var min_speed := 50
-@export var max_speed := 300
-@export var acceleration := 300
-@export var rotation_speed := 5
-@export var friction := 2
-@export var mouse_tracehold := 10
-@export var invulnerability_time: float = 1.0
+@export var max_speed := 300.0
+@export var acceleration := 300.0
+@export var rotation_speed := 5.0
+@export var friction := 2.0
+@export var mouse_tracehold := 10.0
+@export var invulnerability_time := 1.0
 
-var velocity:
-	get:
-		return _velocity
-var target_angle:
+var target_angle: float:
 	get:
 		return _target_angle
-var hp:
-	get:
-		return _hp
 
-var _velocity: Vector2 = Vector2(0.0, 0.0)
-var _target_angle: float = 0.0
-var _direction: Vector2 = Vector2.UP
-var _forward: float = 0.0
-var _distance_to_mouse: Vector2 = Vector2.ZERO
-var _hp: float = MAX_HP:
-	set(value):
-		value = clamp(value, 0.0, MAX_HP)
-		if value < _hp:
-			emit_signal("hit", value)
-		if value > _hp:
-			emit_signal("healed", value)
-		if value <= 0.0:
-			_die()
-		_hp = value
-var _invulnerable: bool = false
+## The angle towards the mouse cursor.
+var _target_angle := 0.0
+## Indicates if the player is accelerating or decelerating.
+var _forward := 0.0
+var _distance_to_mouse := Vector2.ZERO
+var _invulnerable := false
 
 
 func _process(delta) -> void:
@@ -57,16 +36,19 @@ func _process(delta) -> void:
 	_forward = Input.get_axis("down", "up")
 	if _forward:
 		_velocity += _forward * acceleration * _direction * delta
-	# elif _velocity.length() > min_speed + 0.1:
-	# 	_velocity -= _velocity.normalized() * friction * (_velocity.length() - min_speed) * delta
 	else:
-		_velocity = lerp(_velocity, (_direction * min_speed), friction * delta)
+		_velocity = lerp(_velocity, entity_stats.base_speed * _direction, friction * delta)
 
 	_velocity = _velocity.limit_length(max_speed)
 	position += _velocity * delta
 
 	trail.set_deferred("amount_ratio", _velocity.length() / max_speed)
-	engine_sound.set_deferred("pitch_scale", 1.0 + (_velocity.length() - min_speed) / (2 * (max_speed - min_speed)))
+	audio_player.set_deferred("pitch_scale", 1.0 + (_velocity.length() - entity_stats.base_speed) / (2 * (max_speed - entity_stats.base_speed)))
+
+
+func _input(event):
+	if event.is_action_pressed("primary"):
+		_shoot()
 
 
 func _on_area_entered(area: Area2D) -> void:
@@ -75,7 +57,8 @@ func _on_area_entered(area: Area2D) -> void:
 
 
 func _hit(damage: float) -> void:
-	_hp -= damage
+	super (damage)
+	hit.emit(_hp)
 	_invulnerable = true
 	set_deferred("monitorable", false)
 	set_deferred("monitoring", false)
@@ -87,12 +70,13 @@ func _hit(damage: float) -> void:
 
 
 func _die() -> void:
-	emit_signal("died")
-	Global.trigger_camera_shake.emit(5)
-	set_deferred("monitorable", false)
-	set_deferred("monitoring", false)
-	sprite.hide()
-	trail.emitting = false
-	explosion.emitting = true
-	set_process(false)
-	await explosion.finished
+	died.emit()
+	super ()
+
+
+func _shoot() -> void:
+	var bullet: Entity = bullet_scene.instantiate()
+	bullet.position = gun.global_position
+	bullet.rotation = rotation
+	Global.current_world.add_child(bullet)
+	Global.trigger_camera_shake.emit(1) # ISSUE: Camera shake intensity and duration need adjustment for proper feedback.

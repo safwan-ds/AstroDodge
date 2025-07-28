@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://4lux8g6q8nxo"
-path="res://.godot/imported/EchoesOfZyra.ttf-5d37812a507e4bdb31ea1d315b937e86.fontdata"
+uid="uid://bxajlsvdlbsv0"
+path="res://.godot/imported/siesdot.otf-e11ce151c78947213a9c8b43489f2a1f.fontdata"
 
 [deps]
 
-source_file="res://fonts/EchoesOfZyra.ttf"
-dest_files=["res://.godot/imported/EchoesOfZyra.ttf-5d37812a507e4bdb31ea1d315b937e86.fontdata"]
+source_file="res://fonts/siesdot.otf"
+dest_files=["res://.godot/imported/siesdot.otf-e11ce151c78947213a9c8b43489f2a1f.fontdata"]
 
 [params]
 

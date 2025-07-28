@@ -3,10 +3,11 @@ extends Control
 @export var asteroids_label: Label
 @export var score_label: Label
 @export var hp_bar: TextureProgressBar
-@export var velocity_bar: TextureProgressBar
+@export var speed_bar: TextureProgressBar
+@export var pause_label: Label
 @export var game_over_label: Label
 
-@onready var gameplay: Node2D = Global.current_world
+@onready var gameplay := Global.current_world
 @onready var player: Player = gameplay.player
 
 var tween: Tween
@@ -28,11 +29,29 @@ func _process(delta) -> void:
 	_set_values()
 
 
+func _input(event):
+	if event.is_action_pressed("back"):
+		if gameplay.paused or gameplay.game_over:
+			gameplay.paused = false
+			get_tree().paused = false
+			Global.change_state.emit(Global.GameState.MAIN_MENU)
+		else:
+			gameplay.paused = true
+			get_tree().paused = true
+			pause_label.show()
+	
+	if event.is_action_pressed("up"):
+		if gameplay.paused:
+			gameplay.paused = false
+			pause_label.hide()
+			get_tree().paused = false
+
+
 func _set_values() -> void:
 	asteroids_label.set_deferred("text", "Asteroids: " + str(get_tree().get_node_count_in_group("asteroids")))
 	if not gameplay.game_over:
 		score_label.set_deferred("text", "Score: " + str(int(gameplay.score)) + "\n(x" + str(snapped(gameplay.score_multiplier, 0.01)) + ")")
-		velocity_bar.set_deferred("value", player.velocity.length())
+		speed_bar.value = player.speed
 
 
 func _on_player_hit(hp: float) -> void:
@@ -55,5 +74,6 @@ func _on_player_healed(hp: float) -> void:
 
 func _on_player_died() -> void:
 	score_label.set_deferred("text", "Score: " + str(int(gameplay.score)))
+	pause_label.hide()
 	game_over_label.show()
 	create_tween().tween_property(game_over_label, "visible_ratio", 1.0, 1.0).set_trans(Tween.TRANS_QUAD)

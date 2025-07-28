@@ -29,6 +29,7 @@ DevConsole="*res://dev_console.tscn"
 
 window/size/viewport_width=640
 window/size/viewport_height=360
+window/size/mode=3
 window/size/always_on_top=true
 window/stretch/mode="viewport"
 mouse_cursor/stretch/aspect="keep"
@@ -53,6 +54,7 @@ enemies="Entities doing damage Player"
 player="The main controllable entity"
 asteroids=""
 entities="All moving objects in Gameplay state"
+bullets=""
 
 [gui]
 

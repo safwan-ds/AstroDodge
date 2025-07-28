@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://ct5y0mr6ibk83"]
+[gd_scene load_steps=10 format=3 uid="uid://ct5y0mr6ibk83"]
 
 [ext_resource type="Shader" uid="uid://im147euqgw67" path="res://shaders/blur.gdshader" id="1_at6hn"]
 [ext_resource type="Script" uid="uid://b6gxkihdfqbtx" path="res://states/main_menu/quit_popup.gd" id="1_nksoh"]
+[ext_resource type="Theme" uid="uid://bvaghou14ty2x" path="res://themes/primary/primary.tres" id="1_sjqw2"]
 [ext_resource type="PackedScene" uid="uid://b3115dt7ltsfb" path="res://components/animation_component.tscn" id="3_x216i"]
+[ext_resource type="FontFile" uid="uid://bxajlsvdlbsv0" path="res://fonts/siesdot.otf" id="5_jkaxs"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nksoh"]
 shader = ExtResource("1_at6hn")
@@ -144,6 +146,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_sjqw2")
 script = ExtResource("1_nksoh")
 animation_player = NodePath("AnimationPlayer")
 
@@ -205,6 +208,7 @@ focus_mode = 0
 text = "Quit"
 
 [node name="AnimationComponent" parent="PanelContainer/CenterContainer/VBoxContainer/QuitButton" instance=ExtResource("3_x216i")]
+hover_font = ExtResource("5_jkaxs")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 root_node = NodePath("../BlackRect")
