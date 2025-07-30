@@ -29,9 +29,10 @@ DevConsole="*res://dev_console.tscn"
 
 window/size/viewport_width=640
 window/size/viewport_height=360
-window/size/mode=3
 window/size/always_on_top=true
 window/stretch/mode="viewport"
+window/vsync/vsync_mode=0
+mouse_cursor/custom_image="uid://pjscuebk0xa"
 mouse_cursor/stretch/aspect="keep"
 
 [editor_plugins]
@@ -55,12 +56,14 @@ player="The main controllable entity"
 asteroids=""
 entities="All moving objects in Gameplay state"
 bullets=""
+voltstar=""
+voltshot=""
 
 [gui]
 
 common/snap_controls_to_pixels=false
 theme/custom="uid://bvaghou14ty2x"
-theme/custom_font="uid://4lux8g6q8nxo"
+theme/custom_font="uid://bedbtc1axrevw"
 
 [input]
 
@@ -123,6 +126,7 @@ locale/locale_filter_mode=0
 2d_physics/layer_1="player"
 2d_physics/layer_2="enemies"
 2d_physics/layer_3="weapons"
+2d_physics/layer_4="anti_weapons"
 
 [rendering]
 

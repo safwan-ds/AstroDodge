@@ -1,29 +1,45 @@
 class_name Spawner extends Timer
 
-@export var outside_viewport: bool = true
-@export var padding: float = 50.0
+@export var outside_viewport := true
+@export var padding := 50.0
 @export var entity: PackedScene
+@export var entity_group: String
 
 @export_subgroup("Spawn Count")
-@export_range(1, 100) var spawn_count_min: int = 1
-@export_range(1, 100) var spawn_count_max: int = 4
+@export_range(1, 100) var spawn_count_min := 1
+@export_range(1, 100) var spawn_count_max := 4
+@export_range(1, 100) var max_count := 10
 
 var camera: Camera2D
 var viewport_size: Vector2
-var spawn_count: int = 1
+var spawn_count := 1
 
 
-func _ready():
+func _ready() -> void:
+	timeout.connect(_on_timeout)
 	camera = get_viewport().get_camera_2d()
 
 
 func _on_timeout() -> void:
-	spawn_count = randi_range(spawn_count_min, spawn_count_max)
-	if not camera:
-		camera = get_viewport().get_camera_2d()
-	viewport_size = camera.get_viewport_rect().size / camera.zoom # Adjust for zoom
-	for i in range(spawn_count):
+	var current_entity_count := get_tree().get_node_count_in_group(entity_group)
+	if current_entity_count < max_count:
+		spawn_count = randi_range(
+			spawn_count_min, spawn_count_max if max_count - current_entity_count > spawn_count_max else max_count - current_entity_count
+		)
+		if not camera:
+			camera = get_viewport().get_camera_2d()
+		viewport_size = camera.get_viewport_rect().size / camera.zoom # Adjust for zoom
+		_spawn_tick()
+
+
+func _spawn_tick() -> void:
+	var batch = min(spawn_count, 1)
+	for i in range(batch):
 		_spawn_entity()
+		spawn_count -= 1
+	if spawn_count > 0:
+		await get_tree().process_frame
+		_spawn_tick()
 
 
 func _spawn_entity() -> void:

@@ -1,5 +1,6 @@
 class_name Main extends Node
 
+@export_group("Links to Nodes")
 @export var world_2d: Node2D
 @export var gui: CanvasLayer
 @export var popups: CanvasLayer
@@ -7,13 +8,16 @@ class_name Main extends Node
 @export var fps_label: Label
 @export var first_transition_in: Control
 
-# All States
 @export_group("States")
 @export var main_menu: PackedScene
 @export var main_menu_bg: PackedScene
 @export var gameplay_scene: PackedScene
 @export var gameplay_gui: PackedScene
 @export var transition_scene: PackedScene
+
+@export_group("Cursors")
+@export var primary_cursor: PortableCompressedTexture2D
+@export var crosshair_cursor: PortableCompressedTexture2D
 
 var selected_world: PackedScene
 var selected_gui: PackedScene
@@ -30,6 +34,9 @@ var current_gui: Control:
 			current_gui.queue_free()
 		current_gui = node
 		Global.current_gui = current_gui
+
+@onready var selected_cursor := primary_cursor
+@onready var selected_cursor_hotspot := Vector2.ZERO
 
 
 func _ready():
@@ -49,22 +56,27 @@ func _on_update_interval_timeout() -> void:
 
 func _change_state(state: Global.GameState):
 	var transition_data := await _transition_in()
-	for g in [world_2d, gui]:
-		for child in g.get_children():
+	for node in [world_2d, gui]:
+		for child in node.get_children():
 			child.queue_free()
 
 	match state:
 		Global.GameState.MAIN_MENU:
 			selected_world = main_menu_bg
 			selected_gui = main_menu
+			selected_cursor = primary_cursor
+			selected_cursor_hotspot = Vector2.ZERO
 		Global.GameState.GAMEPLAY:
 			selected_world = gameplay_scene
 			selected_gui = gameplay_gui
+			selected_cursor = crosshair_cursor
+			selected_cursor_hotspot = Vector2(15, 15)
 
 	current_world = selected_world.instantiate()
 	world_2d.add_child(current_world)
 	current_gui = selected_gui.instantiate()
 	gui.add_child(current_gui)
+	Input.set_custom_mouse_cursor(selected_cursor, Input.CURSOR_ARROW, selected_cursor_hotspot)
 	Global.current_state = state
 	_transition_out(transition_data)
 

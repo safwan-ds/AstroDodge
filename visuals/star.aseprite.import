@@ -3,12 +3,12 @@
 importer="aseprite_wizard.plugin.static-texture"
 type="PortableCompressedTexture2D"
 uid="uid://bws0tgak6lngw"
-path="res://.godot/imported/star.aseprite-55b61fb27d6b7899eae4a2b6dd2d6739.res"
+path="res://.godot/imported/star.aseprite-727e36737fc24db56dbe5cfd537c5ee9.res"
 
 [deps]
 
-source_file="res://vfx/star.aseprite"
-dest_files=["res://.godot/imported/star.aseprite-55b61fb27d6b7899eae4a2b6dd2d6739.res"]
+source_file="res://visuals/star.aseprite"
+dest_files=["res://.godot/imported/star.aseprite-727e36737fc24db56dbe5cfd537c5ee9.res"]
 
 [params]
 

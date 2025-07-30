@@ -1,12 +1,14 @@
-[gd_scene load_steps=10 format=3 uid="uid://c6dws4r4j113d"]
+[gd_scene load_steps=12 format=3 uid="uid://c6dws4r4j113d"]
 
 [ext_resource type="Script" uid="uid://dlije8squ566x" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://cw014nevwfvi4" path="res://states/main_menu/main_menu.tscn" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://1dsi1j6wov3b" path="res://states/main_menu/main_menu_bg.tscn" id="3_h2yge"]
-[ext_resource type="Shader" uid="uid://5t73kbufuj3k" path="res://shaders/vhs.gdshader" id="4_1bvp3"]
+[ext_resource type="Shader" uid="uid://5t73kbufuj3k" path="res://visuals/shaders/vhs.gdshader" id="4_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://bjtu0rprxq5m8" path="res://states/gameplay/gameplay.tscn" id="4_7mycd"]
 [ext_resource type="PackedScene" uid="uid://yfcq067tpxu4" path="res://states/gameplay/gui/gameplay_gui.tscn" id="5_272bh"]
 [ext_resource type="PackedScene" uid="uid://lrifys76w5sp" path="res://transitions/dissolve_transition.tscn" id="6_272bh"]
+[ext_resource type="Texture2D" uid="uid://pjscuebk0xa" path="res://visuals/cursors/primary.aseprite" id="7_kek77"]
+[ext_resource type="Texture2D" uid="uid://cq7b46g0ej58v" path="res://visuals/cursors/crosshair.aseprite" id="8_4c57u"]
 
 [sub_resource type="Environment" id="Environment_7dm0k"]
 background_mode = 3
@@ -59,6 +61,8 @@ main_menu_bg = ExtResource("3_h2yge")
 gameplay_scene = ExtResource("4_7mycd")
 gameplay_gui = ExtResource("5_272bh")
 transition_scene = ExtResource("6_272bh")
+primary_cursor = ExtResource("7_kek77")
+crosshair_cursor = ExtResource("8_4c57u")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_7dm0k")

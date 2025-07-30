@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://cq0qntcts8cab" path="res://entities/player/player.gd" id="1_abrql"]
 [ext_resource type="SpriteFrames" uid="uid://b00oh7m38h44a" path="res://entities/player/player.aseprite" id="1_symyc"]
 [ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats.gd" id="2_bls4j"]
-[ext_resource type="PackedScene" uid="uid://be4yma7b7wmky" path="res://entities/bullet/bullet.tscn" id="2_fkugw"]
-[ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://vfx/particle.png" id="2_sglur"]
+[ext_resource type="PackedScene" uid="uid://be4yma7b7wmky" path="res://entities/player/bullet/bullet.tscn" id="2_fkugw"]
+[ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://visuals/particle.png" id="2_sglur"]
 
 [sub_resource type="Resource" id="Resource_fkugw"]
 script = ExtResource("2_bls4j")
@@ -27,7 +27,7 @@ particles_anim_loop = false
 offsets = PackedFloat32Array(0, 0.557078)
 colors = PackedColorArray(0, 0.866667, 1, 1, 0, 1, 0, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_abrql"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fkugw"]
 gradient = SubResource("Gradient_4qh0a")
 use_hdr = true
 
@@ -49,7 +49,7 @@ damping_min = 32.184
 damping_max = 79.885
 scale_min = 0.25
 scale_max = 0.75
-color_ramp = SubResource("GradientTexture1D_abrql")
+color_ramp = SubResource("GradientTexture1D_fkugw")
 hue_variation_min = -0.1
 hue_variation_max = 0.1
 anim_speed_min = 1.0
@@ -161,11 +161,12 @@ _data = {
 }
 
 [node name="Player" type="Area2D" node_paths=PackedStringArray("gun", "animation_player", "sprite", "trail", "explosion", "audio_player") groups=["entities", "player"]]
-collision_mask = 2
+collision_mask = 10
 script = ExtResource("1_abrql")
 bullet_scene = ExtResource("2_fkugw")
 gun = NodePath("Gun")
 animation_player = NodePath("AnimationPlayer")
+shoot_cooldown = 0.25
 entity_stats = SubResource("Resource_fkugw")
 sprite = NodePath("Sprite")
 trail = NodePath("Trail")

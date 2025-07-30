@@ -7,16 +7,17 @@ extends Node
 @export var click: AudioStreamWAV
 @export var lose: AudioStreamWAV
 @export var boom: AudioStreamWAV
+@export var shoot: AudioStreamWAV
 
 @export var gameplay_music: AudioStreamOggVorbis
 
 var rng := RandomNumberGenerator.new()
 
-enum SFX {HOVER, CLICK, LOSE, BOOM}
+enum SFX {HOVER, CLICK, LOSE, BOOM, SHOOT}
 enum Music {MAIN_MENU, GAMEPLAY}
 
 
-func play_sfx(sfx_type: SFX, volume: float = 1.0) -> void:
+func play_sfx(sfx_type: SFX, volume: float = 0.0) -> void:
 	sfx.set_deferred("pitch_scale", rng.randf_range(0.9, 1.1))
 	sfx.set_deferred("volume_db", volume)
 	match sfx_type:
@@ -28,6 +29,8 @@ func play_sfx(sfx_type: SFX, volume: float = 1.0) -> void:
 			sfx.stream = lose
 		SFX.BOOM:
 			sfx.stream = boom
+		SFX.SHOOT:
+			sfx.stream = shoot
 	sfx.play()
 
 

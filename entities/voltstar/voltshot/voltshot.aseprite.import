@@ -2,13 +2,13 @@
 
 importer="aseprite_wizard.plugin.spriteframes"
 type="SpriteFrames"
-uid="uid://bb1mei7g6gwkc"
-path="res://.godot/imported/bullet.aseprite-a57c197dbc18ea5133c8d8e85bd065cc.res"
+uid="uid://cjkgvxxvsymwy"
+path="res://.godot/imported/voltshot.aseprite-e57df2f66f86b0443281acd19ad85caa.res"
 
 [deps]
 
-source_file="res://entities/bullet/bullet.aseprite"
-dest_files=["res://.godot/imported/bullet.aseprite-a57c197dbc18ea5133c8d8e85bd065cc.res"]
+source_file="res://entities/voltstar/voltshot/voltshot.aseprite"
+dest_files=["res://.godot/imported/voltshot.aseprite-e57df2f66f86b0443281acd19ad85caa.res"]
 
 [params]
 

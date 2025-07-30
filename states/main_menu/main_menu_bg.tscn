@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://1dsi1j6wov3b"]
 
-[ext_resource type="Texture2D" uid="uid://bws0tgak6lngw" path="res://vfx/star.aseprite" id="1_cbev6"]
+[ext_resource type="Texture2D" uid="uid://bws0tgak6lngw" path="res://visuals/star.aseprite" id="1_cbev6"]
 
 [sub_resource type="Curve" id="Curve_dpe7l"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.514706, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]

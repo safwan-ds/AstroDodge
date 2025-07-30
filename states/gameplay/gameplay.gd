@@ -1,8 +1,10 @@
 extends Node2D
 
+@export_group("Links to Nodes")
 @export var player: Player
 @export var star_field: GPUParticles2D
 @export var direction_arrow: Polygon2D
+@export var camera: Camera2D
 
 @export_group("Score")
 @export var d_score := 1.0

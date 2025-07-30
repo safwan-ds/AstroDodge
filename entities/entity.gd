@@ -1,7 +1,10 @@
 ## The base class for all moving entities in the game.
 class_name Entity extends Area2D
 
+@export_group("Entity Stats")
 @export var entity_stats: EntityStats
+
+@export_group("Links to Nodes")
 @export var sprite: AnimatedSprite2D
 @export var trail: GPUParticles2D
 @export var explosion: GPUParticles2D
@@ -33,11 +36,12 @@ func _process(delta) -> void:
 	_velocity = _direction * entity_stats.base_speed
 	position += _velocity * delta
 
-
+## This method should be overridden in subclasses to handle area interactions.
 func _on_area_entered(area: Area2D) -> void:
-	pass # This method should be overridden in subclasses to handle area interactions.
+	pass
 
 
+## Defines the actions that will happen when the entity is hit.
 func _hit(damage: float) -> void:
 	_hp -= damage
 	if _hp <= 0:
@@ -45,6 +49,7 @@ func _hit(damage: float) -> void:
 	Global.trigger_camera_shake.emit(entity_stats.hit_shake_intensity)
 
 
+## Defines the actions that will happen when the entity dies.
 func _die() -> void:
 	Global.trigger_camera_shake.emit(entity_stats.death_shake_intensity)
 	set_deferred("monitorable", false)
@@ -53,4 +58,6 @@ func _die() -> void:
 	trail.emitting = false
 	explosion.emitting = true
 	set_process(false)
+	set_process_input(false)
 	await explosion.finished
+	queue_free()

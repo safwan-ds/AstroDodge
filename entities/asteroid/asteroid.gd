@@ -3,12 +3,16 @@ class_name Asteroid extends Entity
 @export var shatter: GPUParticles2D
 
 var _died := false
-var _random_scale := randf_range(1, 4)
+var _random_scale := randi_range(2, 8) / 2.0
 
 
 func _ready():
 	super ()
-	_direction = (get_tree().get_first_node_in_group("player").position - position).normalized().rotated(randf_range(-PI / 4, PI / 4))
+	var player: Player = get_tree().get_first_node_in_group("player")
+	if player:
+		_direction = (player.position - position).normalized().rotated(randf_range(-PI / 4, PI / 4))
+	else:
+		_direction = (Global.current_world.get_node("Camera").position - position).normalized().rotated(randf_range(-PI / 4, PI / 4))
 	rotation = _direction.angle() + PI / 2
 	scale = Vector2(_random_scale, _random_scale)
 
@@ -34,9 +38,8 @@ func _die() -> void:
 		return
 	_died = true
 	audio_player.play()
-	super ()
-	await shatter.finished
-	queue_free()
+	shatter.emitting = true
+	await super ()
 
 
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:

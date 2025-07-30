@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://bjtu0rprxq5m8"]
+[gd_scene load_steps=12 format=3 uid="uid://bjtu0rprxq5m8"]
 
 [ext_resource type="Script" uid="uid://crolqalprt2j3" path="res://states/gameplay/gameplay.gd" id="1_b11t3"]
 [ext_resource type="PackedScene" uid="uid://dkywyhvbi881a" path="res://entities/player/player.tscn" id="2_mknij"]
-[ext_resource type="Texture2D" uid="uid://bws0tgak6lngw" path="res://vfx/star.aseprite" id="3_bt3ji"]
+[ext_resource type="Texture2D" uid="uid://bws0tgak6lngw" path="res://visuals/star.aseprite" id="3_bt3ji"]
 [ext_resource type="Script" uid="uid://dtrgdfwlixqjg" path="res://entities/spawner.gd" id="3_crk4x"]
 [ext_resource type="Script" uid="uid://bbr8jv8jlcxs2" path="res://states/gameplay/camera.gd" id="3_kvqur"]
+[ext_resource type="PackedScene" uid="uid://d2ubv33cs8o2g" path="res://entities/voltstar/voltstar.tscn" id="5_crk4x"]
 [ext_resource type="PackedScene" uid="uid://osdmu4njekb3" path="res://entities/asteroid/asteroid.tscn" id="5_kvqur"]
 
 [sub_resource type="Curve" id="Curve_dpe7l"]
@@ -32,11 +33,12 @@ frequency = 0.05
 fractal_octaves = 4
 fractal_gain = 0.8
 
-[node name="Gameplay" type="Node2D" node_paths=PackedStringArray("player", "star_field", "direction_arrow")]
+[node name="Gameplay" type="Node2D" node_paths=PackedStringArray("player", "star_field", "direction_arrow", "camera")]
 script = ExtResource("1_b11t3")
 player = NodePath("Player")
 star_field = NodePath("StarField")
 direction_arrow = NodePath("DirectionArrow")
+camera = NodePath("Player/Camera")
 
 [node name="StarField" type="GPUParticles2D" parent="."]
 process_mode = 3
@@ -50,11 +52,20 @@ randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_mknij")
 
 [node name="AsteroidSpawner" type="Timer" parent="."]
-wait_time = 2.0
 autostart = true
 script = ExtResource("3_crk4x")
 entity = ExtResource("5_kvqur")
 spawn_count_max = 3
+max_count = 20
+metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
+
+[node name="VoltstarSpawner" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+script = ExtResource("3_crk4x")
+entity = ExtResource("5_crk4x")
+entity_group = "voltstar"
+max_count = 5
 metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
 
 [node name="DirectionArrow" type="Polygon2D" parent="."]
@@ -63,20 +74,21 @@ color = Color(1, 0, 0, 1)
 polygon = PackedVector2Array(-5, -35, 5, -35, 0, -40)
 uv = PackedVector2Array(-45.258, 36.9323, 72.717, 39.7546, -9.69618, -24.0309)
 
-[node name="Player" parent="." instance=ExtResource("2_mknij")]
+[node name="Player" parent="." node_paths=PackedStringArray("camera") instance=ExtResource("2_mknij")]
+camera = NodePath("Camera")
 
 [node name="Camera" type="Camera2D" parent="Player"]
 offset = Vector2(-0.0164191, -2.58723)
+process_callback = 0
 position_smoothing_enabled = true
 rotation_smoothing_speed = 0.2
 script = ExtResource("3_kvqur")
 transition_duration = 0.75
 transition_type = 5
 noise = SubResource("FastNoiseLite_kvqur")
-min_noise_speed = 1.005
+noise_speed = 25.0
 base_shake_intensity = 10.0
-shake_decay_rate = 15.0
+shake_decay_rate = 3.5
 
-[connection signal="timeout" from="AsteroidSpawner" to="AsteroidSpawner" method="_on_timeout"]
 [connection signal="died" from="Player" to="." method="_on_player_died"]
 [connection signal="hit" from="Player" to="." method="_on_player_hit"]

@@ -2,8 +2,9 @@ class_name EntityStats extends Resource
 
 const MAX_SHAKE_INTENSITY := 5
 
+## Starting health of the entity. Also, entity's HP max value.
 @export var max_health := 100.0
-## The base speed of the entity.
+## The base moving speed of the entity.
 @export var base_speed := 200.0
 
 @export_group("Camera Shake")

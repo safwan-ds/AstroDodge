@@ -1,0 +1,186 @@
+[gd_scene load_steps=21 format=3 uid="uid://d2ubv33cs8o2g"]
+
+[ext_resource type="Script" uid="uid://b6r2kxihtnu0s" path="res://entities/voltstar/voltstar.gd" id="1_kuoce"]
+[ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats.gd" id="2_kuoce"]
+[ext_resource type="PackedScene" uid="uid://b7nl6c8mo8a7m" path="res://entities/voltstar/voltshot/voltshot.tscn" id="2_la6je"]
+[ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://visuals/particle.png" id="2_sy5s6"]
+[ext_resource type="SpriteFrames" uid="uid://b32h0nwxlo5om" path="res://entities/voltstar/voltstar.aseprite" id="3_sy5s6"]
+[ext_resource type="AudioStream" uid="uid://dk7frf6ie0cch" path="res://audio/sfx/boom.wav" id="5_i0qia"]
+
+[sub_resource type="Resource" id="Resource_sy5s6"]
+script = ExtResource("2_kuoce")
+max_health = 100.0
+base_speed = 50.0
+hit_shake_intensity = 1
+death_shake_intensity = 2
+metadata/_custom_type_script = "uid://bjq253037nqv"
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_i0qia"]
+particles_animation = true
+particles_anim_h_frames = 10
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id="Gradient_la6je"]
+offsets = PackedFloat32Array(0, 0.557078)
+colors = PackedColorArray(0.658824, 0.439216, 0.670588, 1, 0.94902, 0.788235, 0.913725, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_i0qia"]
+gradient = SubResource("Gradient_la6je")
+use_hdr = true
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_km6wj"]
+lifetime_randomness = 0.72
+particle_flag_align_y = true
+particle_flag_rotate_y = true
+particle_flag_disable_z = true
+emission_shape_scale = Vector3(1, 1, 0)
+emission_shape = 1
+emission_sphere_radius = 30.0
+direction = Vector3(0, 0.275, 0)
+spread = 10.18
+initial_velocity_min = 39.36
+initial_velocity_max = 139.76
+gravity = Vector3(0, 0, 0)
+linear_accel_min = -67.85
+linear_accel_max = 67.85
+tangential_accel_min = -28.11
+tangential_accel_max = 28.11
+damping_min = 32.184
+damping_max = 79.885
+scale_min = 0.25
+scale_max = 0.75
+color_ramp = SubResource("GradientTexture1D_i0qia")
+hue_variation_min = -0.05
+hue_variation_max = 0.05
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+turbulence_noise_strength = 0.45
+turbulence_noise_scale = 0.815
+turbulence_influence_min = 0.0
+turbulence_influence_max = 0.138
+turbulence_initial_displacement_min = -16.5
+turbulence_initial_displacement_max = 16.5
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_la6je"]
+size = Vector2(64, 64)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_kuoce"]
+particles_animation = true
+particles_anim_h_frames = 10
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id="Gradient_sy5s6"]
+colors = PackedColorArray(0.290196, 0.184314, 0.466667, 1, 0.94902, 0.788235, 0.913725, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_la6je"]
+gradient = SubResource("Gradient_sy5s6")
+
+[sub_resource type="Curve" id="Curve_i0qia"]
+_data = [Vector2(0, 0), 0.0, 4.7812, 0, 0, Vector2(0.457143, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_t1w5k"]
+curve = SubResource("Curve_i0qia")
+
+[sub_resource type="Curve" id="Curve_la6je"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_km6wj"]
+curve = SubResource("Curve_la6je")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_t1w5k"]
+resource_local_to_scene = true
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+emission_shape = 2
+emission_sphere_radius = 59.05
+spread = 180.0
+initial_velocity_min = 20.0
+initial_velocity_max = 50.0
+radial_velocity_min = -219.08
+radial_velocity_max = 120.14
+gravity = Vector3(0, 0, 0)
+tangential_accel_min = -28.11
+tangential_accel_max = 28.11
+damping_min = 32.184
+damping_max = 79.885
+scale_min = 0.5
+scale_max = 1.5
+scale_curve = SubResource("CurveTexture_t1w5k")
+color_ramp = SubResource("GradientTexture1D_la6je")
+hue_variation_min = -0.01
+hue_variation_max = 0.00999998
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+turbulence_enabled = true
+turbulence_noise_strength = 1.24
+turbulence_influence_min = 0.0
+turbulence_influence_max = 1.0
+turbulence_initial_displacement_min = -16.5
+turbulence_initial_displacement_max = 16.5
+turbulence_influence_over_life = SubResource("CurveTexture_km6wj")
+
+[node name="Voltstar" type="Area2D" node_paths=PackedStringArray("guns", "sprite", "trail", "explosion", "audio_player") groups=["enemies", "entities", "voltstar"]]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_kuoce")
+guns = NodePath("Guns")
+voltshot_scene = ExtResource("2_la6je")
+distance_to_player = 200.0
+entity_stats = SubResource("Resource_sy5s6")
+sprite = NodePath("Sprite")
+trail = NodePath("Trail")
+explosion = NodePath("Explosion")
+audio_player = NodePath("AudioStreamPlayer2D")
+metadata/_custom_type_script = "uid://qy4n5oh6dqpx"
+
+[node name="Trail" type="GPUParticles2D" parent="."]
+modulate = Color(1.25, 1.25, 1.25, 1)
+material = SubResource("CanvasItemMaterial_i0qia")
+amount = 512
+texture = ExtResource("2_sy5s6")
+randomness = 0.34
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_km6wj")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("3_sy5s6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_la6je")
+
+[node name="Explosion" type="GPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_kuoce")
+emitting = false
+amount = 1000
+texture = ExtResource("2_sy5s6")
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_t1w5k")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_i0qia")
+volume_db = -1.0
+
+[node name="Guns" type="Node2D" parent="."]
+
+[node name="Gun1" type="Marker2D" parent="Guns"]
+position = Vector2(-45, -48)
+
+[node name="Gun2" type="Marker2D" parent="Guns"]
+position = Vector2(-45, 48)
+
+[node name="Gun3" type="Marker2D" parent="Guns"]
+position = Vector2(45, 48)
+
+[node name="Gun4" type="Marker2D" parent="Guns"]
+position = Vector2(45, -48)
+
+[node name="ShootingTimer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[connection signal="timeout" from="ShootingTimer" to="." method="_on_shooting_timer_timeout"]

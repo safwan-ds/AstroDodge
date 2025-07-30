@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://0c545nil5vxk" path="res://states/gameplay/gui/hud_v_bar_l_Over.ase_layer_tex" id="7_l70dh"]
 [ext_resource type="Texture2D" uid="uid://c1wchy4hcy2bv" path="res://states/gameplay/gui/hud_v_bar_l_Progress.ase_layer_tex" id="8_6ar7c"]
 
-[node name="GameplayGUI" type="Control" node_paths=PackedStringArray("asteroids_label", "score_label", "hp_bar", "speed_bar", "pause_label", "game_over_label")]
+[node name="GameplayGUI" type="Control" node_paths=PackedStringArray("asteroids_label", "score_label", "hp_bar", "speed_bar", "pause_label", "game_over_label", "cooldown_bar")]
 process_mode = 3
 layout_mode = 3
 anchors_preset = 15
@@ -26,6 +26,7 @@ hp_bar = NodePath("HPBar")
 speed_bar = NodePath("SpeedBar")
 pause_label = NodePath("PauseLabel")
 game_over_label = NodePath("GameOverLabel")
+cooldown_bar = NodePath("CooldownBar")
 metadata/_edit_horizontal_guides_ = [346.0]
 
 [node name="AsteroidsCounter" type="Label" parent="."]
@@ -72,12 +73,13 @@ texture_progress = ExtResource("5_v4wjf")
 
 [node name="SpeedBar" type="TextureProgressBar" parent="."]
 layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
+anchors_preset = -1
+anchor_top = 0.428
+anchor_right = 0.122
 anchor_bottom = 1.0
 offset_left = 14.0
-offset_top = -206.0
-offset_right = 78.0
+offset_top = -0.0800171
+offset_right = -0.0800018
 offset_bottom = -14.0
 grow_vertical = 0
 max_value = 300.0
@@ -133,3 +135,18 @@ Press esc to return to the main menu"
 horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
+
+[node name="CooldownBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.256
+anchor_top = 0.872
+anchor_right = 0.503
+anchor_bottom = 1.0
+offset_left = 0.159988
+offset_top = 0.0799866
+offset_right = 0.0799866
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 0
+show_percentage = false

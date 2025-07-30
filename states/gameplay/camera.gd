@@ -7,10 +7,8 @@ extends Camera2D
 
 @export_group("Camera Shake")
 @export var noise := FastNoiseLite.new()
-@export var min_noise_speed := 0.0
-@export var max_noise_speed := 50.0
+@export var noise_speed := 50.0
 @export var base_shake_intensity := 50.0
-@export var min_shake_intensity := 10.0
 @export var shake_decay_rate := 4.0
 
 @export_group("Camera Lookahead")
@@ -18,9 +16,8 @@ extends Camera2D
 @export var lookahead_smoothness := 4.0
 @export var lookahead_multiplier := 0.2
 
-var _shake_intensity := min_shake_intensity
+var _shake_intensity := 0.0
 var _time := 0.0
-var _noise_speed := max_noise_speed
 var _target_offset := Vector2.ZERO
 var _current_offset := Vector2.ZERO
 
@@ -41,9 +38,8 @@ func _process(delta) -> void:
 			Vector2(lookahead_distance, lookahead_distance)
 		)
 	_current_offset = lerp(_current_offset, _target_offset, lookahead_smoothness * delta)
-	if _shake_intensity > min_shake_intensity:
-		_shake_intensity = lerp(_shake_intensity, min_shake_intensity, shake_decay_rate * delta)
-		_noise_speed = lerp(_noise_speed, min_noise_speed, shake_decay_rate * delta)
+	if _shake_intensity > 0.0:
+		_shake_intensity = lerp(_shake_intensity, 0.0, shake_decay_rate * delta)
 		offset = Vector2(
 			_get_noise_from_seed(0) * _shake_intensity + _current_offset.x,
 			_get_noise_from_seed(1) * _shake_intensity + _current_offset.y
@@ -54,9 +50,8 @@ func _process(delta) -> void:
 
 func _trigger_shake(intensity: int) -> void:
 	_shake_intensity = max(intensity * base_shake_intensity, _shake_intensity)
-	_noise_speed = max(max_noise_speed, _noise_speed)
 
 
 func _get_noise_from_seed(_seed: int) -> float:
 	noise.seed = _seed
-	return noise.get_noise_1d(_time * _noise_speed)
+	return noise.get_noise_1d(_time * noise_speed)
