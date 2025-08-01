@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://crolqalprt2j3" path="res://states/gameplay/gameplay.gd" id="1_b11t3"]
 [ext_resource type="PackedScene" uid="uid://dkywyhvbi881a" path="res://entities/player/player.tscn" id="2_mknij"]
 [ext_resource type="Texture2D" uid="uid://bws0tgak6lngw" path="res://visuals/star.aseprite" id="3_bt3ji"]
-[ext_resource type="Script" uid="uid://dtrgdfwlixqjg" path="res://entities/spawner.gd" id="3_crk4x"]
+[ext_resource type="Script" uid="uid://dtrgdfwlixqjg" path="res://entities/entity_spawner.gd" id="3_crk4x"]
 [ext_resource type="Script" uid="uid://bbr8jv8jlcxs2" path="res://states/gameplay/camera.gd" id="3_kvqur"]
 [ext_resource type="PackedScene" uid="uid://d2ubv33cs8o2g" path="res://entities/voltstar/voltstar.tscn" id="5_crk4x"]
 [ext_resource type="PackedScene" uid="uid://osdmu4njekb3" path="res://entities/asteroid/asteroid.tscn" id="5_kvqur"]
@@ -60,11 +60,12 @@ max_count = 20
 metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
 
 [node name="VoltstarSpawner" type="Timer" parent="."]
-wait_time = 5.0
+wait_time = 1.5
 autostart = true
 script = ExtResource("3_crk4x")
 entity = ExtResource("5_crk4x")
 entity_group = "voltstar"
+spawn_count_max = 2
 max_count = 5
 metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
 
@@ -79,7 +80,6 @@ camera = NodePath("Camera")
 
 [node name="Camera" type="Camera2D" parent="Player"]
 offset = Vector2(-0.0164191, -2.58723)
-process_callback = 0
 position_smoothing_enabled = true
 rotation_smoothing_speed = 0.2
 script = ExtResource("3_kvqur")
@@ -90,5 +90,5 @@ noise_speed = 25.0
 base_shake_intensity = 10.0
 shake_decay_rate = 3.5
 
-[connection signal="died" from="Player" to="." method="_on_player_died"]
-[connection signal="hit" from="Player" to="." method="_on_player_hit"]
+[connection signal="is_dead" from="Player" to="." method="_on_player_is_dead"]
+[connection signal="is_hurt" from="Player" to="." method="_on_player_is_hurt"]

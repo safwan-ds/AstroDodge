@@ -1,4 +1,4 @@
-class_name Spawner extends Timer
+class_name EntitySpawner extends Timer
 
 @export var outside_viewport := true
 @export var padding := 50.0

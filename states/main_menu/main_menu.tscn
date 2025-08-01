@@ -76,7 +76,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_pwybm")
 script = ExtResource("1_ldv0f")
-quit_popup_scene = ExtResource("5_u0hdh")
+quit_popup = ExtResource("5_u0hdh")
 continue_button = NodePath("Panel/CenterContainer/VBoxContainer/ContinueButton")
 animation_player = NodePath("AnimationPlayer")
 
@@ -153,6 +153,15 @@ focus_mode = 0
 text = "Settings"
 
 [node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/SettingsButton" instance=ExtResource("4_hvp4n")]
+hovered_scale = Vector2(1.3, 1.1)
+
+[node name="UpgradessButton" type="Button" parent="Panel/CenterContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+focus_mode = 0
+text = "Upgrades"
+
+[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/UpgradessButton" instance=ExtResource("4_hvp4n")]
 hovered_scale = Vector2(1.3, 1.1)
 
 [node name="QuitButton" type="Button" parent="Panel/CenterContainer/VBoxContainer"]

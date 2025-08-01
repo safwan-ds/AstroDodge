@@ -26,7 +26,8 @@ func _on_area_entered(area) -> void:
 
 
 func _on_shooting_timer_timeout() -> void:
-	for gun in guns.get_children():
-		var voltshot: Voltshot = voltshot_scene.instantiate()
-		voltshot.position = gun.global_position
-		Global.current_world.add_child(voltshot)
+	if is_processing():
+		for gun in guns.get_children():
+			var voltshot: Voltshot = voltshot_scene.instantiate()
+			voltshot.position = gun.global_position
+			Global.current_world.add_child(voltshot)

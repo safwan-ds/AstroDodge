@@ -16,9 +16,9 @@ var tween: Tween
 
 
 func _ready() -> void:
-	player.connect("hit", _on_player_hit)
-	player.connect("healed", _on_player_healed)
-	player.connect("died", _on_player_died)
+	player.is_hurt.connect(_on_player_is_hurt)
+	player.is_healed.connect(_on_player_is_healed)
+	player.is_dead.connect(_on_player_is_dead)
 
 	_set_values()
 	hp_bar.value = player.hp
@@ -60,7 +60,7 @@ func _set_values() -> void:
 		cooldown_bar.value = player.shoot_cooldown - player._shoot_cooldown
 
 
-func _on_player_hit(hp: float) -> void:
+func _on_player_is_hurt(hp: float) -> void:
 	if tween:
 		tween.kill()
 	hp_bar.tint_progress = Color(1, 0, 0)
@@ -69,7 +69,7 @@ func _on_player_hit(hp: float) -> void:
 	tween.tween_property(hp_bar, "tint_progress", Color(1, 1, 1), 0.5).set_trans(Tween.TRANS_QUAD)
 
 
-func _on_player_healed(hp: float) -> void:
+func _on_player_is_healed(hp: float) -> void:
 	if tween:
 		tween.kill()
 	hp_bar.tint_progress = Color(0, 1, 0)
@@ -78,7 +78,7 @@ func _on_player_healed(hp: float) -> void:
 	tween.tween_property(hp_bar, "tint_progress", Color(1, 1, 1), 0.5).set_trans(Tween.TRANS_QUAD)
 
 
-func _on_player_died() -> void:
+func _on_player_is_dead() -> void:
 	score_label.text = "Score: " + str(int(gameplay.score))
 	pause_label.hide()
 	game_over_label.show()

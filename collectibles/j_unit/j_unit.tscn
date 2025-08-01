@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://ugylwg3bkqdw"]
+
+[ext_resource type="Script" uid="uid://bw5qj28nwdxfg" path="res://collectibles/collectible.gd" id="1_36tnp"]
+[ext_resource type="SpriteFrames" uid="uid://bia8ta5ttvs6f" path="res://collectibles/j_unit/j_unit.aseprite" id="3_natie"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_43vdg"]
+size = Vector2(10, 10)
+
+[node name="JUnit" type="Area2D" groups=["collectibles", "entities"]]
+collision_layer = 16
+script = ExtResource("1_36tnp")
+metadata/_custom_type_script = "uid://bw5qj28nwdxfg"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_43vdg")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("3_natie")
+animation = &"Loop"
+autoplay = "Loop"
+frame_progress = 0.928572

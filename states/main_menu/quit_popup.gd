@@ -8,6 +8,11 @@ func _ready():
 	animation_player.play("quit_popup")
 
 
+func _input(event):
+	if event.is_action_pressed("back"):
+		close()
+
+
 func _on_quit_button_pressed() -> void:
 	if not canceled:
 		Global.quit_game.emit()

@@ -43,6 +43,7 @@ enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg")
 
 folder_colors={
 "res://audio/": "teal",
+"res://collectibles/": "yellow",
 "res://components/": "red",
 "res://entities/": "yellow",
 "res://states/": "purple",
@@ -58,6 +59,7 @@ entities="All moving objects in Gameplay state"
 bullets=""
 voltstar=""
 voltshot=""
+collectibles=""
 
 [gui]
 
@@ -127,6 +129,7 @@ locale/locale_filter_mode=0
 2d_physics/layer_2="enemies"
 2d_physics/layer_3="weapons"
 2d_physics/layer_4="anti_weapons"
+2d_physics/layer_5="collectibles"
 
 [rendering]
 

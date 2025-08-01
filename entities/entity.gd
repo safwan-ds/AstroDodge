@@ -4,6 +4,9 @@ class_name Entity extends Area2D
 @export_group("Entity Stats")
 @export var entity_stats: EntityStats
 
+@export_group("Links to Scenes")
+@export var j_unit: PackedScene
+
 @export_group("Links to Nodes")
 @export var sprite: AnimatedSprite2D
 @export var trail: GPUParticles2D
@@ -42,7 +45,7 @@ func _on_area_entered(area: Area2D) -> void:
 
 
 ## Defines the actions that will happen when the entity is hit.
-func _hit(damage: float) -> void:
+func _be_hurt(damage: float) -> void:
 	_hp -= damage
 	if _hp <= 0:
 		return
@@ -51,6 +54,8 @@ func _hit(damage: float) -> void:
 
 ## Defines the actions that will happen when the entity dies.
 func _die() -> void:
+	if j_unit:
+		_spawn_collectibles()
 	Global.trigger_camera_shake.emit(entity_stats.death_shake_intensity)
 	set_deferred("monitorable", false)
 	set_deferred("monitoring", false)
@@ -61,3 +66,10 @@ func _die() -> void:
 	set_process_input(false)
 	await explosion.finished
 	queue_free()
+
+
+func _spawn_collectibles():
+	for i in range(randi_range(5, 10)):
+		var unit: Collectible = j_unit.instantiate()
+		unit.position = position
+		Global.current_world.add_child(unit)

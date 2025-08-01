@@ -39,10 +39,10 @@ func _input(event) -> void:
 			Global.change_state.emit(Global.GameState.GAMEPLAY)
 
 
-func _on_player_hit(hp: float) -> void:
+func _on_player_is_hurt(hp: float) -> void:
 	score_multiplier = 1.0
 
 
-func _on_player_died() -> void:
+func _on_player_is_dead() -> void:
 	game_over = true
 	direction_arrow.hide()

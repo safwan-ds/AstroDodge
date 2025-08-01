@@ -1,7 +1,7 @@
 class_name Player extends Entity
-signal hit(hp: float)
-signal healed(hp: float)
-signal died
+signal is_hurt(hp: float)
+signal is_healed(hp: float)
+signal is_dead
 
 @export_group("Links to Nodes")
 @export var bullet_scene: PackedScene
@@ -33,6 +33,7 @@ var _invulnerable := false
 var _shoot_cooldown := 0.0:
 	set(value):
 		_shoot_cooldown = max(0.0, value)
+var _auto_fire := false
 
 
 func _process(delta) -> void:
@@ -56,42 +57,49 @@ func _process(delta) -> void:
 
 	if _shoot_cooldown > 0.0:
 		_shoot_cooldown -= delta
+	
+	if _auto_fire:
+		_shoot()
 
 
 func _input(event):
-	if event.is_action_pressed("primary") and _shoot_cooldown <= 0.0:
-		_shoot_cooldown = shoot_cooldown
+	if event.is_action_pressed("primary"):
 		_shoot()
+	if event.is_action_pressed("secondary"):
+		_auto_fire = not _auto_fire
 
 
 func _on_area_entered(area: Area2D) -> void:
 	if area.is_in_group("enemies") and not _invulnerable:
-		_hit(10)
+		_be_hurt(10)
 
 
-func _hit(damage: float) -> void:
+func _be_hurt(damage: float) -> void:
 	super (damage)
-	hit.emit(_hp)
-	_invulnerable = true
-	set_deferred("monitoring", false)
-	await get_tree().create_timer(invulnerability_time).timeout
-	_invulnerable = false
-	set_deferred("monitoring", true)
-	create_tween().tween_property(sprite, "modulate", Color.WHITE, 0.3)
+	is_hurt.emit(_hp)
+	if not Global.current_world.game_over:
+		_invulnerable = true
+		set_deferred("monitoring", false)
+		await get_tree().create_timer(invulnerability_time).timeout
+		_invulnerable = false
+		set_deferred("monitoring", true)
+		create_tween().tween_property(sprite, "modulate", Color.WHITE, 0.3)
 
 
 func _die() -> void:
 	camera.position = position
 	remove_child(camera)
 	Global.current_world.add_child(camera)
-	died.emit()
+	is_dead.emit()
 	super ()
 
 
 func _shoot() -> void:
-	AudioManager.play_sfx(AudioManager.SFX.SHOOT, -1.0)
-	var bullet: Bullet = bullet_scene.instantiate()
-	bullet.position = gun.global_position
-	bullet.rotation = _target_angle
-	Global.current_world.add_child(bullet)
-	Global.trigger_camera_shake.emit(1)
+	if _shoot_cooldown <= 0.0:
+		_shoot_cooldown = shoot_cooldown
+		AudioManager.play_sfx(AudioManager.SFX.SHOOT, -1.0)
+		var bullet: Bullet = bullet_scene.instantiate()
+		bullet.position = gun.global_position
+		bullet.rotation = _target_angle
+		Global.current_world.add_child(bullet)
+		Global.trigger_camera_shake.emit(1)

@@ -42,7 +42,7 @@ var current_gui: Control:
 func _ready():
 	first_transition_in.get_node("AnimationPlayer").play_backwards("dissolve")
 	Global.change_state.connect(_change_state)
-	Global.show_popup.connect(popups.add_child)
+	Global.show_popup.connect(_show_popup)
 	Global.quit_game.connect(_quit_game)
 	current_world = world_2d.get_child(0)
 	current_gui = gui.get_child(0)
@@ -96,6 +96,11 @@ func _transition_out(transition_data: Array) -> void:
 	transition_animation.play_backwards("dissolve")
 	await transition_animation.animation_finished
 	transition_node.queue_free()
+
+
+func _show_popup(popup: PackedScene):
+	if not popups.get_children():
+		popups.add_child(popup.instantiate())
 
 
 func _quit_game() -> void:

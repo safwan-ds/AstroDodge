@@ -166,6 +166,7 @@ script = ExtResource("1_abrql")
 bullet_scene = ExtResource("2_fkugw")
 gun = NodePath("Gun")
 animation_player = NodePath("AnimationPlayer")
+invulnerability_time = 62.97
 shoot_cooldown = 0.25
 entity_stats = SubResource("Resource_fkugw")
 sprite = NodePath("Sprite")

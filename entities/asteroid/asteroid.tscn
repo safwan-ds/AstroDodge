@@ -1,10 +1,11 @@
-[gd_scene load_steps=25 format=3 uid="uid://osdmu4njekb3"]
+[gd_scene load_steps=26 format=3 uid="uid://osdmu4njekb3"]
 
 [ext_resource type="Script" uid="uid://d025xcw3sundv" path="res://entities/asteroid/asteroid.gd" id="1_20vrb"]
 [ext_resource type="SpriteFrames" uid="uid://ddqj7lbvirpwv" path="res://entities/asteroid/asteroid.aseprite" id="2_4qh0a"]
 [ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats.gd" id="2_78yw1"]
 [ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://visuals/particle.png" id="3_ecv56"]
-[ext_resource type="Shader" uid="uid://ciletaxalhqm4" path="res://visuals/shaders/explosion.gdshader" id="4_go57s"]
+[ext_resource type="PackedScene" uid="uid://ugylwg3bkqdw" path="res://collectibles/j_unit/j_unit.tscn" id="3_xhm4x"]
+[ext_resource type="Shader" uid="uid://ciletaxalhqm4" path="res://visuals/shaders/shatter.gdshader" id="4_go57s"]
 [ext_resource type="AudioStream" uid="uid://dk7frf6ie0cch" path="res://audio/sfx/boom.wav" id="4_useci"]
 [ext_resource type="Texture2D" uid="uid://bqc5o6oog7bl8" path="res://entities/asteroid/asteroid.png" id="5_6133j"]
 
@@ -191,6 +192,7 @@ collision_mask = 5
 script = ExtResource("1_20vrb")
 shatter = NodePath("Shatter")
 entity_stats = SubResource("Resource_xhm4x")
+j_unit = ExtResource("3_xhm4x")
 sprite = NodePath("Sprite")
 trail = NodePath("Trail")
 explosion = NodePath("Explosion")

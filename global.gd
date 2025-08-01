@@ -1,6 +1,6 @@
 extends Node
 signal change_state(state: GameState)
-signal show_popup(popup: Control)
+signal show_popup(popup: PackedScene)
 signal quit_game
 signal trigger_camera_shake(intensity: int)
 

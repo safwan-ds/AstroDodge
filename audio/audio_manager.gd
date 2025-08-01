@@ -18,7 +18,7 @@ enum Music {MAIN_MENU, GAMEPLAY}
 
 
 func play_sfx(sfx_type: SFX, volume: float = 0.0) -> void:
-	sfx.set_deferred("pitch_scale", rng.randf_range(0.9, 1.1))
+	sfx.set_deferred("pitch_scale", rng.randf_range(0.8, 1.2))
 	sfx.set_deferred("volume_db", volume)
 	match sfx_type:
 		SFX.HOVER:
