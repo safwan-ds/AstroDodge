@@ -160,13 +160,14 @@ _data = {
 &"hit": SubResource("Animation_abrql")
 }
 
-[node name="Player" type="Area2D" node_paths=PackedStringArray("gun", "animation_player", "sprite", "trail", "explosion", "audio_player") groups=["entities", "player"]]
+[node name="Player" type="Area2D" node_paths=PackedStringArray("gun", "animation_player", "cooldown_bar", "sprite", "trail", "explosion", "audio_player") groups=["entities", "player"]]
 collision_mask = 10
 script = ExtResource("1_abrql")
 bullet_scene = ExtResource("2_fkugw")
 gun = NodePath("Gun")
 animation_player = NodePath("AnimationPlayer")
-invulnerability_time = 62.97
+cooldown_bar = NodePath("CooldownBar")
+invulnerability_time = 0.5
 shoot_cooldown = 0.25
 entity_stats = SubResource("Resource_fkugw")
 sprite = NodePath("Sprite")
@@ -214,3 +215,20 @@ libraries = {
 
 [node name="Gun" type="Marker2D" parent="."]
 position = Vector2(0, -11)
+
+[node name="CooldownBar" type="ProgressBar" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 13.0
+offset_top = -2.0
+offset_right = 27.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+value = 100.0
+show_percentage = false
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

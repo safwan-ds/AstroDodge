@@ -55,12 +55,11 @@ process_material = SubResource("ParticleProcessMaterial_mknij")
 autostart = true
 script = ExtResource("3_crk4x")
 entity = ExtResource("5_kvqur")
-spawn_count_max = 3
-max_count = 20
+spawn_count_max = 2
 metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
 
 [node name="VoltstarSpawner" type="Timer" parent="."]
-wait_time = 1.5
+wait_time = 2.0
 autostart = true
 script = ExtResource("3_crk4x")
 entity = ExtResource("5_crk4x")

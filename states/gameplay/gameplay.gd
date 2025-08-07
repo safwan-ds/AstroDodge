@@ -12,8 +12,11 @@ extends Node2D
 
 var score := 0.0
 var score_multiplier := 1.0
+
 var paused := false
 var game_over := false
+
+@onready var collectibles_counter_temp := Global.data_save.collectibles_counter
 
 
 func _process(delta) -> void:

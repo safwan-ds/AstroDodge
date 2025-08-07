@@ -5,7 +5,6 @@ class_name Main extends Node
 @export var gui: CanvasLayer
 @export var popups: CanvasLayer
 @export var transitions: CanvasLayer
-@export var fps_label: Label
 @export var first_transition_in: Control
 
 @export_group("States")
@@ -48,10 +47,6 @@ func _ready():
 	current_gui = gui.get_child(0)
 	await first_transition_in.get_node("AnimationPlayer").animation_finished
 	first_transition_in.queue_free()
-
-
-func _on_update_interval_timeout() -> void:
-	fps_label.set_deferred("text", int(Engine.get_frames_per_second()))
 
 
 func _change_state(state: Global.GameState):

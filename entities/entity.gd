@@ -54,8 +54,6 @@ func _be_hurt(damage: float) -> void:
 
 ## Defines the actions that will happen when the entity dies.
 func _die() -> void:
-	if j_unit:
-		_spawn_collectibles()
 	Global.trigger_camera_shake.emit(entity_stats.death_shake_intensity)
 	set_deferred("monitorable", false)
 	set_deferred("monitoring", false)

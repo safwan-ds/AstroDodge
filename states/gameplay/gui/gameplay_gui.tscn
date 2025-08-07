@@ -1,15 +1,14 @@
-[gd_scene load_steps=9 format=3 uid="uid://yfcq067tpxu4"]
+[gd_scene load_steps=8 format=3 uid="uid://yfcq067tpxu4"]
 
 [ext_resource type="Theme" uid="uid://bvaghou14ty2x" path="res://themes/primary/primary.tres" id="1_ivni6"]
 [ext_resource type="Script" uid="uid://hc3wlengjkr8" path="res://states/gameplay/gui/gameplay_gui.gd" id="2_lc4p0"]
-[ext_resource type="Texture2D" uid="uid://lr6xxev078h" path="res://states/gameplay/gui/hud_bar_l_Under.ase_layer_tex" id="3_j5dm2"]
-[ext_resource type="Texture2D" uid="uid://b2l8y281q4ke0" path="res://states/gameplay/gui/hud_bar_l_Over.ase_layer_tex" id="4_y7ek3"]
-[ext_resource type="Texture2D" uid="uid://cc422mac50s8i" path="res://states/gameplay/gui/hud_bar_l_Progress.ase_layer_tex" id="5_v4wjf"]
+[ext_resource type="Texture2D" uid="uid://c78fhkc571dbc" path="res://states/gameplay/gui/hud_bar_l_Under.ase_layer_tex" id="3_j5dm2"]
+[ext_resource type="Texture2D" uid="uid://xmqmpnp2scc0" path="res://states/gameplay/gui/hud_bar_l_Progress.ase_layer_tex" id="5_v4wjf"]
 [ext_resource type="Texture2D" uid="uid://bmmapair3lvym" path="res://states/gameplay/gui/hud_v_bar_l_Under.ase_layer_tex" id="6_228b6"]
 [ext_resource type="Texture2D" uid="uid://0c545nil5vxk" path="res://states/gameplay/gui/hud_v_bar_l_Over.ase_layer_tex" id="7_l70dh"]
 [ext_resource type="Texture2D" uid="uid://c1wchy4hcy2bv" path="res://states/gameplay/gui/hud_v_bar_l_Progress.ase_layer_tex" id="8_6ar7c"]
 
-[node name="GameplayGUI" type="Control" node_paths=PackedStringArray("asteroids_label", "score_label", "hp_bar", "speed_bar", "pause_label", "game_over_label", "cooldown_bar")]
+[node name="GameplayGUI" type="Control" node_paths=PackedStringArray("score_label", "hp_bar", "speed_bar", "pause_label", "game_over_label", "collectibles_counter_label")]
 process_mode = 3
 layout_mode = 3
 anchors_preset = 15
@@ -20,13 +19,12 @@ grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("1_ivni6")
 script = ExtResource("2_lc4p0")
-asteroids_label = NodePath("AsteroidsCounter")
 score_label = NodePath("ScoreLabel")
 hp_bar = NodePath("HPBar")
 speed_bar = NodePath("SpeedBar")
 pause_label = NodePath("PauseLabel")
 game_over_label = NodePath("GameOverLabel")
-cooldown_bar = NodePath("CooldownBar")
+collectibles_counter_label = NodePath("CollectiblesCounterLabel")
 metadata/_edit_horizontal_guides_ = [346.0]
 
 [node name="AsteroidsCounter" type="Label" parent="."]
@@ -68,7 +66,6 @@ value = 100.0
 radial_fill_degrees = 162.4
 nine_patch_stretch = true
 texture_under = ExtResource("3_j5dm2")
-texture_over = ExtResource("4_y7ek3")
 texture_progress = ExtResource("5_v4wjf")
 
 [node name="SpeedBar" type="TextureProgressBar" parent="."]
@@ -136,17 +133,13 @@ horizontal_alignment = 1
 vertical_alignment = 1
 uppercase = true
 
-[node name="CooldownBar" type="ProgressBar" parent="."]
+[node name="CollectiblesCounterLabel" type="Label" parent="."]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.256
-anchor_top = 0.872
-anchor_right = 0.503
-anchor_bottom = 1.0
-offset_left = 0.159988
-offset_top = 0.0799866
-offset_right = 0.0799866
-offset_bottom = -14.0
-grow_horizontal = 2
-grow_vertical = 0
-show_percentage = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -153.0
+offset_bottom = 41.0
+grow_horizontal = 0
+text = "Collectibles"
+horizontal_alignment = 2

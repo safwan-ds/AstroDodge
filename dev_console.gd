@@ -150,9 +150,13 @@ func get_nodes_in_group(group_name: String) -> Array:
 
 
 func destroy_all_asteroids() -> void:
-	var asteroids := get_tree().get_nodes_in_group("asteroids")
-	for asteroid in asteroids:
-		asteroid._destroy()
+	for asteroid in get_tree().get_nodes_in_group("asteroids"):
+		asteroid._die()
+
+
+func destroy_all_enemies() -> void:
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		enemy._die()
 
 
 func reload() -> void:

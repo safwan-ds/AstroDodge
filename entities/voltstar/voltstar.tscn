@@ -1,10 +1,11 @@
-[gd_scene load_steps=21 format=3 uid="uid://d2ubv33cs8o2g"]
+[gd_scene load_steps=22 format=3 uid="uid://d2ubv33cs8o2g"]
 
 [ext_resource type="Script" uid="uid://b6r2kxihtnu0s" path="res://entities/voltstar/voltstar.gd" id="1_kuoce"]
 [ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats.gd" id="2_kuoce"]
 [ext_resource type="PackedScene" uid="uid://b7nl6c8mo8a7m" path="res://entities/voltstar/voltshot/voltshot.tscn" id="2_la6je"]
 [ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://visuals/particle.png" id="2_sy5s6"]
 [ext_resource type="SpriteFrames" uid="uid://b32h0nwxlo5om" path="res://entities/voltstar/voltstar.aseprite" id="3_sy5s6"]
+[ext_resource type="PackedScene" uid="uid://ugylwg3bkqdw" path="res://collectibles/j_unit/j_unit.tscn" id="4_t1w5k"]
 [ext_resource type="AudioStream" uid="uid://dk7frf6ie0cch" path="res://audio/sfx/boom.wav" id="5_i0qia"]
 
 [sub_resource type="Resource" id="Resource_sy5s6"]
@@ -123,14 +124,15 @@ turbulence_initial_displacement_min = -16.5
 turbulence_initial_displacement_max = 16.5
 turbulence_influence_over_life = SubResource("CurveTexture_km6wj")
 
-[node name="Voltstar" type="Area2D" node_paths=PackedStringArray("guns", "sprite", "trail", "explosion", "audio_player") groups=["enemies", "entities", "voltstar"]]
+[node name="Voltstar" type="Area2D" node_paths=PackedStringArray("guns", "sprite", "trail", "explosion", "audio_player") groups=["enemies", "entities", "voltstars"]]
 collision_layer = 2
-collision_mask = 5
+collision_mask = 7
 script = ExtResource("1_kuoce")
 guns = NodePath("Guns")
 voltshot_scene = ExtResource("2_la6je")
 distance_to_player = 200.0
 entity_stats = SubResource("Resource_sy5s6")
+j_unit = ExtResource("4_t1w5k")
 sprite = NodePath("Sprite")
 trail = NodePath("Trail")
 explosion = NodePath("Explosion")

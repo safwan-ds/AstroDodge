@@ -1,10 +1,49 @@
-[gd_scene load_steps=4 format=3 uid="uid://ugylwg3bkqdw"]
+[gd_scene load_steps=9 format=3 uid="uid://ugylwg3bkqdw"]
 
 [ext_resource type="Script" uid="uid://bw5qj28nwdxfg" path="res://collectibles/collectible.gd" id="1_36tnp"]
 [ext_resource type="SpriteFrames" uid="uid://bia8ta5ttvs6f" path="res://collectibles/j_unit/j_unit.aseprite" id="3_natie"]
+[ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://visuals/particle.png" id="3_v2tmq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_43vdg"]
 size = Vector2(10, 10)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_66o28"]
+particles_animation = true
+particles_anim_h_frames = 10
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id="Gradient_ct8au"]
+colors = PackedColorArray(0.305882, 0.635294, 0.827451, 1, 0.853124, 0.930647, 0.98053, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_urvk4"]
+gradient = SubResource("Gradient_ct8au")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_88v0e"]
+resource_local_to_scene = true
+particle_flag_align_y = true
+particle_flag_rotate_y = true
+particle_flag_disable_z = true
+direction = Vector3(0, 0.275, 0)
+spread = 5.0
+initial_velocity_min = 21.1
+initial_velocity_max = 45.8
+gravity = Vector3(0, 0, 0)
+damping_min = 0.005
+damping_max = 9.965
+scale_min = 0.2
+scale_max = 0.2
+color_ramp = SubResource("GradientTexture1D_urvk4")
+hue_variation_min = -0.05
+hue_variation_max = 0.05
+anim_speed_min = 1.0
+anim_speed_max = 1.0
+turbulence_noise_strength = 0.45
+turbulence_noise_scale = 0.815
+turbulence_influence_min = 0.0
+turbulence_influence_max = 0.138
+turbulence_initial_displacement_min = -16.5
+turbulence_initial_displacement_max = 16.5
 
 [node name="JUnit" type="Area2D" groups=["collectibles", "entities"]]
 collision_layer = 16
@@ -18,4 +57,13 @@ shape = SubResource("RectangleShape2D_43vdg")
 sprite_frames = ExtResource("3_natie")
 animation = &"Loop"
 autoplay = "Loop"
-frame_progress = 0.928572
+frame_progress = 0.0599761
+
+[node name="Trail" type="GPUParticles2D" parent="."]
+modulate = Color(1, 1.75, 1, 1)
+z_index = -1
+material = SubResource("CanvasItemMaterial_66o28")
+amount = 16
+texture = ExtResource("3_v2tmq")
+visibility_rect = Rect2(-150, -6.345, 300, 600)
+process_material = SubResource("ParticleProcessMaterial_88v0e")

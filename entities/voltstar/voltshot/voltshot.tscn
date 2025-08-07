@@ -10,8 +10,11 @@ script = ExtResource("2_h3msd")
 max_health = 1.0
 base_speed = 100.0
 hit_shake_intensity = 0
-death_shake_intensity = 1
+death_shake_intensity = 0
 metadata/_custom_type_script = "uid://bjq253037nqv"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_og24r"]
+radius = 6.0
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_h3msd"]
 particles_animation = true
@@ -56,9 +59,6 @@ turbulence_influence_min = 0.0
 turbulence_influence_max = 0.138
 turbulence_initial_displacement_min = -16.5
 turbulence_initial_displacement_max = 16.5
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_og24r"]
-radius = 6.0
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_rsqvy"]
 particles_animation = true
@@ -127,8 +127,10 @@ trail = NodePath("Trail")
 explosion = NodePath("Explosion")
 metadata/_custom_type_script = "uid://qy4n5oh6dqpx"
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_og24r")
+
 [node name="Trail" type="GPUParticles2D" parent="."]
-modulate = Color(1.25, 1.25, 1.25, 1)
 material = SubResource("CanvasItemMaterial_h3msd")
 amount = 128
 texture = ExtResource("2_t2ija")
@@ -137,15 +139,12 @@ fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_0apl1")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+modulate = Color(1.2, 1.2, 1.5, 1)
 sprite_frames = ExtResource("4_h3msd")
 autoplay = "default"
-frame_progress = 0.782875
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_og24r")
+frame_progress = 0.743877
 
 [node name="Explosion" type="GPUParticles2D" parent="."]
-modulate = Color(1, 1, 1.25, 1)
 material = SubResource("CanvasItemMaterial_rsqvy")
 emitting = false
 amount = 256

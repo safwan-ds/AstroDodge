@@ -49,13 +49,12 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.435
 shader_parameter/vignette_opacity = 1.0
 
-[node name="Main" type="Node" node_paths=PackedStringArray("world_2d", "gui", "popups", "transitions", "fps_label", "first_transition_in")]
+[node name="Main" type="Node" node_paths=PackedStringArray("world_2d", "gui", "popups", "transitions", "first_transition_in")]
 script = ExtResource("1_ig7tw")
 world_2d = NodePath("World/World2D")
 gui = NodePath("GUI")
 popups = NodePath("Popups")
 transitions = NodePath("Transitions")
-fps_label = NodePath("Overlays/FPSLabel")
 first_transition_in = NodePath("Transitions/DissolveTransition")
 main_menu = ExtResource("2_0xm2m")
 main_menu_bg = ExtResource("3_h2yge")
@@ -100,22 +99,6 @@ follow_viewport_enabled = true
 [node name="Overlays" type="CanvasLayer" parent="."]
 layer = 3
 
-[node name="FPSLabel" type="Label" parent="Overlays"]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -71.0
-offset_right = -17.0
-offset_bottom = 47.0
-grow_horizontal = 0
-size_flags_horizontal = 4
-size_flags_vertical = 0
-theme_override_font_sizes/font_size = 32
-horizontal_alignment = 2
-
-[node name="UpdateInterval" type="Timer" parent="Overlays/FPSLabel"]
-autostart = true
-
 [node name="Shader" type="ColorRect" parent="Overlays"]
 material = SubResource("ShaderMaterial_lquwl")
 anchors_preset = 15
@@ -124,5 +107,3 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-
-[connection signal="timeout" from="Overlays/FPSLabel/UpdateInterval" to="." method="_on_update_interval_timeout"]

@@ -21,8 +21,11 @@ func _process(delta) -> void:
 
 
 func _on_area_entered(area) -> void:
-	audio_player.play()
-	await _die()
+	if area.get_groups().any(func(x): return x in ["voltstars", "player", "bullets"]):
+		if area.is_in_group("bullets"):
+			_spawn_collectibles.call_deferred()
+		audio_player.play()
+		await _die()
 
 
 func _on_shooting_timer_timeout() -> void:
