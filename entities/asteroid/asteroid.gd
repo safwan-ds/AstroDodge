@@ -30,6 +30,8 @@ func _ready():
 
 
 func _on_area_entered(area: Area2D) -> void:
+	if not area.is_in_group("bullets") and not area.is_in_group("asteroids") and not area.is_in_group("player"):
+		return
 	_die()
 
 
@@ -43,4 +45,5 @@ func _die() -> void:
 
 
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
-	queue_free()
+	if not _died:
+		queue_free()

@@ -16,6 +16,8 @@ func _ready():
 
 
 func _process(delta):
+	if is_queued_for_deletion():
+		return
 	if player:
 		_direction = (player.global_position - global_position).normalized()
 		_velocity = _velocity.move_toward((global_position.distance_to(player.global_position) + 300.0) * _direction, acceleration * delta)
@@ -24,7 +26,7 @@ func _process(delta):
 		queue_free()
 
 
-func _on_area_entered(area):
+func _on_area_entered(_area):
 	var gameplay := Global.current_world
 	gameplay.collectibles_counter_temp[collectible_type] += 1
 	Global.data_save.collectibles_counter[collectible_type] += 1

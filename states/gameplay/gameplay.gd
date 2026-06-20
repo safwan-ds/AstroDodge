@@ -16,7 +16,12 @@ var score_multiplier := 1.0
 var paused := false
 var game_over := false
 
-@onready var collectibles_counter_temp := Global.data_save.collectibles_counter
+var collectibles_counter_temp: Array[int]
+
+
+func _ready() -> void:
+	collectibles_counter_temp.resize(Global.CollectibleType.size())
+	collectibles_counter_temp.fill(0)
 
 
 func _process(delta) -> void:
@@ -42,7 +47,7 @@ func _input(event) -> void:
 			Global.change_state.emit(Global.GameState.GAMEPLAY)
 
 
-func _on_player_is_hurt(hp: float) -> void:
+func _on_player_is_hurt(_hp: float) -> void:
 	score_multiplier = 1.0
 
 

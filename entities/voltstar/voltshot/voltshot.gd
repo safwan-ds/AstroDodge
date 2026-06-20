@@ -16,11 +16,9 @@ func _process(delta):
 	super (delta)
 
 
-func _on_area_entered(area):
-	await _die()
-	queue_free()
+func _on_area_entered(_area):
+	_die()
 
 
 func _on_lifetime_timeout() -> void:
-	await _die()
-	queue_free()
+	_die()

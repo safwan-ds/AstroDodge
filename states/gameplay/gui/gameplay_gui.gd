@@ -29,7 +29,7 @@ func _ready() -> void:
 	game_over_label.visible_ratio = 0.0
 
 
-func _process(delta) -> void:
+func _process(_delta) -> void:
 	_set_values()
 
 

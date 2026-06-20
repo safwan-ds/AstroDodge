@@ -44,6 +44,11 @@ window/vsync/vsync_mode=0
 mouse_cursor/custom_image="uid://pjscuebk0xa"
 mouse_cursor/stretch/aspect="keep"
 
+[editor]
+
+version_control/plugin_name="GitPlugin"
+version_control/autoload_on_startup=true
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg")

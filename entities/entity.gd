@@ -26,6 +26,7 @@ var speed: float:
 
 var _direction := Vector2.ZERO
 var _velocity := Vector2.ZERO
+var _is_dying := false
 
 @onready var collectibles_map: Dictionary[Global.CollectibleType, PackedScene] = {
 	Global.CollectibleType.J_UNIT: j_unit,
@@ -52,7 +53,7 @@ func _process(delta) -> void:
 	position += _velocity * delta
 
 ## This method should be overridden in subclasses to handle area interactions.
-func _on_area_entered(area: Area2D) -> void:
+func _on_area_entered(_area: Area2D) -> void:
 	pass
 
 
@@ -66,6 +67,7 @@ func _be_hurt(damage: float) -> void:
 
 ## Defines the actions that will happen when the entity dies.
 func _die() -> void:
+	_is_dying = true
 	Global.trigger_camera_shake.emit(entity_stats.death_shake_intensity)
 	set_deferred("monitorable", false)
 	set_deferred("monitoring", false)
