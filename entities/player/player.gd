@@ -110,7 +110,7 @@ func _be_hurt(damage: float) -> void:
 func _die() -> void:
 	camera.position = position
 	remove_child(camera)
-	Global.current_world.add_child(camera)
+	add_sibling(camera)
 	is_dead.emit()
 	super ()
 
@@ -122,5 +122,5 @@ func _shoot() -> void:
 		var bullet: Bullet = bullet_scene.instantiate()
 		bullet.position = gun.global_position
 		bullet.rotation = _target_angle + randf_range(-PI / 20.0, PI / 20.0)
-		Global.current_world.add_child(bullet)
+		add_sibling(bullet)
 		Global.trigger_camera_shake.emit(1)

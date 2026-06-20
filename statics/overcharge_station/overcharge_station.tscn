@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://bcdkv4q00dugr"]
+
+[ext_resource type="SpriteFrames" uid="uid://d1o2nd2qifqxg" path="res://statics/overcharge_station/overcharge_station.aseprite" id="1_mwyfp"]
+[ext_resource type="Script" uid="uid://bi0j23u3vblin" path="res://statics/overcharge_station/overcharge_station.gd" id="1_rlg6h"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6j77q"]
+size = Vector2(62, 62)
+
+[node name="OverchargeStation" type="Area2D" node_paths=PackedStringArray("sprite") groups=["statics"]]
+collision_layer = 32
+script = ExtResource("1_rlg6h")
+sprite = NodePath("AnimatedSprite2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_6j77q")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("1_mwyfp")
+autoplay = "default"
+frame_progress = 0.149243
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(-1000, -1000, 2000, 2000)

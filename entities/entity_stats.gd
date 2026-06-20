@@ -1,6 +1,7 @@
 class_name EntityStats extends Resource
 
-const MAX_SHAKE_INTENSITY := 5
+const MAX_SHAKE_INTENSITY = 5
+const MAX_DROPPED_COLLECTIBLES = 10
 
 ## Starting health of the entity. Also, entity's HP max value.
 @export var max_health := 100.0

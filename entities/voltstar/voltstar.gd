@@ -23,7 +23,7 @@ func _process(delta) -> void:
 func _on_area_entered(area) -> void:
 	if area.get_groups().any(func(x): return x in ["voltstars", "player", "bullets"]):
 		if area.is_in_group("bullets"):
-			_spawn_collectibles.call_deferred()
+			_spawn_collectibles.call_deferred(Global.CollectibleType.J_UNIT, 2, 5)
 		audio_player.play()
 		await _die()
 
@@ -33,4 +33,4 @@ func _on_shooting_timer_timeout() -> void:
 		for gun in guns.get_children():
 			var voltshot: Voltshot = voltshot_scene.instantiate()
 			voltshot.position = gun.global_position
-			Global.current_world.add_child(voltshot)
+			add_sibling(voltshot)

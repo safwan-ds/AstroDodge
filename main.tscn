@@ -69,7 +69,7 @@ environment = SubResource("Environment_7dm0k")
 
 [node name="BG" type="CanvasLayer" parent="."]
 process_mode = 4
-layer = 0
+layer = -1
 
 [node name="ColorRect" type="ColorRect" parent="BG"]
 anchors_preset = 15
@@ -80,6 +80,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="World" type="CanvasLayer" parent="."]
+layer = 0
 follow_viewport_enabled = true
 
 [node name="World2D" type="Node2D" parent="World"]
@@ -91,13 +92,15 @@ follow_viewport_enabled = true
 [node name="MainMenu" parent="GUI" instance=ExtResource("2_0xm2m")]
 
 [node name="Popups" type="CanvasLayer" parent="."]
+layer = 2
 
 [node name="Transitions" type="CanvasLayer" parent="."]
+layer = 3
 
 [node name="DissolveTransition" parent="Transitions" instance=ExtResource("6_272bh")]
 
 [node name="Overlays" type="CanvasLayer" parent="."]
-layer = 3
+layer = 4
 
 [node name="Shader" type="ColorRect" parent="Overlays"]
 material = SubResource("ShaderMaterial_lquwl")

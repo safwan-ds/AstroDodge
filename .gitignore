@@ -3,14 +3,8 @@
 /android/
 .nomedia
 
-# Godot-specific ignores
-.import/
-export.cfg
-export_credentials.cfg
-export_presets.cfg
-
-# Imported translations (automatically generated from CSV files)
-*.translation
+# Exported game builds
+exports/
 
 # Mono-specific ignores
 .mono/
@@ -20,3 +14,7 @@ mono_crash.*.json
 # IDE specific ignores
 .vscode/
 .idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db

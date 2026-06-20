@@ -1,9 +1,10 @@
-[gd_scene load_steps=19 format=3 uid="uid://b7nl6c8mo8a7m"]
+[gd_scene load_steps=20 format=3 uid="uid://b7nl6c8mo8a7m"]
 
 [ext_resource type="Script" uid="uid://1fhi3dlhmrfd" path="res://entities/voltstar/voltshot/voltshot.gd" id="1_e4s2s"]
 [ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats.gd" id="2_h3msd"]
 [ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://visuals/particle.png" id="2_t2ija"]
 [ext_resource type="SpriteFrames" uid="uid://cjkgvxxvsymwy" path="res://entities/voltstar/voltshot/voltshot.aseprite" id="4_h3msd"]
+[ext_resource type="Texture2D" uid="uid://c0s7x5vpgqd0o" path="res://visuals/radial_point_light_texture.tres" id="5_og24r"]
 
 [sub_resource type="Resource" id="Resource_og24r"]
 script = ExtResource("2_h3msd")
@@ -156,5 +157,10 @@ process_material = SubResource("ParticleProcessMaterial_fb55d")
 [node name="Lifetime" type="Timer" parent="."]
 wait_time = 5.0
 autostart = true
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+energy = 1.25
+texture = ExtResource("5_og24r")
+texture_scale = 0.4
 
 [connection signal="timeout" from="Lifetime" to="." method="_on_lifetime_timeout"]

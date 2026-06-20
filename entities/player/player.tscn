@@ -180,7 +180,6 @@ position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_symyc")
 
 [node name="Trail" type="GPUParticles2D" parent="."]
-modulate = Color(1.25, 1.25, 1.25, 1)
 material = SubResource("CanvasItemMaterial_bls4j")
 position = Vector2(0, 6.115)
 amount = 300

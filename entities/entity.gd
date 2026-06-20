@@ -4,8 +4,12 @@ class_name Entity extends Area2D
 @export_group("Entity Stats")
 @export var entity_stats: EntityStats
 
-@export_group("Links to Scenes")
+@export_group("Links to Collectible Scenes")
 @export var j_unit: PackedScene
+@export var c_unit: PackedScene
+@export var ddx6_chip: PackedScene
+@export var mx3_chip: PackedScene
+@export var asm_unit: PackedScene
 
 @export_group("Links to Nodes")
 @export var sprite: AnimatedSprite2D
@@ -22,6 +26,14 @@ var speed: float:
 
 var _direction := Vector2.ZERO
 var _velocity := Vector2.ZERO
+
+@onready var collectibles_map: Dictionary[Global.CollectibleType, PackedScene] = {
+	Global.CollectibleType.J_UNIT: j_unit,
+	Global.CollectibleType.C_UNIT: c_unit,
+	Global.CollectibleType.DDX6_CHIP: ddx6_chip,
+	Global.CollectibleType.MX3_CHIP: mx3_chip,
+	Global.CollectibleType.ASM_UNIT: asm_unit,
+}
 @onready var _hp := entity_stats.max_health:
 	set(value):
 		value = clamp(value, 0.0, entity_stats.max_health)
@@ -66,8 +78,9 @@ func _die() -> void:
 	queue_free()
 
 
-func _spawn_collectibles():
-	for i in range(randi_range(5, 10)):
-		var unit: Collectible = j_unit.instantiate()
-		unit.position = position
-		Global.current_world.add_child(unit)
+func _spawn_collectibles(collectible_type: Global.CollectibleType, min_count: int, max_count: int):
+	var collectible_scene := collectibles_map[collectible_type]
+	for i in range(randi_range(min_count, max_count)):
+		var collectible_node: Collectible = collectible_scene.instantiate()
+		collectible_node.position = position
+		add_sibling(collectible_node)

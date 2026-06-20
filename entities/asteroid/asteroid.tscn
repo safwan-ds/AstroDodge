@@ -218,6 +218,25 @@ process_material = SubResource("ParticleProcessMaterial_ecv56")
 sprite_frames = ExtResource("2_4qh0a")
 autoplay = "default"
 frame_progress = 0.979719
+metadata/_aseprite_wizard_interface_config_ = {
+"animation_section": false,
+"layer_section": false,
+"output_section": false,
+"pending_changes": {
+"embed_tex": true,
+"layers": [],
+"o_ex_p": "",
+"o_folder": "",
+"o_name": "",
+"only_visible": false,
+"scale": "1.0",
+"should_round_fps": true,
+"slice": "",
+"source": "",
+"source_uid": -1
+},
+"slice_section": false
+}
 
 [node name="Shatter" type="GPUParticles2D" parent="."]
 visible = false
