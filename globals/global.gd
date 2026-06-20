@@ -5,6 +5,7 @@ signal show_popup(popup: PackedScene)
 signal quit_game
 # Gameplay signals
 signal trigger_camera_shake(intensity: int)
+signal explosion_occurred(world_position: Vector2)
 signal item_collected
 
 enum GameState {MAIN_MENU, GAMEPLAY}

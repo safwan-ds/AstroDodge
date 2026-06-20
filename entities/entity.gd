@@ -69,6 +69,7 @@ func _be_hurt(damage: float) -> void:
 func _die() -> void:
 	_is_dying = true
 	Global.trigger_camera_shake.emit(entity_stats.death_shake_intensity)
+	Global.explosion_occurred.emit(global_position)
 	set_deferred("monitorable", false)
 	set_deferred("monitoring", false)
 	sprite.hide()
