@@ -32,14 +32,15 @@ func _ready() -> void:
 
 func _process(delta) -> void:
 	_time += delta
+	var mouse_world := get_global_mouse_position() + offset / zoom
 	_target_offset = clamp(
-			(get_global_mouse_position() - global_position) * lookahead_multiplier,
+			(mouse_world - global_position) * lookahead_multiplier,
 			Vector2(-lookahead_distance, -lookahead_distance),
 			Vector2(lookahead_distance, lookahead_distance)
 		)
-	_current_offset = lerp(_current_offset, _target_offset, lookahead_smoothness * delta)
+	_current_offset = lerp(_current_offset, _target_offset, 1.0 - exp(-lookahead_smoothness * delta))
 	if _shake_intensity > 0.0:
-		_shake_intensity = lerp(_shake_intensity, 0.0, shake_decay_rate * delta)
+		_shake_intensity = lerp(_shake_intensity, 0.0, 1.0 - exp(-shake_decay_rate * delta))
 		offset = Vector2(
 			_get_noise_from_seed(0) * _shake_intensity + _current_offset.x,
 			_get_noise_from_seed(1) * _shake_intensity + _current_offset.y
