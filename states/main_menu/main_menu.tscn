@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cw014nevwfvi4"]
+[gd_scene format=3 uid="uid://cw014nevwfvi4"]
 
 [ext_resource type="Script" uid="uid://b4ee4gr4c5ssj" path="res://states/main_menu/main_menu.gd" id="1_ldv0f"]
 [ext_resource type="Theme" uid="uid://bvaghou14ty2x" path="res://themes/primary/primary.tres" id="1_pwybm"]
@@ -52,7 +52,7 @@ point_count = 2
 curve = SubResource("Curve_hvp4n")
 
 [sub_resource type="Curve" id="Curve_u0hdh"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.638009, 1), 1.21129, 1.21129, 0, 0, Vector2(1, 0), -38.489, 0.0, 0, 0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.63779527, 0.75268817), -0.6827955, -0.6827955, 0, 0, Vector2(1, 0), -9.454088, 0.0, 0, 0]
 point_count = 3
 
 [sub_resource type="CurveTexture" id="CurveTexture_xle8m"]
@@ -67,7 +67,7 @@ scale_curve = SubResource("CurveTexture_xle8m")
 color = Color(0.188235, 0.188235, 0.345098, 1)
 alpha_curve = SubResource("CurveTexture_u0hdh")
 
-[node name="MainMenu" type="Control" node_paths=PackedStringArray("continue_button", "animation_player")]
+[node name="MainMenu" type="Control" unique_id=1027437982 node_paths=PackedStringArray("continue_button", "animation_player")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -80,20 +80,18 @@ quit_popup = ExtResource("5_u0hdh")
 continue_button = NodePath("Panel/CenterContainer/VBoxContainer/ContinueButton")
 animation_player = NodePath("AnimationPlayer")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1334830848]
 root_node = NodePath("../Logo/LogoRect")
-libraries = {
-&"": SubResource("AnimationLibrary_xle8m")
-}
+libraries/ = SubResource("AnimationLibrary_xle8m")
 
-[node name="Logo" type="CenterContainer" parent="."]
+[node name="Logo" type="CenterContainer" parent="." unique_id=983722038]
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
 offset_right = 300.0
 grow_vertical = 2
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="Logo"]
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Logo" unique_id=748811093]
 position = Vector2(150, 180)
 amount = 16
 texture = ExtResource("3_pd6do")
@@ -101,14 +99,14 @@ lifetime = 0.6
 fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_xle8m")
 
-[node name="LogoRect" type="TextureRect" parent="Logo"]
+[node name="LogoRect" type="TextureRect" parent="Logo" unique_id=36133100]
 custom_minimum_size = Vector2(225.235, 93.545)
 layout_mode = 2
 size_flags_vertical = 3
 texture = ExtResource("3_pd6do")
 stretch_mode = 5
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1319032984]
 clip_contents = true
 layout_mode = 1
 anchors_preset = 15
@@ -118,7 +116,7 @@ offset_left = 323.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CenterContainer" type="CenterContainer" parent="Panel"]
+[node name="CenterContainer" type="CenterContainer" parent="Panel" unique_id=181523050]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -126,49 +124,49 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/CenterContainer" unique_id=1908142086]
 layout_mode = 2
 alignment = 1
 
-[node name="ContinueButton" type="Button" parent="Panel/CenterContainer/VBoxContainer"]
+[node name="ContinueButton" type="Button" parent="Panel/CenterContainer/VBoxContainer" unique_id=1760384495]
 visible = false
 layout_mode = 2
 focus_mode = 0
 text = "Continue"
 
-[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/ContinueButton" instance=ExtResource("4_hvp4n")]
+[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/ContinueButton" unique_id=68965047 instance=ExtResource("4_hvp4n")]
 hovered_scale = Vector2(1.3, 1.1)
 
-[node name="NewGameButton" type="Button" parent="Panel/CenterContainer/VBoxContainer"]
+[node name="NewGameButton" type="Button" parent="Panel/CenterContainer/VBoxContainer" unique_id=634749862]
 layout_mode = 2
 focus_mode = 0
 text = "New Game"
 
-[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/NewGameButton" instance=ExtResource("4_hvp4n")]
+[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/NewGameButton" unique_id=2039883989 instance=ExtResource("4_hvp4n")]
 hovered_scale = Vector2(1.3, 1.1)
 
-[node name="SettingsButton" type="Button" parent="Panel/CenterContainer/VBoxContainer"]
+[node name="SettingsButton" type="Button" parent="Panel/CenterContainer/VBoxContainer" unique_id=1172474302]
 layout_mode = 2
 focus_mode = 0
 text = "Settings"
 
-[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/SettingsButton" instance=ExtResource("4_hvp4n")]
+[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/SettingsButton" unique_id=1720340407 instance=ExtResource("4_hvp4n")]
 hovered_scale = Vector2(1.3, 1.1)
 
-[node name="UpgradessButton" type="Button" parent="Panel/CenterContainer/VBoxContainer"]
+[node name="UpgradessButton" type="Button" parent="Panel/CenterContainer/VBoxContainer" unique_id=1152374092]
 layout_mode = 2
 focus_mode = 0
 text = "Upgrades"
 
-[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/UpgradessButton" instance=ExtResource("4_hvp4n")]
+[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/UpgradessButton" unique_id=771634534 instance=ExtResource("4_hvp4n")]
 hovered_scale = Vector2(1.3, 1.1)
 
-[node name="QuitButton" type="Button" parent="Panel/CenterContainer/VBoxContainer"]
+[node name="QuitButton" type="Button" parent="Panel/CenterContainer/VBoxContainer" unique_id=1642162074]
 layout_mode = 2
 focus_mode = 0
 text = "Quit"
 
-[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/QuitButton" instance=ExtResource("4_hvp4n")]
+[node name="AnimationComponent" parent="Panel/CenterContainer/VBoxContainer/QuitButton" unique_id=1429361522 instance=ExtResource("4_hvp4n")]
 hovered_scale = Vector2(1.3, 1.1)
 
 [connection signal="pressed" from="Panel/CenterContainer/VBoxContainer/NewGameButton" to="." method="_on_new_game_button_pressed"]

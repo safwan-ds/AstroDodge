@@ -39,6 +39,9 @@ var current_gui: Control:
 
 
 func _ready():
+	Preloader.preload_all()
+	await Preloader.finished
+
 	first_transition_in.get_node("AnimationPlayer").play_backwards("dissolve")
 	Global.change_state.connect(_change_state)
 	Global.show_popup.connect(_show_popup)

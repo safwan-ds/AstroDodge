@@ -33,6 +33,7 @@ buses/default_bus_layout="res://globals/default_bus_layout.tres"
 Global="*res://globals/global.gd"
 AudioManager="*res://audio/audio_manager.tscn"
 DevConsole="*res://globals/dev_console.tscn"
+Preloader="*res://globals/preloader.gd"
 
 [display]
 

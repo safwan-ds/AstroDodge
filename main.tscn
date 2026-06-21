@@ -96,18 +96,6 @@ follow_viewport_enabled = true
 
 [node name="MainMenuBG" parent="World/World2D" unique_id=514926862 instance=ExtResource("3_h2yge")]
 
-[node name="GUI" type="CanvasLayer" parent="." unique_id=37482294]
-
-[node name="MainMenu" parent="GUI" unique_id=1413073452 instance=ExtResource("2_0xm2m")]
-
-[node name="Popups" type="CanvasLayer" parent="." unique_id=1315658345]
-layer = 2
-
-[node name="Transitions" type="CanvasLayer" parent="." unique_id=1809331346]
-layer = 3
-
-[node name="DissolveTransition" parent="Transitions" unique_id=1648528627 instance=ExtResource("6_272bh")]
-
 [node name="FX" type="CanvasLayer" parent="." unique_id=1087067797]
 layer = 4
 
@@ -121,8 +109,21 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("10_d2f5c")
 
-[node name="Overlays" type="CanvasLayer" parent="." unique_id=1864504883]
+[node name="GUI" type="CanvasLayer" parent="." unique_id=37482294]
 layer = 5
+
+[node name="MainMenu" parent="GUI" unique_id=1413073452 instance=ExtResource("2_0xm2m")]
+
+[node name="Popups" type="CanvasLayer" parent="." unique_id=1315658345]
+layer = 7
+
+[node name="Transitions" type="CanvasLayer" parent="." unique_id=1809331346]
+layer = 8
+
+[node name="DissolveTransition" parent="Transitions" unique_id=1648528627 instance=ExtResource("6_272bh")]
+
+[node name="Overlays" type="CanvasLayer" parent="." unique_id=1864504883]
+layer = 9
 
 [node name="Shader" type="ColorRect" parent="Overlays" unique_id=479555843]
 material = SubResource("ShaderMaterial_lquwl")
