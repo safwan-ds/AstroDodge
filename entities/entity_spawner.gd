@@ -41,13 +41,11 @@ func _on_timeout() -> void:
 
 
 func _spawn_tick() -> void:
-	var batch = min(spawn_count, 1)
-	for i in range(batch):
+	while spawn_count > 0:
 		_spawn_entity()
 		spawn_count -= 1
-	if spawn_count > 0:
-		await get_tree().process_frame
-		_spawn_tick()
+		if spawn_count > 0:
+			await get_tree().process_frame
 
 
 ## Instantiate [member entity] at a random position just outside the camera viewport.

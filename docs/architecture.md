@@ -17,7 +17,7 @@ Four autoloads are registered in `project.godot`. They are always available glob
 | **Global**       | `globals/global.gd`        | Signals, enums, data save, fullscreen toggle, dev console toggle |
 | **AudioManager** | `audio/audio_manager.tscn` | SFX + music playback with randomization and fade in/out          |
 | **DevConsole**   | `globals/dev_console.tscn` | Debug console (visible only in debug builds)                     |
-| **Preloader**    | `globals/preloader.gd`     | Loading screen and GPU warmup                                    |
+| **Preloader**    | `states/loading/loading_screen.gd` | Loading screen + GPU warmup (instantiated scene freed after use) |
 
 ### Global (`globals/global.gd`)
 
@@ -44,9 +44,11 @@ Save data lives at `user://data_save.res` as a custom `Resource` (`DataSave exte
 - Text input field for executing commands, output display for results
 - Auto-focuses input on open
 
-### Preloader
+### Preloader (`states/loading/loading_screen.gd`)
 
-- Manages loading screen display during scene transitions
+- Script-only autoload (`extends Node`) — no permanent scene tree overhead
+- Manages loading screen display during initial startup
+- Instantiates `loading_screen.tscn` on-demand during `preload_all()`, frees it after completion
 - Performs GPU warmup (creates/destroys placeholder objects) to avoid shader compile hitches during gameplay
 
 ---
@@ -65,7 +67,7 @@ Root (Node)
 ├── Global (Node)          # Autoload — signals, data, state
 ├── AudioManager (Node)    # Autoload — SFX + music
 ├── DevConsole (Control)   # Autoload — debug console
-└── Preloader (Node)       # Autoload — loading + warmup
+└── Preloader (Node)       # Autoload — LoadingScreen (script-only, frees UI after use)
 ```
 
 The `Root → Main` subtree is swapped out on state changes (`Global.change_state` signal). The autoloads persist across state transitions.
@@ -178,7 +180,7 @@ res://
 ├── docs /                     # Documentation
 ├── entities /                 # Player, Asteroid, Bullet, Voltstar, Voltshot
 ├── fonts /
-├── globals /                  # Global, DevConsole, Preloader, DataSave
+├── globals /                  # Global, DevConsole, DataSave
 ├── states /                   # MainMenu, Gameplay (and GUI subdir)
 ├── statics /                  # OverchargeStation
 ├── themes /                   # Theme + font resources

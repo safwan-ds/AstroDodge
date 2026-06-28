@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ciofdkevvj6oa"]
 
-[ext_resource type="Script" uid="uid://bgym6lgpl2gp3" path="res://states/loading/loading_screen.gd" id="1_72fcs"]
+[ext_resource type="Script" path="res://states/loading/loading_screen_view.gd" id="1_xt7su"]
 [ext_resource type="PackedScene" path="res://collectibles/j_unit/j_unit.tscn" id="2_0fcri"]
 [ext_resource type="Shader" uid="uid://cknortpq7s626" path="res://visuals/shaders/black_border.gdshader" id="2_jcrjc"]
 [ext_resource type="PackedScene" path="res://entities/asteroid/asteroid.tscn" id="3_s7ba5"]
@@ -19,7 +19,7 @@ font_size = 45
 
 [node name="LoadingScreen" type="CanvasLayer" unique_id=1349288503]
 layer = 100
-script = ExtResource("1_72fcs")
+script = ExtResource("1_xt7su")
 scenes_to_preload = Array[PackedScene]([ExtResource("2_0fcri"), ExtResource("3_s7ba5"), ExtResource("4_5pdhx"), ExtResource("5_tyl4c"), ExtResource("6_6cr3f"), ExtResource("7_boh5o"), ExtResource("8_0oyfe")])
 shaders_to_preload = Array[Shader]([ExtResource("2_jcrjc"), ExtResource("3_x028a"), ExtResource("4_jcgnt"), ExtResource("5_lmjlo"), ExtResource("6_kttkj")])
 

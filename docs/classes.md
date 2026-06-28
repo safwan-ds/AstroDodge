@@ -8,13 +8,13 @@ extends Area2D
 classDiagram
     Entity <|-- Asteroid : inherits
     Entity <|-- Player : inherits
-    Entity <|-- Bullet : inherits
     Entity <|-- Voltstar : inherits
     Entity <|-- Voltshot : inherits
     Entity --> EntityStats : uses
     Player --> Bullet : shoots
     Voltstar --> Voltshot : fires
     Entity "1" --> "*" collectible : spawns
+    EntitySpawner --> Entity : instantiates
 
     class Entity{
         +EntityStats entity_stats
@@ -30,13 +30,15 @@ classDiagram
         +float hp
         +float speed
         -Vector2 _direction
+        -Vector2 _velocity
         -Dictionary _collectibles_map
         -float _hp
         -bool _is_dying
-        -_on_area_entered(Area2D area)
-        -_be_hurt(float damage)
-        -_die()
-        -_spawn_collectibles(CollectibleType collectible_type, int min_count, int max_count)
+        +_on_area_entered(Area2D area)
+        +_move(float delta)
+        +_be_hurt(float damage)
+        +_die()
+        +_spawn_collectibles(CollectibleType type, int min, int max)
     }
     class Player{
         +is_hurt(hp float)
@@ -64,8 +66,11 @@ classDiagram
         -float _current_shoot_cooldown
         -bool _auto_fire
         -Tween _auto_fire_tween
-        -_input(InputEvent event)
-        -_shoot()
+        +_move(float delta)
+        +_be_hurt(float damage)
+        +_die()
+        +_input(InputEvent event)
+        +_shoot()
     }
     class Asteroid{
         +GPUParticles2D shatter
@@ -77,8 +82,11 @@ classDiagram
         +_on_visible_on_screen_notifier_2d_screen_exited()
     }
     class Bullet{
-        -_on_area_entered(Area2D area)
-        -_on_visible_on_screen_notifier_2d_screen_exited()
+        +float speed
+        +GPUParticles2D trail
+        +_process(float delta)
+        +_on_area_entered(Area2D area)
+        +_on_screen_exited()
     }
     class Voltstar{
         +Node2D guns
@@ -88,16 +96,30 @@ classDiagram
         -float _rotation_speed
         -int _movement_direction
         -float _speed
-        -_process(float delta)
-        -_on_area_entered(Area2D area)
-        -_on_shooting_timer_timeout()
+        +_move(float delta)
+        +_on_area_entered(Area2D area)
+        +_on_shooting_timer_timeout()
     }
     class Voltshot{
         +float rotation_speed
-        -_ready()
-        -_process(float delta)
-        -_on_area_entered(Area2D area)
-        -_on_lifetime_timeout()
+        +_ready()
+        +_move(float delta)
+        +_on_area_entered(Area2D area)
+        +_on_lifetime_timeout()
+    }
+    class EntitySpawner{
+        +PackedScene entity
+        +String entity_group
+        +int spawn_count_min
+        +int spawn_count_max
+        +int max_count
+        +Camera2D camera
+        +Vector2 viewport_size
+        +int spawn_count
+        +_ready()
+        +_on_timeout()
+        +_spawn_tick()
+        +_spawn_entity()
     }
 ```
 
