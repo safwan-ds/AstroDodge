@@ -1,4 +1,6 @@
 extends Node2D
+## Main gameplay world. Tracks score with multiplier, follows player with star field,[br]
+## and handles game-over / menu transitions.
 
 @export_group("Links to Nodes")
 @export var player: Player
@@ -7,7 +9,9 @@ extends Node2D
 @export var camera: Camera2D
 
 @export_group("Score")
+## Base score gained per second.
 @export var d_score := 1.0
+## Score multiplier growth per second.
 @export var d2_score := 0.01
 
 var score := 0.0
@@ -31,7 +35,7 @@ func _process(delta) -> void:
 	star_field.position = player.position
 
 	direction_arrow.position = player.position
-	direction_arrow.rotation = player._target_angle
+	direction_arrow.rotation = player.target_angle
 
 	score_multiplier += d2_score * delta
 	score += d_score * delta * score_multiplier

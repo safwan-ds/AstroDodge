@@ -1,4 +1,6 @@
 class_name Voltshot extends Entity
+## Projectile fired by [Voltstar] enemies. Rotates toward the player[br]
+## and self-destructs on contact or after a lifetime timeout.
 
 @export var rotation_speed := 5.0
 

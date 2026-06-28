@@ -1,4 +1,6 @@
 class_name Voltstar extends Entity
+## Orbiting enemy that maintains a fixed distance from the player.[br]
+## Fires [Voltshot] projectiles on a timer. Drops collectibles when destroyed.
 
 @export var guns: Node2D
 @export var voltshot_scene: PackedScene
@@ -30,6 +32,7 @@ func _on_area_entered(area) -> void:
 		await _die()
 
 
+## Fire a [Voltshot] from each gun toward the player.
 func _on_shooting_timer_timeout() -> void:
 	if is_processing():
 		for gun in guns.get_children():

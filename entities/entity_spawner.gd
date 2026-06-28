@@ -1,13 +1,18 @@
 class_name EntitySpawner extends Timer
+## Timer-based spawner that places entities just outside the camera viewport.[br]
+## Respects a per-group max count and spreads batches across frames to avoid spikes.
 
 @export var outside_viewport := true
 @export var padding := 50.0
+## Scene to instantiate for each spawn.
 @export var entity: PackedScene
+## Group assigned to spawned entities (used for max-count tracking).
 @export var entity_group: String
 
 @export_subgroup("Spawn Count")
 @export_range(1, 100) var spawn_count_min := 1
 @export_range(1, 100) var spawn_count_max := 4
+## Maximum entities of [member entity_group] allowed in the scene at once.
 @export_range(1, 100) var max_count := 10
 
 var camera: Camera2D
@@ -20,15 +25,18 @@ func _ready() -> void:
 	camera = get_viewport().get_camera_2d()
 
 
+## Check entity group count and spawn a batch if below [member max_count].
 func _on_timeout() -> void:
 	var current_entity_count := get_tree().get_node_count_in_group(entity_group)
 	if current_entity_count < max_count:
 		spawn_count = randi_range(
-			spawn_count_min, spawn_count_max if max_count - current_entity_count > spawn_count_max else max_count - current_entity_count
+			spawn_count_min,
+			spawn_count_max if max_count - current_entity_count > spawn_count_max \
+				else max_count - current_entity_count,
 		)
 		if not camera:
 			camera = get_viewport().get_camera_2d()
-		viewport_size = camera.get_viewport_rect().size / camera.zoom # Adjust for zoom
+		viewport_size = camera.get_viewport_rect().size / camera.zoom
 		_spawn_tick()
 
 
@@ -42,35 +50,34 @@ func _spawn_tick() -> void:
 		_spawn_tick()
 
 
+## Instantiate [member entity] at a random position just outside the camera viewport.
 func _spawn_entity() -> void:
 	if entity:
 		var instance = entity.instantiate()
 		var side = randi() % 4
-		# Top-left corner of the camera's view in global coordinates
 		var view_top_left_global = camera.get_screen_center_position() - (viewport_size / 2.0)
-		# Bottom-right corner
 		var view_bottom_right_global = camera.get_screen_center_position() + (viewport_size / 2.0)
-		
+
 		match side:
 			0: # Top
 				instance.position = Vector2(
 					randf_range(view_top_left_global.x, view_bottom_right_global.x),
-					view_top_left_global.y - padding
+					view_top_left_global.y - padding,
 				)
 			1: # Right
 				instance.position = Vector2(
 					view_bottom_right_global.x + padding,
-					randf_range(view_top_left_global.y, view_bottom_right_global.y)
+					randf_range(view_top_left_global.y, view_bottom_right_global.y),
 				)
 			2: # Bottom
 				instance.position = Vector2(
 					randf_range(view_top_left_global.x, view_bottom_right_global.x),
-					view_bottom_right_global.y + padding
+					view_bottom_right_global.y + padding,
 				)
 			3: # Left
 				instance.position = Vector2(
 					view_top_left_global.x - padding,
-					randf_range(view_top_left_global.y, view_bottom_right_global.y)
+					randf_range(view_top_left_global.y, view_bottom_right_global.y),
 				)
 
 		add_child(instance)

@@ -1,4 +1,6 @@
 class_name Collectible extends Area2D
+## Collectible resource that accelerates toward the player on pickup.[br]
+## Updates score counters and persists collected counts to disk.
 
 @export var collectible_type: Global.CollectibleType
 @export var initial_speed := 500.0
@@ -20,7 +22,8 @@ func _process(delta):
 		return
 	if player:
 		_direction = (player.global_position - global_position).normalized()
-		_velocity = _velocity.move_toward((global_position.distance_to(player.global_position) + 300.0) * _direction, acceleration * delta)
+		var target_vel := (global_position.distance_to(player.global_position) + 300.0) * _direction
+		_velocity = _velocity.move_toward(target_vel, acceleration * delta)
 		position += _velocity * delta
 	else:
 		queue_free()

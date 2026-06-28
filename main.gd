@@ -1,4 +1,6 @@
 class_name Main extends Node
+## Root scene controller. Manages world/GUI lifecycle, state transitions,[br]
+## cursor switching, and popup display.
 
 @export_group("Links to Nodes")
 @export var world_2d: Node2D
@@ -8,10 +10,15 @@ class_name Main extends Node
 @export var first_transition_in: Control
 
 @export_group("States")
+## MainMenu scene (Control).
 @export var main_menu: PackedScene
+## MainMenu background scene (world layer).
 @export var main_menu_bg: PackedScene
+## Gameplay world scene.
 @export var gameplay_scene: PackedScene
+## Gameplay GUI scene (HUD layer).
 @export var gameplay_gui: PackedScene
+## Scene used for dissolve transition effects.
 @export var transition_scene: PackedScene
 
 @export_group("Cursors")
@@ -53,6 +60,7 @@ func _ready():
 	first_transition_in.queue_free()
 
 
+## Transition out, clear world/GUI, instantiate new state scenes, set cursor, transition in.
 func _change_state(state: Global.GameState):
 	var transition_data := await _transition_in()
 	for node in [world_2d, gui]:
@@ -80,6 +88,7 @@ func _change_state(state: Global.GameState):
 	_transition_out(transition_data)
 
 
+## Play dissolve animation, return [param transition_node, animation_player] for paired out.
 func _transition_in() -> Array:
 	var transition_node: Control = transition_scene.instantiate()
 	transitions.add_child(transition_node)
@@ -89,6 +98,7 @@ func _transition_in() -> Array:
 	return [transition_node, transition_animation]
 
 
+## Play dissolve backwards on transition, then free the node.
 func _transition_out(transition_data: Array) -> void:
 	var transition_node: Control = transition_data[0]
 	var transition_animation: AnimationPlayer = transition_data[1]
@@ -97,11 +107,13 @@ func _transition_out(transition_data: Array) -> void:
 	transition_node.queue_free()
 
 
+## Add popup instance to popups layer (only one at a time).
 func _show_popup(popup: PackedScene):
 	if not popups.get_children():
 		popups.add_child(popup.instantiate())
 
 
+## Play transition animation, then quit the application.
 func _quit_game() -> void:
 	await _transition_in()
 	get_tree().quit()

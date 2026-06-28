@@ -1,12 +1,12 @@
 extends Node
-# Global signals
-signal change_state(state: GameState)
-signal show_popup(popup: PackedScene)
-signal quit_game
-# Gameplay signals
-signal trigger_camera_shake(intensity: int)
-signal explosion_occurred(world_position: Vector2)
-signal item_collected
+## Global autoload singleton for signals, shared state, enums, and save data.[br]
+## Lives across all scenes.
+signal change_state(state: GameState)  ## Emitted when transitioning between MAIN_MENU and GAMEPLAY.
+signal show_popup(popup: PackedScene)  ## Emitted to display a popup (e.g., quit confirmation).
+signal quit_game  ## Emitted to start the quit sequence.
+signal trigger_camera_shake(intensity: int)  ## Emitted to shake the camera with given intensity.
+signal explosion_occurred(world_position: Vector2)  ## Emitted at explosion position (consumed by SpaceWarp overlay).
+signal item_collected  ## Emitted when any collectible is picked up.
 
 enum GameState {MAIN_MENU, GAMEPLAY}
 enum CollectibleType {J_UNIT, C_UNIT, DDX6_CHIP, MX3_CHIP, ASM_UNIT}
@@ -19,15 +19,11 @@ const COLLECTIBLE_TYPE_STRINGS = {
 }
 const SAVE_FILE_PATH = "user://data_save.res"
 
-# Data save
 var data_save: DataSave
-
-# Current game state
 var current_world: Node2D
 var current_gui: Control
 var current_state: GameState = GameState.MAIN_MENU
 
-# Screen mode switching
 var _prev_window_mode := DisplayServer.WINDOW_MODE_WINDOWED
 var _current_window_mode: DisplayServer.WindowMode
 
@@ -51,7 +47,6 @@ func _input(event) -> void:
 			_prev_window_mode = _current_window_mode
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 
-	# Debugging inputs
 	if OS.is_debug_build():
 		if event.is_action_pressed("_dev_console") and DevConsole:
 			DevConsole.visible = not DevConsole.visible

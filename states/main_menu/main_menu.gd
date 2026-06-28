@@ -1,4 +1,5 @@
 extends Control
+## Main menu screen with logo animation and buttons for New Game / Quit.
 
 @export var quit_popup: PackedScene
 

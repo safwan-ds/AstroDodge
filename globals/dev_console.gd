@@ -1,7 +1,12 @@
 extends CanvasLayer
+## In-game debug console. Parses GDScript expressions with auto-complete[br]
+## and history navigation. Only enabled in debug builds.
 
+## LineEdit for command input.
 @export var input_text: LineEdit
+## RichTextLabel for command output display.
 @export var output_text: RichTextLabel
+## ItemList for command auto-complete suggestions.
 @export var auto_complete_list: ItemList
 
 var _expression := Expression.new()
@@ -12,7 +17,6 @@ var _selected_history_index := -1
 @onready var regex := RegEx.new()
 
 
-# Main Dev Console class methods
 func _ready() -> void:
 	if not OS.is_debug_build():
 		queue_free()
@@ -88,7 +92,7 @@ func _on_input_text_text_submitted(command: String) -> void:
 	input_text.clear()
 	input_text.grab_focus()
 	_selected_history_index = -1
-	
+
 	output_text.push_bold()
 	output_text.push_color(Color.WHITE)
 	output_text.add_text("> " + command + "\n")
@@ -121,7 +125,6 @@ func _on_input_text_text_submitted(command: String) -> void:
 		output_text.add_text(str(result) + "\n")
 
 
-# Custom Dev Console commands
 func clear() -> String:
 	output_text.clear()
 	return "Cleared!"

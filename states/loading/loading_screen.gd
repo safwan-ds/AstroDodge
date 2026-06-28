@@ -4,7 +4,9 @@ extends CanvasLayer
 
 signal finished()
 
+## [PackedScene]s to instantiate during warmup. Configure in loading_screen.tscn inspector.
 @export var scenes_to_preload: Array[PackedScene]
+## [Shader]s to compile during warmup. Configure in loading_screen.tscn inspector.
 @export var shaders_to_preload: Array[Shader]
 
 var _loading := false
@@ -18,6 +20,8 @@ func _ready() -> void:
 	_progress_bar = $Center/VBox/Progress as ProgressBar
 
 
+## Preload all scenes and shaders: mute audio, warm GPU particles, unmute, then hide.[br]
+## Idempotent — guarded by [member _loading].
 func preload_all() -> void:
 	if _loading:
 		return
@@ -29,13 +33,11 @@ func preload_all() -> void:
 	var total := shaders_to_preload.size() + scenes_to_preload.size()
 	var idx := 0
 
-	# 1. Shaders are preloaded at compile time — process frames for GPU compilation
 	for shader in shaders_to_preload:
 		_update_progress(float(idx) / float(total) * 100.0, "Shader: " + shader.resource_path.get_file())
 		idx += 1
 		await get_tree().process_frame
 
-	# 2. Set up warming world
 	var saved_world := Global.current_world
 	_warming_root = Node2D.new()
 	_warming_root.name = "_WarmingRoot"
@@ -47,7 +49,6 @@ func preload_all() -> void:
 	get_tree().root.add_child(_warming_root)
 	Global.current_world = _warming_root
 
-	# 3. Warm scenes — instantiate + process frames for GPU particles
 	for scene in scenes_to_preload:
 		_update_progress(float(idx) / float(total) * 100.0, "Warming: " + scene.resource_path.get_file())
 		idx += 1
@@ -58,19 +59,16 @@ func preload_all() -> void:
 		await get_tree().process_frame
 		await get_tree().process_frame
 
-	# 4. Clean up warming world
 	get_tree().root.remove_child(_warming_root)
 	_warming_root.queue_free()
 	_warming_root = null
 	Global.current_world = saved_world
 
-	# 5. Extra GPU catch-up frames
 	_update_progress(100.0, "Compiling...")
 	for _i in range(5):
 		await get_tree().process_frame
 
 	_update_progress(100.0, "Ready!")
-	# Unmute audio buses — the 0.15s delay absorbs any unmute pop/click
 	for i in AudioServer.get_bus_count():
 		AudioServer.set_bus_mute(i, false)
 	await get_tree().create_timer(0.15).timeout
@@ -79,6 +77,7 @@ func preload_all() -> void:
 	finished.emit()
 
 
+## Stop all [AudioStreamPlayer]s and mute all audio buses to prevent noise during loading.
 func _stop_audio() -> void:
 	for player in get_tree().root.find_children("*", "AudioStreamPlayer", true, false):
 		player.stop()

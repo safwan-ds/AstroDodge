@@ -1,7 +1,11 @@
-## The base class for all moving entities in the game.
 class_name Entity extends Area2D
+## Base class for all moving entities (player, enemies, projectiles).[br]
+## Provides hp, movement, death effects (explosion, camera shake),
+## and collectible spawning. Subclasses override [method _on_area_entered]
+## and may call [method _die] directly.
 
 @export_group("Entity Stats")
+## Stats resource defining hp, speed, shake intensities, and collectible drops.
 @export var entity_stats: EntityStats
 
 @export_group("Links to Collectible Scenes")
@@ -52,12 +56,12 @@ func _process(delta) -> void:
 	_velocity = _direction * entity_stats.base_speed
 	position += _velocity * delta
 
-## This method should be overridden in subclasses to handle area interactions.
+
 func _on_area_entered(_area: Area2D) -> void:
 	pass
 
 
-## Defines the actions that will happen when the entity is hit.
+## Reduce hp by [param damage]. Triggers camera shake if entity survives.
 func _be_hurt(damage: float) -> void:
 	_hp -= damage
 	if _hp <= 0:
@@ -65,7 +69,8 @@ func _be_hurt(damage: float) -> void:
 	Global.trigger_camera_shake.emit(entity_stats.hit_shake_intensity)
 
 
-## Defines the actions that will happen when the entity dies.
+## Play death effects (camera shake, explosion particles), then queue_free.[br]
+## Idempotent — re-entrancy guard prevents double-execution.
 func _die() -> void:
 	if _is_dying:
 		return
@@ -93,6 +98,7 @@ func _die() -> void:
 		queue_free()
 
 
+## Spawn [param min_count] to [param max_count] collectibles of [param collectible_type] near the entity.
 func _spawn_collectibles(collectible_type: Global.CollectibleType, min_count: int, max_count: int):
 	var collectible_scene := collectibles_map[collectible_type]
 	for i in range(randi_range(min_count, max_count)):

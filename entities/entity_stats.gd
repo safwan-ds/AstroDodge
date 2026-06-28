@@ -1,4 +1,6 @@
 class_name EntityStats extends Resource
+## Resource defining an entity's stats: health, speed, camera shake,[br]
+## and collectible drops.
 
 const MAX_SHAKE_INTENSITY = 5
 const MAX_DROPPED_COLLECTIBLES = 10

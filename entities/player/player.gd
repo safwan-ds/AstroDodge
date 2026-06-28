@@ -1,8 +1,10 @@
-## The class of Player's entity.
 class_name Player extends Entity
-signal is_hurt(hp: float)
+## Player-controlled ship. Moves toward the mouse, shoots bullets,[br]
+## enters invulnerability frames on hit, triggers game-over on death.
+
+signal is_hurt(hp: float)  ## Emitted when the player takes damage.
 signal is_healed(hp: float)
-signal is_dead
+signal is_dead  ## Emitted when the player dies (consumed by Gameplay to show game-over).
 
 @export_group("Links to Nodes")
 @export var bullet_scene: PackedScene
@@ -20,7 +22,9 @@ signal is_dead
 @export var friction := 200.0
 
 @export_group("Gameplay")
+## Seconds of invulnerability after taking a hit.
 @export var invulnerability_time := 1.0
+## Minimum delay between shots.
 @export var shoot_cooldown := 0.5
 
 var target_angle: float:
@@ -68,7 +72,10 @@ func _process(delta) -> void:
 	position += _velocity * delta
 
 	trail.set_deferred("amount_ratio", _velocity.length() / max_speed)
-	audio_player.set_deferred("pitch_scale", 1.0 + (_velocity.length() - entity_stats.base_speed) / (2 * (max_speed - entity_stats.base_speed)))
+	audio_player.set_deferred(
+		"pitch_scale",
+		1.0 + (_velocity.length() - entity_stats.base_speed) / (2.0 * (max_speed - entity_stats.base_speed)),
+	)
 
 	if _current_shoot_cooldown > 0.0:
 		_current_shoot_cooldown -= delta
@@ -107,6 +114,7 @@ func _be_hurt(damage: float) -> void:
 		create_tween().tween_property(sprite, "modulate", Color.WHITE, 0.3)
 
 
+## Detach camera to world, emit [signal is_dead], then run base death sequence.
 func _die() -> void:
 	if _is_dying:
 		return
@@ -117,6 +125,7 @@ func _die() -> void:
 	super ()
 
 
+## Fire a bullet from the gun position. Plays SFX and triggers camera shake.
 func _shoot() -> void:
 	if _current_shoot_cooldown <= 0.0:
 		_current_shoot_cooldown = shoot_cooldown

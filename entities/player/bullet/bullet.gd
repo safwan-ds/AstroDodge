@@ -1,4 +1,6 @@
 class_name Bullet extends Area2D
+## Lightweight projectile. Does not inherit [Entity] — flies forward[br]
+## and cleans up on enemy contact or when off-screen.
 
 @export var speed := 600.0
 @export var trail: GPUParticles2D
