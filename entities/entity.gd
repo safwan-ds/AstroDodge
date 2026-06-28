@@ -10,9 +10,9 @@ class_name Entity extends Area2D
 
 @export_group("Links to Collectible Scenes")
 @export var j_unit: PackedScene
-@export var c_unit: PackedScene
-@export var ddx6_chip: PackedScene
-@export var mx3_chip: PackedScene
+@export var cap_unit: PackedScene
+@export var ddrx_chip: PackedScene
+@export var m2_chip: PackedScene
 @export var asm_unit: PackedScene
 
 @export_group("Links to Nodes")
@@ -34,9 +34,9 @@ var _is_dying := false
 
 @onready var collectibles_map: Dictionary[Global.CollectibleType, PackedScene] = {
 	Global.CollectibleType.J_UNIT: j_unit,
-	Global.CollectibleType.C_UNIT: c_unit,
-	Global.CollectibleType.DDX6_CHIP: ddx6_chip,
-	Global.CollectibleType.MX3_CHIP: mx3_chip,
+	Global.CollectibleType.CAP_UNIT: cap_unit,
+	Global.CollectibleType.DDRX_CHIP: ddrx_chip,
+	Global.CollectibleType.M2_CHIP: m2_chip,
 	Global.CollectibleType.ASM_UNIT: asm_unit,
 }
 @onready var _hp := entity_stats.max_health:

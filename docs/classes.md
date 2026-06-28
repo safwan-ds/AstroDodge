@@ -19,9 +19,9 @@ classDiagram
     class Entity{
         +EntityStats entity_stats
         +PackedScene j_unit
-        +PackedScene c_unit
-        +PackedScene ddx6_chip
-        +PackedScene mx3_chip
+        +PackedScene cap_unit
+        +PackedScene ddrx_chip
+        +PackedScene m2_chip
         +PackedScene asm_unit
         +AnimatedSprite2D sprite
         +GPUParticles2D trail

@@ -24,7 +24,7 @@ Four autoloads are registered in `project.godot`. They are always available glob
 Central hub. Exposes:
 
 - **Signals:** `change_state`, `show_popup`, `quit_game`, `trigger_camera_shake`, `explosion_occurred`, `item_collected`
-- **Enums:** `GameState {MAIN_MENU, GAMEPLAY}`, `CollectibleType {J_UNIT, C_UNIT, DDX6_CHIP, MX3_CHIP, ASM_UNIT}`
+- **Enums:** `GameState {MAIN_MENU, GAMEPLAY}`, `CollectibleType {J_UNIT, CAP_UNIT, DDRX_CHIP, M2_CHIP, ASM_UNIT}`
 - **Data:** `data_save: DataSave` — persisted collectible counts via `ResourceSaver`
 - **State tracking:** `current_state`, `current_world`, `current_gui`
 - **Input:** Fullscreen toggle (F11), dev console toggle (backtick — debug only)

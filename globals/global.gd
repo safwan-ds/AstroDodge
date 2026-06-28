@@ -9,13 +9,14 @@ signal explosion_occurred(world_position: Vector2, world_scale: float)  ## Emitt
 signal item_collected  ## Emitted when any collectible is picked up.
 
 enum GameState {MAIN_MENU, GAMEPLAY}
-enum CollectibleType {J_UNIT, C_UNIT, DDX6_CHIP, MX3_CHIP, ASM_UNIT}
-const COLLECTIBLE_TYPE_STRINGS = {
+enum CollectibleType {J_UNIT, CAP_UNIT, DDRX_CHIP, M2_CHIP, ASM_UNIT}
+
+const COLLECTIBLE_NAMES: Dictionary = {
 	CollectibleType.J_UNIT: "J-unit",
-	CollectibleType.C_UNIT: "C-unit",
-	CollectibleType.DDX6_CHIP: "DDx6-chip",
-	CollectibleType.MX3_CHIP: "Mx3-chip",
-	CollectibleType.ASM_UNIT: ".asm-unit",
+	CollectibleType.CAP_UNIT: "Cap-unit",
+	CollectibleType.DDRX_CHIP: "DDRx-chip",
+	CollectibleType.M2_CHIP: "M2-chip",
+	CollectibleType.ASM_UNIT: "ASM-unit",
 }
 const SAVE_FILE_PATH = "user://data_save.res"
 
