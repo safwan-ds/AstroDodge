@@ -67,6 +67,8 @@ func _be_hurt(damage: float) -> void:
 
 ## Defines the actions that will happen when the entity dies.
 func _die() -> void:
+	if _is_dying:
+		return
 	_is_dying = true
 	Global.trigger_camera_shake.emit(entity_stats.death_shake_intensity)
 	Global.explosion_occurred.emit(global_position)
@@ -74,12 +76,21 @@ func _die() -> void:
 	set_deferred("monitoring", false)
 	sprite.hide()
 	trail.emitting = false
-	explosion.restart()
-	explosion.emitting = true
 	set_process(false)
 	set_process_input(false)
-	await explosion.finished
-	queue_free()
+	explosion.restart()
+	explosion.emitting = true
+
+	# Race particle finished against a SceneTree timer as fallback.
+	# The timer node is owned by the scene tree and survives node deletion.
+	# This prevents a permanent coroutine hang if the entity or explosion
+	# node is freed externally during the await (e.g. by screen_exited)
+	# before the 'finished' signal fires.
+	var wait_max := get_tree().create_timer(explosion.lifetime * 2.0)
+	await (explosion.finished or wait_max.timeout)
+
+	if is_instance_valid(self):
+		queue_free()
 
 
 func _spawn_collectibles(collectible_type: Global.CollectibleType, min_count: int, max_count: int):

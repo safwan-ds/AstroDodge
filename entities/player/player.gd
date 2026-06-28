@@ -108,6 +108,8 @@ func _be_hurt(damage: float) -> void:
 
 
 func _die() -> void:
+	if _is_dying:
+		return
 	camera.position = position
 	remove_child(camera)
 	add_sibling(camera)
