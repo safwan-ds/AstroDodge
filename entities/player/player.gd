@@ -56,20 +56,7 @@ func _ready():
 
 
 func _process(delta) -> void:
-	_distance_to_mouse = (get_global_mouse_position() - position)
-	if _distance_to_mouse.length() >= mouse_tracehold:
-		_target_angle = _distance_to_mouse.angle() + PI / 2
-	rotation = lerp_angle(rotation, _target_angle, rotation_speed * delta)
-	_direction = Vector2.UP.rotated(rotation)
-
-	_forward = Input.get_axis("down", "up")
-	if _forward:
-		_velocity += _forward * acceleration * _direction * delta
-	else:
-		_velocity = _velocity.move_toward(entity_stats.base_speed * _direction, friction * delta)
-
-	_velocity = _velocity.limit_length(max_speed)
-	position += _velocity * delta
+	super(delta)
 
 	trail.set_deferred("amount_ratio", _velocity.length() / max_speed)
 	audio_player.set_deferred(
@@ -101,16 +88,32 @@ func _on_area_entered(area: Area2D) -> void:
 		_be_hurt(10)
 
 
+## Custom physics: mouse aim, acceleration, friction. Called by Entity._process.
+func _move(delta) -> void:
+	_distance_to_mouse = (get_global_mouse_position() - position)
+	if _distance_to_mouse.length() >= mouse_tracehold:
+		_target_angle = _distance_to_mouse.angle() + PI / 2
+	rotation = lerp_angle(rotation, _target_angle, rotation_speed * delta)
+	_direction = Vector2.UP.rotated(rotation)
+
+	_forward = Input.get_axis("down", "up")
+	if _forward:
+		_velocity += _forward * acceleration * _direction * delta
+	else:
+		_velocity = _velocity.move_toward(entity_stats.base_speed * _direction, friction * delta)
+
+	_velocity = _velocity.limit_length(max_speed)
+	position += _velocity * delta
+
+
 func _be_hurt(damage: float) -> void:
 	super(damage)
 	is_hurt.emit(_hp)
 	if "game_over" in Global.current_world and not Global.current_world.game_over:
 		_invulnerable = true
-		# set_deferred("monitoring", false)
 		sprite.modulate = Color.RED
 		await get_tree().create_timer(invulnerability_time).timeout
 		_invulnerable = false
-		# set_deferred("monitoring", true)
 		create_tween().tween_property(sprite, "modulate", Color.WHITE, 0.3)
 
 

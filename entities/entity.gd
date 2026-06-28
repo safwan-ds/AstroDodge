@@ -52,13 +52,18 @@ func _ready() -> void:
 
 
 func _process(delta) -> void:
-	_direction = Vector2.UP.rotated(rotation)
-	_velocity = _direction * entity_stats.base_speed
-	position += _velocity * delta
+	_move(delta)
 
 
 func _on_area_entered(_area: Area2D) -> void:
 	pass
+
+
+## Virtual: override for custom movement. Default: straight at base_speed.
+func _move(delta) -> void:
+	_direction = Vector2.UP.rotated(rotation)
+	_velocity = _direction * entity_stats.base_speed
+	position += _velocity * delta
 
 
 ## Reduce hp by [param damage]. Triggers camera shake if entity survives.
@@ -87,11 +92,6 @@ func _die() -> void:
 	explosion.emitting = true
 
 	# Use SceneTree timer instead of awaiting explosion.finished.
-	# A timer node is owned by the SceneTree and survives node deletion,
-	# preventing a permanent coroutine hang if the entity or explosion
-	# node is freed externally (e.g. by screen_exited) before particles finish.
-	# The explosion GPUParticles2D renders independently on the GPU, so the
-	# visual is unaffected by the timer-based cleanup.
 	var finish_timer := get_tree().create_timer(explosion.lifetime * 3.0)
 	await finish_timer.timeout
 

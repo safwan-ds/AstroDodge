@@ -12,15 +12,16 @@ func _ready():
 	rotation = randf() * TAU
 
 
-func _process(delta):
-	if player:
-		rotation = lerp_angle(rotation, (position - player.position).angle() - PI / 2.0, rotation_speed * delta)
-	super (delta)
-
-
 func _on_area_entered(_area):
 	_die()
 
 
 func _on_lifetime_timeout() -> void:
 	_die()
+
+
+## Rotate toward player, then use default movement. Called by Entity._process via _move().
+func _move(delta):
+	if player:
+		rotation = lerp_angle(rotation, (position - player.position).angle() - PI / 2.0, rotation_speed * delta)
+	super (delta)

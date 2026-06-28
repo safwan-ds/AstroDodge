@@ -14,7 +14,16 @@ var _movement_direction = [1, -1].pick_random()
 @onready var _speed := entity_stats.base_speed + randf_range(-20.0, 20.0)
 
 
-func _process(delta) -> void:
+func _on_area_entered(area) -> void:
+	if area.get_groups().any(func(x): return x in ["player", "bullets"]):
+		if area.is_in_group("bullets"):
+			_spawn_collectibles.call_deferred(Global.CollectibleType.J_UNIT, 2, 5)
+		audio_player.play()
+		await _die()
+
+
+## Orbit around the player. Called by Entity._process via _move().
+func _move(delta) -> void:
 	rotate(delta * _rotation_speed)
 	if player:
 		_direction = (position - player.position).normalized()
@@ -22,14 +31,6 @@ func _process(delta) -> void:
 		position = lerp(position, (distance_to_player - (position - player.position).length()) * _direction + position, weight)
 	_velocity = _speed * _direction.rotated(PI / 2.0 * _movement_direction)
 	position += _velocity * delta
-
-
-func _on_area_entered(area) -> void:
-	if area.get_groups().any(func(x): return x in ["voltstars", "player", "bullets"]):
-		if area.is_in_group("bullets"):
-			_spawn_collectibles.call_deferred(Global.CollectibleType.J_UNIT, 2, 5)
-		audio_player.play()
-		await _die()
 
 
 ## Fire a [Voltshot] from each gun toward the player.

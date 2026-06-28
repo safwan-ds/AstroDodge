@@ -43,6 +43,12 @@ func _on_area_entered(area: Area2D) -> void:
 	_die()
 
 
+## Free self if not already dying — avoids cutting the explosion short.
+func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
+	if not _died:
+		queue_free()
+
+
 ## Play shatter particles and audio, then run the base death sequence.[br]
 ## Guarded by [member _died] to prevent double-execution.
 func _die() -> void:
@@ -53,9 +59,3 @@ func _die() -> void:
 	shatter.restart()
 	shatter.emitting = true
 	await super()
-
-
-## Free self if not already dying — avoids cutting the explosion short.
-func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
-	if not _died:
-		queue_free()

@@ -2,6 +2,9 @@ extends Node
 ## Singleton for SFX and music playback. SFX gets randomized pitch.[br]
 ## Music uses fade-in/fade-out transitions.
 
+enum SFX {HOVER, CLICK, LOSE, BOOM, SHOOT}
+enum Music {MAIN_MENU, GAMEPLAY}
+
 @export var sfx: AudioStreamPlayer
 @export var music: AudioStreamPlayer
 
@@ -20,9 +23,6 @@ extends Node
 @export var gameplay_music: AudioStreamOggVorbis
 
 var rng := RandomNumberGenerator.new()
-
-enum SFX {HOVER, CLICK, LOSE, BOOM, SHOOT}
-enum Music {MAIN_MENU, GAMEPLAY}
 
 
 ## Play a sound effect with randomized pitch and optional [param volume] offset.
