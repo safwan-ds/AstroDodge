@@ -8,6 +8,7 @@ extends ColorRect
 
 var _tween: Tween
 var _explosion_world_pos: Vector2
+var _explosion_world_scale: float
 
 
 func _ready() -> void:
@@ -15,11 +16,12 @@ func _ready() -> void:
 	Global.explosion_occurred.connect(_on_explosion_occurred)
 
 
-func _on_explosion_occurred(world_position: Vector2) -> void:
+func _on_explosion_occurred(world_position: Vector2, world_scale: float) -> void:
 	if not is_inside_tree():
 		return
 
 	_explosion_world_pos = world_position
+	_explosion_world_scale = world_scale
 
 	if _tween and _tween.is_valid():
 		_tween.kill()
@@ -48,3 +50,9 @@ func _update_warp_origin() -> void:
 		return
 
 	_material.set_shader_parameter("warp_origin", screen_pos / viewport_size)
+
+	# Scale warp radius proportionally to the entity's size.
+	# Base radius = 0.12 (~12% of screen width for scale=1.0 entity),
+	# multiplied by the entity's world scale (asteroids range 1.0-4.0).
+	var warp_radius := 0.12 * _explosion_world_scale
+	_material.set_shader_parameter("warp_radius", clamp(warp_radius, 0.02, 0.8))

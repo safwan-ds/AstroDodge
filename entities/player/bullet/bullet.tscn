@@ -74,4 +74,5 @@ sprite_frames = ExtResource("3_b4ffb")
 autoplay = "default"
 frame_progress = 0.714925
 
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

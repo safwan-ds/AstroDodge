@@ -5,7 +5,7 @@ signal change_state(state: GameState)  ## Emitted when transitioning between MAI
 signal show_popup(popup: PackedScene)  ## Emitted to display a popup (e.g., quit confirmation).
 signal quit_game  ## Emitted to start the quit sequence.
 signal trigger_camera_shake(intensity: int)  ## Emitted to shake the camera with given intensity.
-signal explosion_occurred(world_position: Vector2)  ## Emitted at explosion position (consumed by SpaceWarp overlay).
+signal explosion_occurred(world_position: Vector2, world_scale: float)  ## Emitted on entity death with world position and entity scale (consumed by SpaceWarp overlay).
 signal item_collected  ## Emitted when any collectible is picked up.
 
 enum GameState {MAIN_MENU, GAMEPLAY}

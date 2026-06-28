@@ -76,7 +76,7 @@ func _die() -> void:
 		return
 	_is_dying = true
 	Global.trigger_camera_shake.emit(entity_stats.death_shake_intensity)
-	Global.explosion_occurred.emit(global_position)
+	Global.explosion_occurred.emit(global_position, scale.length())
 	set_deferred("monitorable", false)
 	set_deferred("monitoring", false)
 	sprite.hide()
@@ -86,13 +86,14 @@ func _die() -> void:
 	explosion.restart()
 	explosion.emitting = true
 
-	# Race particle finished against a SceneTree timer as fallback.
-	# The timer node is owned by the scene tree and survives node deletion.
-	# This prevents a permanent coroutine hang if the entity or explosion
-	# node is freed externally during the await (e.g. by screen_exited)
-	# before the 'finished' signal fires.
-	var wait_max := get_tree().create_timer(explosion.lifetime * 2.0)
-	await (explosion.finished or wait_max.timeout)
+	# Use SceneTree timer instead of awaiting explosion.finished.
+	# A timer node is owned by the SceneTree and survives node deletion,
+	# preventing a permanent coroutine hang if the entity or explosion
+	# node is freed externally (e.g. by screen_exited) before particles finish.
+	# The explosion GPUParticles2D renders independently on the GPU, so the
+	# visual is unaffected by the timer-based cleanup.
+	var finish_timer := get_tree().create_timer(explosion.lifetime * 3.0)
+	await finish_timer.timeout
 
 	if is_instance_valid(self):
 		queue_free()
