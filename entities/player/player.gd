@@ -95,9 +95,9 @@ func _on_area_entered(area: Area2D) -> void:
 
 
 func _be_hurt(damage: float) -> void:
-	super (damage)
+	super(damage)
 	is_hurt.emit(_hp)
-	if not Global.current_world.game_over:
+	if "game_over" in Global.current_world and not Global.current_world.game_over:
 		_invulnerable = true
 		# set_deferred("monitoring", false)
 		sprite.modulate = Color.RED

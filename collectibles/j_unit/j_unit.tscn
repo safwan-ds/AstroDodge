@@ -1,8 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://ugylwg3bkqdw"]
+[gd_scene load_steps=9 format=3]
 
-[ext_resource type="Script" uid="uid://bw5qj28nwdxfg" path="res://collectibles/collectible.gd" id="1_36tnp"]
-[ext_resource type="SpriteFrames" uid="uid://bia8ta5ttvs6f" path="res://collectibles/j_unit/j_unit.aseprite" id="3_natie"]
-[ext_resource type="Texture2D" uid="res://visuals/particle.png" path="res://visuals/particle.png" id="3_v2tmq"]
+[ext_resource type="Script" path="res://collectibles/collectible.gd" id="1_36tnp"]
+[ext_resource type="SpriteFrames" path="res://collectibles/j_unit/j_unit.aseprite" id="3_natie"]
+[ext_resource type="Texture2D" path="res://visuals/particle.png" id="3_v2tmq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_43vdg"]
 size = Vector2(10, 10)

@@ -1,10 +1,10 @@
-[gd_resource type="Theme" format=3 uid="uid://bvaghou14ty2x"]
+[gd_resource type="Theme" format=3 uid="uid://c05f0xpjdinar"]
 
-[ext_resource type="StyleBox" uid="uid://drnayqi71idy7" path="res://themes/primary/button_hover.tres" id="1_m6g8d"]
-[ext_resource type="StyleBox" uid="uid://dtmjypocdbitt" path="res://themes/primary/button_disabled.tres" id="1_u04b2"]
-[ext_resource type="StyleBox" uid="uid://c2gigi20ubo24" path="res://themes/primary/button_normal.tres" id="2_qiqsp"]
-[ext_resource type="StyleBox" uid="uid://34avgc3pkj1c" path="res://themes/primary/button_pressed.tres" id="3_qiqsp"]
-[ext_resource type="StyleBox" uid="uid://djh16ph0gunxr" path="res://themes/primary/panel_container.tres" id="4_6swes"]
+[ext_resource type="StyleBox" path="res://themes/primary/button_hover.tres" id="1_m6g8d"]
+[ext_resource type="StyleBox" path="res://themes/primary/button_disabled.tres" id="1_u04b2"]
+[ext_resource type="StyleBox" path="res://themes/primary/button_normal.tres" id="2_qiqsp"]
+[ext_resource type="StyleBox" path="res://themes/primary/button_pressed.tres" id="3_qiqsp"]
+[ext_resource type="StyleBox" path="res://themes/primary/panel_container.tres" id="4_6swes"]
 [ext_resource type="FontFile" uid="uid://bedbtc1axrevw" path="res://fonts/monobit.ttf" id="6_u04b2"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_qiqsp"]

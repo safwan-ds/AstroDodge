@@ -8,20 +8,16 @@
 
 config_version=5
 
-[animation]
-
-compatibility/default_parent_skeleton_in_mesh_instance_3d=true
-
 [application]
 
 config/name="AstroDodge"
-run/main_scene="uid://c6dws4r4j113d"
+run/main_scene="res://main.tscn"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.7", "GL Compatibility")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/use_filter=false
-boot_splash/image="uid://1pnkatu0ubxp"
-config/icon="uid://e540svtj7tti"
+boot_splash/image="res://visuals/splash.png"
+config/icon="res://visuals/icon.png"
 boot_splash/minimum_display_time=125
 
 [audio]
@@ -42,13 +38,8 @@ window/size/viewport_height=360
 window/size/always_on_top=true
 window/stretch/mode="viewport"
 window/vsync/vsync_mode=0
-mouse_cursor/custom_image="uid://pjscuebk0xa"
+mouse_cursor/custom_image="res://visuals/cursors/primary.aseprite"
 mouse_cursor/stretch/aspect="keep"
-
-[editor]
-
-version_control/plugin_name="GitPlugin"
-version_control/autoload_on_startup=true
 
 [editor_plugins]
 
@@ -82,8 +73,8 @@ statics="Static objects that are not moving."
 [gui]
 
 common/snap_controls_to_pixels=false
-theme/custom="uid://bvaghou14ty2x"
-theme/custom_font="uid://bedbtc1axrevw"
+theme/custom="res://themes/primary/primary.tres"
+theme/custom_font="res://fonts/siesdot.otf"
 
 [input]
 

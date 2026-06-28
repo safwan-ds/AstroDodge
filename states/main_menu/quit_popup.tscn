@@ -1,10 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://ct5y0mr6ibk83"]
+[gd_scene load_steps=10 format=3]
 
-[ext_resource type="Shader" uid="uid://im147euqgw67" path="res://visuals/shaders/blur.gdshader" id="1_at6hn"]
-[ext_resource type="Script" uid="uid://b6gxkihdfqbtx" path="res://states/main_menu/quit_popup.gd" id="1_nksoh"]
-[ext_resource type="Theme" uid="uid://bvaghou14ty2x" path="res://themes/primary/primary.tres" id="1_sjqw2"]
-[ext_resource type="PackedScene" uid="uid://b3115dt7ltsfb" path="res://components/animation_component.tscn" id="3_x216i"]
-[ext_resource type="FontFile" uid="uid://bxajlsvdlbsv0" path="res://fonts/siesdot.otf" id="5_jkaxs"]
+[ext_resource type="Shader" path="res://visuals/shaders/blur.gdshader" id="1_at6hn"]
+[ext_resource type="Script" path="res://states/main_menu/quit_popup.gd" id="1_nksoh"]
+[ext_resource type="Theme" path="res://themes/primary/primary.tres" id="1_sjqw2"]
+[ext_resource type="PackedScene" path="res://components/animation_component.tscn" id="3_x216i"]
+[ext_resource type="FontFile" path="res://fonts/siesdot.otf" id="5_jkaxs"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nksoh"]
 shader = ExtResource("1_at6hn")

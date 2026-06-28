@@ -1,14 +1,13 @@
-[gd_scene load_steps=23 format=3 uid="uid://dkywyhvbi881a"]
+[gd_scene format=3 uid="uid://d4gqybtf7mnf8"]
 
 [ext_resource type="Script" uid="uid://cq0qntcts8cab" path="res://entities/player/player.gd" id="1_abrql"]
 [ext_resource type="SpriteFrames" uid="uid://b00oh7m38h44a" path="res://entities/player/player.aseprite" id="1_symyc"]
 [ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats.gd" id="2_bls4j"]
-[ext_resource type="PackedScene" uid="uid://be4yma7b7wmky" path="res://entities/player/bullet/bullet.tscn" id="2_fkugw"]
-[ext_resource type="Texture2D" uid="res://visuals/particle.png" path="res://visuals/particle.png" id="2_sglur"]
+[ext_resource type="PackedScene" path="res://entities/player/bullet/bullet.tscn" id="2_fkugw"]
+[ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://visuals/particle.png" id="2_sglur"]
 
 [sub_resource type="Resource" id="Resource_fkugw"]
 script = ExtResource("2_bls4j")
-max_health = 100.0
 base_speed = 50.0
 hit_shake_intensity = 3
 death_shake_intensity = 5
@@ -160,7 +159,7 @@ _data = {
 &"hit": SubResource("Animation_abrql")
 }
 
-[node name="Player" type="Area2D" node_paths=PackedStringArray("gun", "animation_player", "cooldown_bar", "sprite", "trail", "explosion", "audio_player") groups=["entities", "player"]]
+[node name="Player" type="Area2D" unique_id=366239508 node_paths=PackedStringArray("gun", "animation_player", "cooldown_bar", "sprite", "trail", "explosion", "audio_player") groups=["entities", "player"]]
 collision_mask = 10
 script = ExtResource("1_abrql")
 bullet_scene = ExtResource("2_fkugw")
@@ -175,11 +174,11 @@ trail = NodePath("Trail")
 explosion = NodePath("Explosion")
 audio_player = NodePath("EngineSound")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2130759966]
 position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_symyc")
 
-[node name="Trail" type="GPUParticles2D" parent="."]
+[node name="Trail" type="GPUParticles2D" parent="." unique_id=2040300756]
 material = SubResource("CanvasItemMaterial_bls4j")
 position = Vector2(0, 6.115)
 amount = 300
@@ -188,14 +187,14 @@ randomness = 0.34
 fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_abrql")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="."]
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1721297514]
 modulate = Color(1.5, 1.5, 1.5, 1)
 sprite_frames = ExtResource("1_symyc")
 animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.0158842
+frame_progress = 0.5518618
 
-[node name="Explosion" type="GPUParticles2D" parent="."]
+[node name="Explosion" type="GPUParticles2D" parent="." unique_id=519306275]
 modulate = Color(1, 1.75, 1, 1)
 material = SubResource("CanvasItemMaterial_sglur")
 emitting = false
@@ -205,17 +204,16 @@ one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_bectd")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_bls4j")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1037472162]
+libraries/ = SubResource("AnimationLibrary_bls4j")
 
-[node name="EngineSound" type="AudioStreamPlayer2D" parent="."]
+[node name="EngineSound" type="AudioStreamPlayer2D" parent="." unique_id=1342364319]
 
-[node name="Gun" type="Marker2D" parent="."]
+[node name="Gun" type="Marker2D" parent="." unique_id=1345490751]
 position = Vector2(0, -11)
 
-[node name="CooldownBar" type="ProgressBar" parent="."]
+[node name="CooldownBar" type="ProgressBar" parent="." unique_id=1095596277]
+visible = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5

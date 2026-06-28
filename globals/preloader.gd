@@ -4,20 +4,21 @@ signal finished()
 
 
 const LOADING_SCREEN := preload("res://states/loading/loading_screen.tscn")
-const SCENES_TO_PRELOAD := [
-	"res://entities/asteroid/asteroid.tscn",
-	"res://entities/voltstar/voltstar.tscn",
-	"res://entities/voltstar/voltshot/voltshot.tscn",
-	"res://entities/player/bullet/bullet.tscn",
-	"res://collectibles/j_unit/j_unit.tscn",
-	"res://statics/overcharge_station/overcharge_station.tscn",
+const SCENES_TO_PRELOAD: Array[PackedScene] = [
+	preload("res://entities/asteroid/asteroid.tscn"),
+	preload("res://entities/player/player.tscn"),
+	preload("res://entities/voltstar/voltstar.tscn"),
+	preload("res://entities/voltstar/voltshot/voltshot.tscn"),
+	preload("res://entities/player/bullet/bullet.tscn"),
+	preload("res://collectibles/j_unit/j_unit.tscn"),
+	preload("res://statics/overcharge_station/overcharge_station.tscn"),
 ]
-const SHADERS_TO_PRELOAD := [
-	"res://visuals/shaders/vhs.gdshader",
-	"res://visuals/shaders/space_warp.gdshader",
-	"res://visuals/shaders/blur.gdshader",
-	"res://visuals/shaders/shatter.gdshader",
-	"res://visuals/shaders/black_border.gdshader",
+const SHADERS_TO_PRELOAD: Array[Shader] = [
+	preload("res://visuals/shaders/vhs.gdshader"),
+	preload("res://visuals/shaders/space_warp.gdshader"),
+	preload("res://visuals/shaders/blur.gdshader"),
+	preload("res://visuals/shaders/shatter.gdshader"),
+	preload("res://visuals/shaders/black_border.gdshader"),
 ]
 
 var _loading := false
@@ -34,20 +35,20 @@ func preload_all() -> void:
 
 	_build_loading_screen()
 
-	# Stop all players immediately to prevent audio during loading
+	# Stop all players and mute all audio buses to prevent subtle sounds during loading
 	for player in get_tree().root.find_children("*", "AudioStreamPlayer", true, false):
 		player.stop()
 	for player in get_tree().root.find_children("*", "AudioStreamPlayer2D", true, false):
 		player.stop()
+	for i in AudioServer.get_bus_count():
+		AudioServer.set_bus_mute(i, true)
 
 	var total := SHADERS_TO_PRELOAD.size() + SCENES_TO_PRELOAD.size()
 	var idx := 0
 
-	# 1. Load shaders (CPU-cache only)
-	for path in SHADERS_TO_PRELOAD:
-		_update_progress(float(idx) / float(total) * 100.0, "Shader: " + path.get_file())
-		if ResourceLoader.exists(path):
-			ResourceLoader.load(path)
+	# 1. Shaders are preloaded at compile time — process frames for GPU compilation
+	for shader in SHADERS_TO_PRELOAD:
+		_update_progress(float(idx) / float(total) * 100.0, "Shader: " + shader.resource_path.get_file())
 		idx += 1
 		await get_tree().process_frame
 
@@ -56,6 +57,7 @@ func preload_all() -> void:
 	_warming_root = Node2D.new()
 	_warming_root.name = "_WarmingRoot"
 	_warming_root.visible = false
+	_warming_root.process_mode = PROCESS_MODE_DISABLED
 	var warming_camera := Camera2D.new()
 	warming_camera.name = "Camera"
 	_warming_root.add_child(warming_camera)
@@ -63,15 +65,9 @@ func preload_all() -> void:
 	Global.current_world = _warming_root
 
 	# 3. Warm scenes — instantiate + process frames for GPU particles
-	for path in SCENES_TO_PRELOAD:
-		_update_progress(float(idx) / float(total) * 100.0, "Warming: " + path.get_file())
+	for scene in SCENES_TO_PRELOAD:
+		_update_progress(float(idx) / float(total) * 100.0, "Warming: " + scene.resource_path.get_file())
 		idx += 1
-
-		if not ResourceLoader.exists(path):
-			continue
-		var scene: PackedScene = ResourceLoader.load(path)
-		if not scene:
-			continue
 
 		var instance := scene.instantiate()
 		_warming_root.add_child(instance)
@@ -91,6 +87,9 @@ func preload_all() -> void:
 		await get_tree().process_frame
 
 	_update_progress(100.0, "Ready!")
+	# Unmute audio buses — the 0.15s delay absorbs any unmute pop/click
+	for i in AudioServer.get_bus_count():
+		AudioServer.set_bus_mute(i, false)
 	await get_tree().create_timer(0.15).timeout
 	_loading_screen.queue_free()
 	_loading_screen = null

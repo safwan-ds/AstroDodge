@@ -1,10 +1,10 @@
-[gd_scene format=3 uid="uid://cw014nevwfvi4"]
+[gd_scene format=3]
 
-[ext_resource type="Script" uid="uid://b4ee4gr4c5ssj" path="res://states/main_menu/main_menu.gd" id="1_ldv0f"]
-[ext_resource type="Theme" uid="uid://bvaghou14ty2x" path="res://themes/primary/primary.tres" id="1_pwybm"]
-[ext_resource type="Texture2D" uid="uid://cmt2visei7bj3" path="res://states/main_menu/logo.aseprite" id="3_pd6do"]
-[ext_resource type="PackedScene" uid="uid://b3115dt7ltsfb" path="res://components/animation_component.tscn" id="4_hvp4n"]
-[ext_resource type="PackedScene" uid="uid://ct5y0mr6ibk83" path="res://states/main_menu/quit_popup.tscn" id="5_u0hdh"]
+[ext_resource type="Script" path="res://states/main_menu/main_menu.gd" id="1_ldv0f"]
+[ext_resource type="Theme" path="res://themes/primary/primary.tres" id="1_pwybm"]
+[ext_resource type="Texture2D" path="res://states/main_menu/logo.aseprite" id="3_pd6do"]
+[ext_resource type="PackedScene" path="res://components/animation_component.tscn" id="4_hvp4n"]
+[ext_resource type="PackedScene" path="res://states/main_menu/quit_popup.tscn" id="5_u0hdh"]
 
 [sub_resource type="Animation" id="Animation_u0hdh"]
 length = 0.001

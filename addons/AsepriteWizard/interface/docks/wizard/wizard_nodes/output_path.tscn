@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://nhs4ocpam7ku"]
+[gd_scene format=3]
 
 [node name="output_path" type="LineEdit"]
 offset_left = 450.0

@@ -1,10 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://uxm7b02wry10"]
+[gd_scene load_steps=12 format=3]
 
-[ext_resource type="Script" uid="uid://yje4cun233o7" path="res://addons/AsepriteWizard/interface/docks/dock_fields.gd" id="1_f3w00"]
-[ext_resource type="PackedScene" uid="uid://x1f1t87m582u" path="res://addons/AsepriteWizard/interface/shared/animation_player_drop_button.tscn" id="1_gh7xg"]
-[ext_resource type="PackedScene" uid="uid://dj1uo3blocr8e" path="res://addons/AsepriteWizard/interface/shared/source_drop_button.tscn" id="1_y4qrm"]
-[ext_resource type="PackedScene" uid="uid://cwvgnm3o7eed2" path="res://addons/AsepriteWizard/interface/shared/dir_drop_button.tscn" id="2_pypqg"]
-[ext_resource type="PackedScene" uid="uid://ddlr2qc0atcfm" path="res://addons/AsepriteWizard/interface/docks/multi_layer_select_field.tscn" id="4_1c7t4"]
+[ext_resource type="Script" path="res://addons/AsepriteWizard/interface/docks/dock_fields.gd" id="1_f3w00"]
+[ext_resource type="PackedScene" path="res://addons/AsepriteWizard/interface/shared/animation_player_drop_button.tscn" id="1_gh7xg"]
+[ext_resource type="PackedScene" path="res://addons/AsepriteWizard/interface/shared/source_drop_button.tscn" id="1_y4qrm"]
+[ext_resource type="PackedScene" path="res://addons/AsepriteWizard/interface/shared/dir_drop_button.tscn" id="2_pypqg"]
+[ext_resource type="PackedScene" path="res://addons/AsepriteWizard/interface/docks/multi_layer_select_field.tscn" id="4_1c7t4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ptlkd"]
 content_margin_left = 4.0

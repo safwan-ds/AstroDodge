@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://cfud1m1m3km2l"]
+[gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" uid="uid://b86e5gbfj3s03" path="res://globals/dev_console.gd" id="2_j7v83"]
+[ext_resource type="Script" path="res://globals/dev_console.gd" id="2_j7v83"]
 
 [node name="DevConsole" type="CanvasLayer" node_paths=PackedStringArray("input_text", "output_text", "auto_complete_list")]
 process_mode = 3

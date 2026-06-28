@@ -29,3 +29,4 @@ exports/
 # OS generated files
 .DS_Store
 Thumbs.db
+/graphify-out

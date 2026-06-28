@@ -74,6 +74,7 @@ func _die() -> void:
 	set_deferred("monitoring", false)
 	sprite.hide()
 	trail.emitting = false
+	explosion.restart()
 	explosion.emitting = true
 	set_process(false)
 	set_process_input(false)

@@ -5,7 +5,7 @@
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'bumpX' } } }%%
 flowchart LR
-    r[_root_] --> addons --> AsepriteWizard
+    r([root]) --> addons --> AsepriteWizard
     r --> audio
     audio --> music
     audio --> sfx
@@ -44,7 +44,7 @@ flowchart LR
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'bumpX' } } }%%
 flowchart LR
-    r[_root_] --> M(Main)
+    r([root]) --> M(Main)
     M --> BG & World & GUI & Popups & Transitions & Overlays
     r --> G(Global)
     r --> A(AudioManager) --> SFX

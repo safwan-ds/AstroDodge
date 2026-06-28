@@ -40,6 +40,7 @@ func _die() -> void:
 		return
 	_died = true
 	audio_player.play()
+	shatter.restart()
 	shatter.emitting = true
 	await super ()
 

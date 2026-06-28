@@ -1,10 +1,10 @@
-[gd_scene load_steps=20 format=3 uid="uid://b7nl6c8mo8a7m"]
+[gd_scene load_steps=20 format=3]
 
-[ext_resource type="Script" uid="uid://1fhi3dlhmrfd" path="res://entities/voltstar/voltshot/voltshot.gd" id="1_e4s2s"]
-[ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats.gd" id="2_h3msd"]
-[ext_resource type="Texture2D" uid="res://visuals/particle.png" path="res://visuals/particle.png" id="2_t2ija"]
-[ext_resource type="SpriteFrames" uid="uid://cjkgvxxvsymwy" path="res://entities/voltstar/voltshot/voltshot.aseprite" id="4_h3msd"]
-[ext_resource type="Texture2D" uid="uid://c0s7x5vpgqd0o" path="res://visuals/radial_point_light_texture.tres" id="5_og24r"]
+[ext_resource type="Script" path="res://entities/voltstar/voltshot/voltshot.gd" id="1_e4s2s"]
+[ext_resource type="Script" path="res://entities/entity_stats.gd" id="2_h3msd"]
+[ext_resource type="Texture2D" path="res://visuals/particle.png" id="2_t2ija"]
+[ext_resource type="SpriteFrames" path="res://entities/voltstar/voltshot/voltshot.aseprite" id="4_h3msd"]
+[ext_resource type="Texture2D" path="res://visuals/radial_point_light_texture.tres" id="5_og24r"]
 
 [sub_resource type="Resource" id="Resource_og24r"]
 script = ExtResource("2_h3msd")

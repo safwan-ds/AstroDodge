@@ -1,13 +1,13 @@
-[gd_scene load_steps=13 format=3 uid="uid://bjtu0rprxq5m8"]
+[gd_scene format=3 uid="uid://dx6e662s4xoku"]
 
 [ext_resource type="Script" uid="uid://crolqalprt2j3" path="res://states/gameplay/gameplay.gd" id="1_b11t3"]
-[ext_resource type="PackedScene" uid="uid://dkywyhvbi881a" path="res://entities/player/player.tscn" id="2_mknij"]
+[ext_resource type="PackedScene" path="res://entities/player/player.tscn" id="2_mknij"]
 [ext_resource type="Texture2D" uid="uid://bws0tgak6lngw" path="res://visuals/star.aseprite" id="3_bt3ji"]
 [ext_resource type="Script" uid="uid://dtrgdfwlixqjg" path="res://entities/entity_spawner.gd" id="3_crk4x"]
 [ext_resource type="Script" uid="uid://bbr8jv8jlcxs2" path="res://states/gameplay/camera.gd" id="3_kvqur"]
-[ext_resource type="PackedScene" uid="uid://d2ubv33cs8o2g" path="res://entities/voltstar/voltstar.tscn" id="5_crk4x"]
-[ext_resource type="PackedScene" uid="uid://osdmu4njekb3" path="res://entities/asteroid/asteroid.tscn" id="5_kvqur"]
-[ext_resource type="PackedScene" uid="uid://bcdkv4q00dugr" path="res://statics/overcharge_station/overcharge_station.tscn" id="8_3twjh"]
+[ext_resource type="PackedScene" path="res://entities/voltstar/voltstar.tscn" id="5_crk4x"]
+[ext_resource type="PackedScene" path="res://entities/asteroid/asteroid.tscn" id="5_kvqur"]
+[ext_resource type="PackedScene" path="res://statics/overcharge_station/overcharge_station.tscn" id="8_3twjh"]
 
 [sub_resource type="Curve" id="Curve_dpe7l"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.514706, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -34,14 +34,14 @@ frequency = 0.05
 fractal_octaves = 4
 fractal_gain = 0.8
 
-[node name="Gameplay" type="Node2D" node_paths=PackedStringArray("player", "star_field", "direction_arrow", "camera")]
+[node name="Gameplay" type="Node2D" unique_id=392671930 node_paths=PackedStringArray("player", "star_field", "direction_arrow", "camera")]
 script = ExtResource("1_b11t3")
 player = NodePath("Player")
 star_field = NodePath("StarField")
 direction_arrow = NodePath("DirectionArrow")
 camera = NodePath("Player/Camera")
 
-[node name="StarField" type="GPUParticles2D" parent="."]
+[node name="StarField" type="GPUParticles2D" parent="." unique_id=698075454]
 process_mode = 3
 amount = 500
 texture = ExtResource("3_bt3ji")
@@ -51,10 +51,10 @@ speed_scale = 2.0
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_mknij")
 
-[node name="OverchargeStation" parent="." instance=ExtResource("8_3twjh")]
+[node name="OverchargeStation" parent="." unique_id=1456193195 instance=ExtResource("8_3twjh")]
 visible = false
 
-[node name="AsteroidSpawner" type="Timer" parent="."]
+[node name="AsteroidSpawner" type="Timer" parent="." unique_id=1640952936]
 autostart = true
 script = ExtResource("3_crk4x")
 entity = ExtResource("5_kvqur")
@@ -62,7 +62,7 @@ spawn_count_max = 2
 max_count = 5
 metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
 
-[node name="VoltstarSpawner" type="Timer" parent="."]
+[node name="VoltstarSpawner" type="Timer" parent="." unique_id=631326776]
 wait_time = 5.0
 autostart = true
 script = ExtResource("3_crk4x")
@@ -72,16 +72,16 @@ spawn_count_max = 2
 max_count = 3
 metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
 
-[node name="DirectionArrow" type="Polygon2D" parent="."]
+[node name="DirectionArrow" type="Polygon2D" parent="." unique_id=136322743]
 modulate = Color(2, 0, 0, 1)
 color = Color(1, 0, 0, 1)
 polygon = PackedVector2Array(-5, -35, 5, -35, 0, -40)
 uv = PackedVector2Array(-45.258, 36.9323, 72.717, 39.7546, -9.69618, -24.0309)
 
-[node name="Player" parent="." node_paths=PackedStringArray("camera") instance=ExtResource("2_mknij")]
+[node name="Player" parent="." unique_id=815012169 node_paths=PackedStringArray("camera") instance=ExtResource("2_mknij")]
 camera = NodePath("Camera")
 
-[node name="Camera" type="Camera2D" parent="Player"]
+[node name="Camera" type="Camera2D" parent="Player" unique_id=442907226]
 offset = Vector2(-0.0164191, -2.58723)
 position_smoothing_enabled = true
 rotation_smoothing_speed = 0.2
@@ -93,7 +93,7 @@ noise_speed = 25.0
 base_shake_intensity = 10.0
 shake_decay_rate = 3.5
 
-[node name="CanvasModulate" type="CanvasModulate" parent="."]
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=899471673]
 
 [connection signal="is_dead" from="Player" to="." method="_on_player_is_dead"]
 [connection signal="is_hurt" from="Player" to="." method="_on_player_is_hurt"]
