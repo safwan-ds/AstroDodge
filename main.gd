@@ -27,6 +27,7 @@ class_name Main extends Node
 
 var selected_world: PackedScene
 var selected_gui: PackedScene
+var _is_transitioning := false
 
 var current_world: Node2D:
 	set(node):
@@ -62,6 +63,10 @@ func _ready():
 
 ## Transition out, clear world/GUI, instantiate new state scenes, set cursor, transition in.
 func _change_state(state: Global.GameState):
+	if _is_transitioning:
+		return
+	_is_transitioning = true
+
 	var transition_data := await _transition_in()
 	for node in [world_2d, gui]:
 		for child in node.get_children():
@@ -105,6 +110,7 @@ func _transition_out(transition_data: Array) -> void:
 	transition_animation.play_backwards("dissolve")
 	await transition_animation.animation_finished
 	transition_node.queue_free()
+	_is_transitioning = false
 
 
 ## Add popup instance to popups layer (only one at a time).

@@ -28,6 +28,8 @@ func _ready() -> void:
 	game_over_label.hide()
 	game_over_label.visible_ratio = 0.0
 
+	Global.change_state.connect(_on_change_state)
+
 
 func _process(_delta) -> void:
 	_set_values()
@@ -43,12 +45,15 @@ func _input(event):
 			gameplay.paused = true
 			get_tree().paused = true
 			pause_label.show()
-	
+
 	if event.is_action_pressed("up"):
 		if gameplay.paused:
 			gameplay.paused = false
 			pause_label.hide()
 			get_tree().paused = false
+
+		if gameplay.game_over:
+			Global.change_state.emit(Global.GameState.GAMEPLAY)
 
 
 func _set_values() -> void:
@@ -84,3 +89,8 @@ func _on_player_is_dead() -> void:
 	pause_label.hide()
 	game_over_label.show()
 	create_tween().tween_property(game_over_label, "visible_ratio", 1.0, 1.0).set_trans(Tween.TRANS_QUAD)
+
+
+## Stop processing input immediately when a state transition begins.
+func _on_change_state(_state: Global.GameState) -> void:
+	set_process_mode(PROCESS_MODE_DISABLED)

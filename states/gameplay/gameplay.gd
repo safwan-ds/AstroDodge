@@ -41,16 +41,6 @@ func _process(delta) -> void:
 	score += d_score * delta * score_multiplier
 
 
-func _input(event) -> void:
-	if event.is_action_pressed("back"):
-		if paused or game_over:
-			Global.change_state.emit(Global.GameState.MAIN_MENU)
-
-	if event.is_action_pressed("up"):
-		if game_over:
-			Global.change_state.emit(Global.GameState.GAMEPLAY)
-
-
 func _on_player_is_hurt(_hp: float) -> void:
 	score_multiplier = 1.0
 
