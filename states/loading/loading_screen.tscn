@@ -1,10 +1,27 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://ciofdkevvj6oa"]
+
+[ext_resource type="Script" uid="uid://bgym6lgpl2gp3" path="res://states/loading/loading_screen.gd" id="1_72fcs"]
+[ext_resource type="PackedScene" path="res://collectibles/j_unit/j_unit.tscn" id="2_0fcri"]
+[ext_resource type="Shader" uid="uid://cknortpq7s626" path="res://visuals/shaders/black_border.gdshader" id="2_jcrjc"]
+[ext_resource type="PackedScene" path="res://entities/asteroid/asteroid.tscn" id="3_s7ba5"]
+[ext_resource type="Shader" uid="uid://im147euqgw67" path="res://visuals/shaders/blur.gdshader" id="3_x028a"]
+[ext_resource type="PackedScene" uid="uid://0bbc6e4egp2t" path="res://entities/player/bullet/bullet.tscn" id="4_5pdhx"]
+[ext_resource type="Shader" uid="uid://ciletaxalhqm4" path="res://visuals/shaders/shatter.gdshader" id="4_jcgnt"]
+[ext_resource type="Shader" uid="uid://cjslpveoxec88" path="res://visuals/shaders/space_warp.gdshader" id="5_lmjlo"]
+[ext_resource type="PackedScene" uid="uid://d4gqybtf7mnf8" path="res://entities/player/player.tscn" id="5_tyl4c"]
+[ext_resource type="PackedScene" path="res://entities/voltstar/voltshot/voltshot.tscn" id="6_6cr3f"]
+[ext_resource type="Shader" uid="uid://5t73kbufuj3k" path="res://visuals/shaders/vhs.gdshader" id="6_kttkj"]
+[ext_resource type="PackedScene" path="res://entities/voltstar/voltstar.tscn" id="7_boh5o"]
+[ext_resource type="PackedScene" path="res://statics/overcharge_station/overcharge_station.tscn" id="8_0oyfe"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_efxa6"]
 font_size = 45
 
 [node name="LoadingScreen" type="CanvasLayer" unique_id=1349288503]
 layer = 100
+script = ExtResource("1_72fcs")
+scenes_to_preload = Array[PackedScene]([ExtResource("2_0fcri"), ExtResource("3_s7ba5"), ExtResource("4_5pdhx"), ExtResource("5_tyl4c"), ExtResource("6_6cr3f"), ExtResource("7_boh5o"), ExtResource("8_0oyfe")])
+shaders_to_preload = Array[Shader]([ExtResource("2_jcrjc"), ExtResource("3_x028a"), ExtResource("4_jcgnt"), ExtResource("5_lmjlo"), ExtResource("6_kttkj")])
 
 [node name="BG" type="ColorRect" parent="." unique_id=1660812077]
 anchors_preset = 15
@@ -30,7 +47,7 @@ size_flags_vertical = 4
 mouse_filter = 2
 theme_override_constants/separation = 16
 
-[node name="Logo" type="Label" parent="Center/VBox" unique_id=1268651249]
+[node name="LoadingText" type="Label" parent="Center/VBox" unique_id=1268651249]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "Loading"

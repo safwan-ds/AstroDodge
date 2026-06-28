@@ -7,7 +7,7 @@ var _random_scale := randi_range(2, 8) / 2.0
 
 
 func _ready():
-	super ()
+	super()
 	var player: Player = get_tree().get_first_node_in_group("player")
 	if player:
 		_direction = (player.position - position).normalized().rotated(randf_range(-PI / 4, PI / 4))
@@ -30,7 +30,7 @@ func _ready():
 
 
 func _on_area_entered(area: Area2D) -> void:
-	if not area.is_in_group("bullets") and not area.is_in_group("asteroids") and not area.is_in_group("player"):
+	if not area.is_in_group("bullets") and not area.is_in_group("player"):
 		return
 	_die()
 
@@ -42,7 +42,7 @@ func _die() -> void:
 	audio_player.play()
 	shatter.restart()
 	shatter.emitting = true
-	await super ()
+	await super()
 
 
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:

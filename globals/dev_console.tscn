@@ -1,16 +1,16 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://cvy4l5xh6q3if"]
 
-[ext_resource type="Script" path="res://globals/dev_console.gd" id="2_j7v83"]
+[ext_resource type="Script" uid="uid://b86e5gbfj3s03" path="res://globals/dev_console.gd" id="2_j7v83"]
 
-[node name="DevConsole" type="CanvasLayer" node_paths=PackedStringArray("input_text", "output_text", "auto_complete_list")]
+[node name="DevConsole" type="CanvasLayer" unique_id=1082371049 node_paths=PackedStringArray("input_text", "output_text", "auto_complete_list")]
 process_mode = 3
-layer = 2
+layer = 6
 script = ExtResource("2_j7v83")
 input_text = NodePath("Control/VBoxContainer/InputText")
 output_text = NodePath("Control/VBoxContainer/OutputText")
 auto_complete_list = NodePath("Control/VBoxContainer/AutoCompleteList")
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=1244002727]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,7 +18,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ColorRect" type="ColorRect" parent="Control"]
+[node name="ColorRect" type="ColorRect" parent="Control" unique_id=1017728663]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,7 +27,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.745098)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=927850419]
 layout_mode = 1
 anchors_preset = 13
 anchor_left = 0.5
@@ -39,21 +39,21 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(213, 0)
 
-[node name="OutputText" type="RichTextLabel" parent="Control/VBoxContainer"]
+[node name="OutputText" type="RichTextLabel" parent="Control/VBoxContainer" unique_id=1704395444]
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 2
 scroll_following = true
 selection_enabled = true
 
-[node name="AutoCompleteList" type="ItemList" parent="Control/VBoxContainer"]
+[node name="AutoCompleteList" type="ItemList" parent="Control/VBoxContainer" unique_id=1984986143]
 layout_mode = 2
 focus_mode = 0
 allow_reselect = true
 allow_search = false
 auto_height = true
 
-[node name="InputText" type="LineEdit" parent="Control/VBoxContainer"]
+[node name="InputText" type="LineEdit" parent="Control/VBoxContainer" unique_id=672101384]
 layout_mode = 2
 placeholder_text = "Type your command..."
 alignment = 1

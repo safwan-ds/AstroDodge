@@ -36,11 +36,12 @@ var current_gui: Control:
 
 @onready var selected_cursor := primary_cursor
 @onready var selected_cursor_hotspot := Vector2.ZERO
+@onready var _preloader := get_node("/root/Preloader")
 
 
 func _ready():
-	Preloader.preload_all()
-	await Preloader.finished
+	_preloader.preload_all()
+	await _preloader.finished
 
 	first_transition_in.get_node("AnimationPlayer").play_backwards("dissolve")
 	Global.change_state.connect(_change_state)

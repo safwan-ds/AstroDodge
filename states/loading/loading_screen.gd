@@ -1,31 +1,21 @@
-extends Node
+## Controls the loading screen and GPU-warms scenes before gameplay.
+## Configure scenes_to_preload and shaders_to_preload in loading_screen.tscn inspector.
+extends CanvasLayer
 
 signal finished()
 
-
-const LOADING_SCREEN := preload("res://states/loading/loading_screen.tscn")
-const SCENES_TO_PRELOAD: Array[PackedScene] = [
-	preload("res://entities/asteroid/asteroid.tscn"),
-	preload("res://entities/player/player.tscn"),
-	preload("res://entities/voltstar/voltstar.tscn"),
-	preload("res://entities/voltstar/voltshot/voltshot.tscn"),
-	preload("res://entities/player/bullet/bullet.tscn"),
-	preload("res://collectibles/j_unit/j_unit.tscn"),
-	preload("res://statics/overcharge_station/overcharge_station.tscn"),
-]
-const SHADERS_TO_PRELOAD: Array[Shader] = [
-	preload("res://visuals/shaders/vhs.gdshader"),
-	preload("res://visuals/shaders/space_warp.gdshader"),
-	preload("res://visuals/shaders/blur.gdshader"),
-	preload("res://visuals/shaders/shatter.gdshader"),
-	preload("res://visuals/shaders/black_border.gdshader"),
-]
+@export var scenes_to_preload: Array[PackedScene]
+@export var shaders_to_preload: Array[Shader]
 
 var _loading := false
-var _loading_screen: CanvasLayer
 var _status_label: Label
 var _progress_bar: ProgressBar
 var _warming_root: Node2D
+
+
+func _ready() -> void:
+	_status_label = $Center/VBox/Status as Label
+	_progress_bar = $Center/VBox/Progress as ProgressBar
 
 
 func preload_all() -> void:
@@ -33,21 +23,14 @@ func preload_all() -> void:
 		return
 	_loading = true
 
-	_build_loading_screen()
+	await get_tree().process_frame
+	_stop_audio()
 
-	# Stop all players and mute all audio buses to prevent subtle sounds during loading
-	for player in get_tree().root.find_children("*", "AudioStreamPlayer", true, false):
-		player.stop()
-	for player in get_tree().root.find_children("*", "AudioStreamPlayer2D", true, false):
-		player.stop()
-	for i in AudioServer.get_bus_count():
-		AudioServer.set_bus_mute(i, true)
-
-	var total := SHADERS_TO_PRELOAD.size() + SCENES_TO_PRELOAD.size()
+	var total := shaders_to_preload.size() + scenes_to_preload.size()
 	var idx := 0
 
 	# 1. Shaders are preloaded at compile time — process frames for GPU compilation
-	for shader in SHADERS_TO_PRELOAD:
+	for shader in shaders_to_preload:
 		_update_progress(float(idx) / float(total) * 100.0, "Shader: " + shader.resource_path.get_file())
 		idx += 1
 		await get_tree().process_frame
@@ -65,7 +48,7 @@ func preload_all() -> void:
 	Global.current_world = _warming_root
 
 	# 3. Warm scenes — instantiate + process frames for GPU particles
-	for scene in SCENES_TO_PRELOAD:
+	for scene in scenes_to_preload:
 		_update_progress(float(idx) / float(total) * 100.0, "Warming: " + scene.resource_path.get_file())
 		idx += 1
 
@@ -91,10 +74,18 @@ func preload_all() -> void:
 	for i in AudioServer.get_bus_count():
 		AudioServer.set_bus_mute(i, false)
 	await get_tree().create_timer(0.15).timeout
-	_loading_screen.queue_free()
-	_loading_screen = null
+	hide()
 	_loading = false
 	finished.emit()
+
+
+func _stop_audio() -> void:
+	for player in get_tree().root.find_children("*", "AudioStreamPlayer", true, false):
+		player.stop()
+	for player in get_tree().root.find_children("*", "AudioStreamPlayer2D", true, false):
+		player.stop()
+	for i in AudioServer.get_bus_count():
+		AudioServer.set_bus_mute(i, true)
 
 
 func _warm_particles(node: Node) -> void:
@@ -107,13 +98,6 @@ func _warm_particles(node: Node) -> void:
 	if self_particles and not self_particles.emitting:
 		self_particles.restart()
 		self_particles.emitting = true
-
-
-func _build_loading_screen() -> void:
-	_loading_screen = LOADING_SCREEN.instantiate()
-	add_child(_loading_screen)
-	_status_label = _loading_screen.get_node("Center/VBox/Status") as Label
-	_progress_bar = _loading_screen.get_node("Center/VBox/Progress") as ProgressBar
 
 
 func _update_progress(value: float, label: String) -> void:
