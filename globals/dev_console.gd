@@ -14,7 +14,10 @@ var _valid_commands: Array
 var _history: Array[String]
 var _selected_history_index := -1
 
-@onready var regex := RegEx.new()
+# Group name constants used by console commands.
+const GROUP_PLAYER := &"player"
+const GROUP_ASTEROIDS := &"asteroids"
+const GROUP_ENEMIES := &"enemies"
 
 
 func _ready() -> void:
@@ -23,7 +26,6 @@ func _ready() -> void:
 		return
 
 	hide()
-	regex.compile(r"\w+\(?[\w\s\,\"]*\)?")
 	_valid_commands = get_script().get_script_method_list().map(func(method: Dictionary) -> String:
 		return method.name
 	).filter(func(method_name: String) -> bool:
@@ -51,10 +53,7 @@ func _input(event):
 				input_text.set_deferred("caret_column", input_text.text.length())
 
 
-func _on_input_text_text_changed(new_text: String) -> void:
-	var current_caret_column := input_text.caret_column
-	input_text.text = regex.search(new_text).get_string() if regex.search(new_text) else ""
-	input_text.caret_column = clamp(current_caret_column, 0, input_text.text.length())
+func _on_input_text_text_changed(_new_text: String) -> void:
 	_show_auto_complete()
 
 
@@ -120,7 +119,10 @@ func _on_input_text_text_submitted(command: String) -> void:
 		return
 
 	var result = _expression.execute([], self)
-	if not _expression.has_execute_failed():
+	if _expression.has_execute_failed():
+		output_text.push_color(Color.RED)
+		output_text.add_text("Execution error: " + _expression.get_error_text() + "\n")
+	elif result != null:
 		output_text.push_color(Color.GREEN)
 		output_text.add_text(str(result) + "\n")
 
@@ -135,7 +137,7 @@ func help():
 
 
 func modify_hp(new_hp: float) -> Variant:
-	var player = get_tree().get_first_node_in_group("player")
+	var player = get_tree().get_first_node_in_group(GROUP_PLAYER)
 	if player:
 		player._hp = new_hp
 		return player._hp
@@ -143,7 +145,7 @@ func modify_hp(new_hp: float) -> Variant:
 
 
 func game_over() -> void:
-	var player = get_tree().get_first_node_in_group("player")
+	var player = get_tree().get_first_node_in_group(GROUP_PLAYER)
 	if player:
 		player._hp = 0.0
 
@@ -153,12 +155,12 @@ func get_nodes_in_group(group_name: String) -> Array:
 
 
 func destroy_all_asteroids() -> void:
-	for asteroid in get_tree().get_nodes_in_group("asteroids"):
+	for asteroid in get_tree().get_nodes_in_group(GROUP_ASTEROIDS).duplicate():
 		asteroid._die()
 
 
 func destroy_all_enemies() -> void:
-	for enemy in get_tree().get_nodes_in_group("enemies"):
+	for enemy in get_tree().get_nodes_in_group(GROUP_ENEMIES).duplicate():
 		enemy._die()
 
 
