@@ -52,7 +52,9 @@ func _input(event) -> void:
 	if OS.is_debug_build():
 		if event.is_action_pressed("_dev_console") and DevConsole:
 			DevConsole.visible = not DevConsole.visible
-			DevConsole.input_text.grab_focus()
+			if DevConsole.visible:
+				DevConsole.input_text.grab_focus()
+			get_viewport().set_input_as_handled()
 
 
 func _create_new_data_save() -> void:

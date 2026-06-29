@@ -5,9 +5,10 @@
 [ext_resource type="AudioStream" uid="uid://cafb4f41qenbs" path="res://audio/sfx/lose.wav" id="4_mhfhn"]
 [ext_resource type="AudioStream" uid="uid://dk7frf6ie0cch" path="res://audio/sfx/boom.wav" id="5_i1k7u"]
 [ext_resource type="AudioStream" uid="uid://cddn7jqnuqvrj" path="res://audio/sfx/shoot.wav" id="6_8j4p3"]
-[ext_resource type="AudioStream" uid="uid://epho1bo3ykmb" path="res://audio/music/AstroDodge_main_theme.ogg" id="6_i1k7u"]
 [ext_resource type="AudioStream" uid="uid://dwmskwav07031" path="res://audio/sfx/j_unit_pickup.wav" id="7_hlghp"]
 [ext_resource type="AudioStream" uid="uid://da2g2d41cnqix" path="res://audio/sfx/hover.wav" id="7_k3p9q"]
+[ext_resource type="AudioStream" uid="uid://be0kkg01qqnqr" path="res://audio/music/main_menu_music.wav" id="8_01q3q"]
+[ext_resource type="AudioStream" uid="uid://bqqch2xrbnhfo" path="res://audio/music/gameplay_music.wav" id="9_6wlj3"]
 
 [node name="AudioManager" type="Node" unique_id=1387313198 node_paths=PackedStringArray("sfx", "music")]
 script = ExtResource("1_5jhky")
@@ -19,10 +20,11 @@ lose = ExtResource("4_mhfhn")
 boom = ExtResource("5_i1k7u")
 shoot = ExtResource("6_8j4p3")
 pickup = ExtResource("7_hlghp")
-gameplay_music = ExtResource("6_i1k7u")
+main_menu_music = ExtResource("8_01q3q")
+gameplay_music = ExtResource("9_6wlj3")
 
 [node name="SFX" type="AudioStreamPlayer" parent="." unique_id=831534136]
-max_polyphony = 2
+max_polyphony = 4
 bus = &"SFX"
 
 [node name="Music" type="AudioStreamPlayer" parent="." unique_id=1650826825]

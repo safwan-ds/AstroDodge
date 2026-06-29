@@ -87,6 +87,7 @@ func _on_player_is_healed(hp: float) -> void:
 
 
 func _on_player_is_dead() -> void:
+	AudioManager.stop_music()
 	score_label.text = "Score: " + str(int(gameplay.score))
 	pause_label.hide()
 	game_over_label.show()

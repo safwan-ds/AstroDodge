@@ -59,10 +59,13 @@ func _ready():
 	current_gui = gui.get_child(0)
 	await first_transition_in.get_node("AnimationPlayer").animation_finished
 	first_transition_in.queue_free()
+	Global.change_state.emit(Global.GameState.MAIN_MENU)
 
 
 ## Transition out, clear world/GUI, instantiate new state scenes, set cursor, transition in.
 func _change_state(state: Global.GameState):
+	if state == Global.current_state:
+		return
 	if _is_transitioning:
 		return
 	_is_transitioning = true
