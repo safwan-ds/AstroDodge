@@ -6,6 +6,10 @@ class_name Voltstar extends Entity
 @export var voltshot_scene: PackedScene
 @export var distance_to_player := 100.0
 @export var orbit_correction_speed := 2.0
+## Minimum distance between voltstars before repulsion kicks in (pixels).
+@export var repel_threshold := 60.0
+## Strength of the perpendicular repulsion push when voltstars overlap.
+@export var repel_strength := 80.0
 
 var _rotation_speed := randf_range(1.0, 5.0)
 var _movement_direction = [1, -1].pick_random()
@@ -31,6 +35,18 @@ func _move(delta) -> void:
 		position = lerp(position, (distance_to_player - (position - player.position).length()) * _direction + position, weight)
 	_velocity = _speed * _direction.rotated(PI / 2.0 * _movement_direction)
 	position += _velocity * delta
+
+	# Gentle perpendicular repulsion from nearby Voltstars.
+	# Pushes them apart along the orbit tangent so they don't overlap.
+	var voltstars := get_tree().get_nodes_in_group("voltstars")
+	for v in voltstars:
+		if v == self:
+			continue
+		var dist := global_position.distance_to(v.global_position)
+		if dist < repel_threshold:
+			var away: Vector2 = (global_position - v.global_position).normalized()
+			var factor := 1.0 - dist / repel_threshold
+			position += away * repel_strength * delta * factor
 
 
 ## Fire a [Voltshot] from each gun toward the player.

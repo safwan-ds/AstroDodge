@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://dx6e662s4xoku"]
 
 [ext_resource type="Script" uid="uid://crolqalprt2j3" path="res://states/gameplay/gameplay.gd" id="1_b11t3"]
-[ext_resource type="PackedScene" path="res://entities/player/player.tscn" id="2_mknij"]
+[ext_resource type="PackedScene" uid="uid://d4gqybtf7mnf8" path="res://entities/player/player.tscn" id="2_mknij"]
 [ext_resource type="Texture2D" uid="uid://bws0tgak6lngw" path="res://visuals/star.aseprite" id="3_bt3ji"]
 [ext_resource type="Script" uid="uid://dtrgdfwlixqjg" path="res://entities/entity_spawner.gd" id="3_crk4x"]
 [ext_resource type="Script" uid="uid://bbr8jv8jlcxs2" path="res://states/gameplay/camera.gd" id="3_kvqur"]
-[ext_resource type="PackedScene" path="res://entities/voltstar/voltstar.tscn" id="5_crk4x"]
+[ext_resource type="PackedScene" uid="uid://g4tq4k4jla0l" path="res://entities/voltstar/voltstar.tscn" id="5_crk4x"]
 [ext_resource type="PackedScene" path="res://entities/asteroid/asteroid.tscn" id="5_kvqur"]
 [ext_resource type="PackedScene" path="res://statics/overcharge_station/overcharge_station.tscn" id="8_3twjh"]
 
@@ -59,17 +59,17 @@ autostart = true
 script = ExtResource("3_crk4x")
 entity = ExtResource("5_kvqur")
 spawn_count_max = 2
-max_count = 5
 metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
 
 [node name="VoltstarSpawner" type="Timer" parent="." unique_id=631326776]
-wait_time = 5.0
+wait_time = 3.0
 autostart = true
 script = ExtResource("3_crk4x")
 entity = ExtResource("5_crk4x")
 entity_group = "voltstar"
-spawn_count_max = 2
-max_count = 3
+spawn_count_max = 3
+max_count = 7
+spread_batch_sides = true
 metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
 
 [node name="DirectionArrow" type="Polygon2D" parent="." unique_id=136322743]

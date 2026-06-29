@@ -1,17 +1,16 @@
-[gd_scene load_steps=23 format=3]
+[gd_scene format=3 uid="uid://g4tq4k4jla0l"]
 
-[ext_resource type="Script" path="res://entities/voltstar/voltstar.gd" id="1_kuoce"]
-[ext_resource type="Script" path="res://entities/entity_stats.gd" id="2_kuoce"]
+[ext_resource type="Script" uid="uid://b6r2kxihtnu0s" path="res://entities/voltstar/voltstar.gd" id="1_kuoce"]
+[ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats.gd" id="2_kuoce"]
 [ext_resource type="PackedScene" path="res://entities/voltstar/voltshot/voltshot.tscn" id="2_la6je"]
-[ext_resource type="Texture2D" path="res://visuals/particle.png" id="2_sy5s6"]
-[ext_resource type="SpriteFrames" path="res://entities/voltstar/voltstar.aseprite" id="3_sy5s6"]
+[ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://visuals/particle.png" id="2_sy5s6"]
+[ext_resource type="SpriteFrames" uid="uid://b32h0nwxlo5om" path="res://entities/voltstar/voltstar.aseprite" id="3_sy5s6"]
 [ext_resource type="PackedScene" path="res://collectibles/j_unit/j_unit.tscn" id="4_t1w5k"]
-[ext_resource type="AudioStream" path="res://audio/sfx/boom.wav" id="5_i0qia"]
-[ext_resource type="Texture2D" path="res://visuals/radial_point_light_texture.tres" id="8_km6wj"]
+[ext_resource type="AudioStream" uid="uid://dk7frf6ie0cch" path="res://audio/sfx/boom.wav" id="5_i0qia"]
+[ext_resource type="Texture2D" uid="uid://dvpf2d7wmapdr" path="res://visuals/radial_point_light_texture.tres" id="8_km6wj"]
 
 [sub_resource type="Resource" id="Resource_sy5s6"]
 script = ExtResource("2_kuoce")
-max_health = 100.0
 base_speed = 50.0
 hit_shake_intensity = 1
 death_shake_intensity = 2
@@ -125,13 +124,15 @@ turbulence_initial_displacement_min = -16.5
 turbulence_initial_displacement_max = 16.5
 turbulence_influence_over_life = SubResource("CurveTexture_km6wj")
 
-[node name="Voltstar" type="Area2D" node_paths=PackedStringArray("guns", "sprite", "trail", "explosion", "audio_player") groups=["enemies", "entities", "voltstars"]]
+[node name="Voltstar" type="Area2D" unique_id=1206509997 node_paths=PackedStringArray("guns", "sprite", "trail", "explosion", "audio_player") groups=["enemies", "entities", "voltstars"]]
 collision_layer = 2
 collision_mask = 7
 script = ExtResource("1_kuoce")
 guns = NodePath("Guns")
 voltshot_scene = ExtResource("2_la6je")
 distance_to_player = 200.0
+repel_threshold = 200.0
+repel_strength = 200.0
 entity_stats = SubResource("Resource_sy5s6")
 j_unit = ExtResource("4_t1w5k")
 sprite = NodePath("Sprite")
@@ -140,7 +141,7 @@ explosion = NodePath("Explosion")
 audio_player = NodePath("AudioStreamPlayer2D")
 metadata/_custom_type_script = "uid://qy4n5oh6dqpx"
 
-[node name="Trail" type="GPUParticles2D" parent="."]
+[node name="Trail" type="GPUParticles2D" parent="." unique_id=141531341]
 modulate = Color(1.25, 1.25, 1.25, 1)
 material = SubResource("CanvasItemMaterial_i0qia")
 amount = 512
@@ -149,13 +150,13 @@ randomness = 0.34
 fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_km6wj")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="."]
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=666855611]
 sprite_frames = ExtResource("3_sy5s6")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=761734886]
 shape = SubResource("RectangleShape2D_la6je")
 
-[node name="Explosion" type="GPUParticles2D" parent="."]
+[node name="Explosion" type="GPUParticles2D" parent="." unique_id=1881912167]
 material = SubResource("CanvasItemMaterial_kuoce")
 emitting = false
 amount = 1000
@@ -164,44 +165,44 @@ one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_t1w5k")
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1678497403]
 stream = ExtResource("5_i0qia")
 volume_db = -1.0
 
-[node name="Guns" type="Node2D" parent="."]
+[node name="Guns" type="Node2D" parent="." unique_id=1463839368]
 
-[node name="Gun1" type="Marker2D" parent="Guns"]
+[node name="Gun1" type="Marker2D" parent="Guns" unique_id=826430404]
 position = Vector2(-45, -48)
 
-[node name="Gun2" type="Marker2D" parent="Guns"]
+[node name="Gun2" type="Marker2D" parent="Guns" unique_id=699480247]
 position = Vector2(-45, 48)
 
-[node name="Gun3" type="Marker2D" parent="Guns"]
+[node name="Gun3" type="Marker2D" parent="Guns" unique_id=1518335653]
 position = Vector2(45, 48)
 
-[node name="Gun4" type="Marker2D" parent="Guns"]
+[node name="Gun4" type="Marker2D" parent="Guns" unique_id=701167586]
 position = Vector2(45, -48)
 
-[node name="ShootingTimer" type="Timer" parent="."]
+[node name="ShootingTimer" type="Timer" parent="." unique_id=1850676174]
 wait_time = 5.0
 autostart = true
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=169079147]
 position = Vector2(15, -14)
 texture = ExtResource("8_km6wj")
 texture_scale = 0.41
 
-[node name="PointLight2D2" type="PointLight2D" parent="."]
+[node name="PointLight2D2" type="PointLight2D" parent="." unique_id=1331028558]
 position = Vector2(-15, -14)
 texture = ExtResource("8_km6wj")
 texture_scale = 0.41
 
-[node name="PointLight2D3" type="PointLight2D" parent="."]
+[node name="PointLight2D3" type="PointLight2D" parent="." unique_id=899284498]
 position = Vector2(15, 14)
 texture = ExtResource("8_km6wj")
 texture_scale = 0.41
 
-[node name="PointLight2D4" type="PointLight2D" parent="."]
+[node name="PointLight2D4" type="PointLight2D" parent="." unique_id=270418967]
 position = Vector2(-15, 14)
 texture = ExtResource("8_km6wj")
 texture_scale = 0.41
