@@ -13,6 +13,8 @@ extends Node2D
 @export var d_score := 1.0
 ## Score multiplier growth per second.
 @export var d2_score := 0.01
+## Score multiplier decay when player is hurt.
+@export var d3_score := 0.05
 
 var score := 0.0
 var score_multiplier := 1.0
@@ -42,7 +44,7 @@ func _process(delta) -> void:
 
 
 func _on_player_is_hurt(_hp: float) -> void:
-	score_multiplier = 1.0
+	score_multiplier = max(1.0, score_multiplier - d3_score)
 
 
 func _on_player_is_dead() -> void:

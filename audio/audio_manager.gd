@@ -2,7 +2,7 @@ extends Node
 ## Singleton for SFX and music playback. SFX gets randomized pitch.[br]
 ## Music uses fade-in/fade-out transitions.
 
-enum SFX {HOVER, CLICK, LOSE, BOOM, SHOOT}
+enum SFX {HOVER, CLICK, LOSE, BOOM, SHOOT, PICKUP}
 enum Music {MAIN_MENU, GAMEPLAY}
 
 @export var sfx: AudioStreamPlayer
@@ -18,11 +18,35 @@ enum Music {MAIN_MENU, GAMEPLAY}
 @export var boom: AudioStreamWAV
 ## Shoot sound effect.
 @export var shoot: AudioStreamWAV
+## Collectible pickup sound effect.
+@export var pickup: AudioStreamWAV
 
 ## Background music for gameplay / menus.
 @export var gameplay_music: AudioStreamOggVorbis
 
+const MUSIC_DUCK_DB := -12.0
+
 var rng := RandomNumberGenerator.new()
+
+## Connected to Global.change_state to handle music across game states.
+func _ready() -> void:
+	Global.change_state.connect(_on_change_state)
+	Global.pause_toggled.connect(_on_pause_toggled)
+	music.process_mode = PROCESS_MODE_ALWAYS
+
+
+func _on_change_state(state: Global.GameState) -> void:
+	match state:
+		Global.GameState.MAIN_MENU:
+			stop_music()
+		Global.GameState.GAMEPLAY:
+			play_music(Music.GAMEPLAY)
+
+
+func _on_pause_toggled(is_paused: bool) -> void:
+	var target_db := MUSIC_DUCK_DB if is_paused else 0.0
+	if music.playing:
+		create_tween().tween_property(music, "volume_db", target_db, 0.3).set_trans(Tween.TRANS_QUAD)
 
 
 ## Play a sound effect with randomized pitch and optional [param volume] offset.
@@ -40,6 +64,8 @@ func play_sfx(sfx_type: SFX, volume: float = 0.0) -> void:
 			sfx.stream = boom
 		SFX.SHOOT:
 			sfx.stream = shoot
+		SFX.PICKUP:
+			sfx.stream = pickup
 	sfx.play()
 
 

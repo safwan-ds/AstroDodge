@@ -34,5 +34,6 @@ func _on_area_entered(_area):
 	gameplay.collectibles_counter_temp[collectible_type] += 1
 	Global.data_save.collectibles_counter[collectible_type] += 1
 	Global.data_save.save()
+	AudioManager.play_sfx(AudioManager.SFX.PICKUP, -6.0)
 	Global.item_collected.emit()
 	queue_free()

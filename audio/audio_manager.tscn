@@ -1,27 +1,29 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene format=3 uid="uid://bha4sggnasrc8"]
 
-[ext_resource type="Script" path="res://audio/audio_manager.gd" id="1_5jhky"]
-[ext_resource type="AudioStream" path="res://audio/sfx/Hover.wav" id="2_drlug"]
-[ext_resource type="AudioStream" path="res://audio/sfx/Click.wav" id="3_0i2i4"]
-[ext_resource type="AudioStream" path="res://audio/sfx/lose.wav" id="4_mhfhn"]
-[ext_resource type="AudioStream" path="res://audio/sfx/boom.wav" id="5_i1k7u"]
-[ext_resource type="AudioStream" path="res://audio/sfx/shoot.wav" id="6_8j4p3"]
-[ext_resource type="AudioStream" path="res://audio/music/AstroDodge_main_theme.ogg" id="6_i1k7u"]
+[ext_resource type="Script" uid="uid://cp15s4bwg4fg1" path="res://audio/audio_manager.gd" id="1_5jhky"]
+[ext_resource type="AudioStream" uid="uid://oxin3yk6gakr" path="res://audio/sfx/click.wav" id="3_0i2i4"]
+[ext_resource type="AudioStream" uid="uid://cafb4f41qenbs" path="res://audio/sfx/lose.wav" id="4_mhfhn"]
+[ext_resource type="AudioStream" uid="uid://dk7frf6ie0cch" path="res://audio/sfx/boom.wav" id="5_i1k7u"]
+[ext_resource type="AudioStream" uid="uid://cddn7jqnuqvrj" path="res://audio/sfx/shoot.wav" id="6_8j4p3"]
+[ext_resource type="AudioStream" uid="uid://epho1bo3ykmb" path="res://audio/music/AstroDodge_main_theme.ogg" id="6_i1k7u"]
+[ext_resource type="AudioStream" uid="uid://dwmskwav07031" path="res://audio/sfx/j_unit_pickup.wav" id="7_hlghp"]
+[ext_resource type="AudioStream" uid="uid://da2g2d41cnqix" path="res://audio/sfx/hover.wav" id="7_k3p9q"]
 
-[node name="AudioManager" type="Node" node_paths=PackedStringArray("sfx", "music")]
+[node name="AudioManager" type="Node" unique_id=1387313198 node_paths=PackedStringArray("sfx", "music")]
 script = ExtResource("1_5jhky")
 sfx = NodePath("SFX")
 music = NodePath("Music")
-hover = ExtResource("2_drlug")
+hover = ExtResource("7_k3p9q")
 click = ExtResource("3_0i2i4")
 lose = ExtResource("4_mhfhn")
 boom = ExtResource("5_i1k7u")
 shoot = ExtResource("6_8j4p3")
+pickup = ExtResource("7_hlghp")
+gameplay_music = ExtResource("6_i1k7u")
 
-[node name="SFX" type="AudioStreamPlayer" parent="."]
+[node name="SFX" type="AudioStreamPlayer" parent="." unique_id=831534136]
 max_polyphony = 2
 bus = &"SFX"
 
-[node name="Music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("6_i1k7u")
+[node name="Music" type="AudioStreamPlayer" parent="." unique_id=1650826825]
 bus = &"Music"

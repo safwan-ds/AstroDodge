@@ -2,9 +2,9 @@ class_name Player extends Entity
 ## Player-controlled ship. Moves toward the mouse, shoots bullets,[br]
 ## enters invulnerability frames on hit, triggers game-over on death.
 
-signal is_hurt(hp: float)  ## Emitted when the player takes damage.
+signal is_hurt(hp: float) ## Emitted when the player takes damage.
 signal is_healed(hp: float)
-signal is_dead  ## Emitted when the player dies (consumed by Gameplay to show game-over).
+signal is_dead ## Emitted when the player dies (consumed by Gameplay to show game-over).
 
 @export_group("Links to Nodes")
 @export var bullet_scene: PackedScene
@@ -121,11 +121,12 @@ func _be_hurt(damage: float) -> void:
 func _die() -> void:
 	if _is_dying:
 		return
+	AudioManager.play_sfx(AudioManager.SFX.LOSE, 5.0)
 	camera.position = position
 	remove_child(camera)
 	add_sibling(camera)
 	is_dead.emit()
-	super ()
+	super()
 
 
 ## Fire a bullet from the gun position. Plays SFX and triggers camera shake.

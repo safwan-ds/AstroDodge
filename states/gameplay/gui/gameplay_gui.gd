@@ -45,12 +45,14 @@ func _input(event):
 			gameplay.paused = true
 			get_tree().paused = true
 			pause_label.show()
+			Global.pause_toggled.emit(true)
 
 	if event.is_action_pressed("up"):
 		if gameplay.paused:
 			gameplay.paused = false
 			pause_label.hide()
 			get_tree().paused = false
+			Global.pause_toggled.emit(false)
 
 		if gameplay.game_over:
 			Global.change_state.emit(Global.GameState.GAMEPLAY)
