@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ciofdkevvj6oa"]
 
-[ext_resource type="Script" uid="uid://5h2fn55ceom5" path="res://states/loading/loading_screen_view.gd" id="1_xt7su"]
+[ext_resource type="Script" uid="uid://5h2fn55ceom5" path="res://states/loading/loading_screen.gd" id="1_xt7su"]
 [ext_resource type="PackedScene" path="res://entities/collectibles/j_unit/j_unit.tscn" id="2_0fcri"]
 [ext_resource type="Shader" uid="uid://cknortpq7s626" path="res://visuals/shaders/black_border.gdshader" id="2_jcrjc"]
 [ext_resource type="PackedScene" path="res://entities/asteroid/asteroid.tscn" id="3_s7ba5"]
