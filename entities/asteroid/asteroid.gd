@@ -2,7 +2,6 @@ class_name Asteroid extends Entity
 ## Asteroid that drifts toward the player. Destroys itself on contact[br]
 ## or when off-screen. Overrides [method _die] to add shatter particles.
 
-@export var shatter: GPUParticles2D
 
 var _died := false
 var _random_scale := randi_range(2, 8) / 2.0
@@ -18,22 +17,12 @@ func _ready():
 	rotation = _direction.angle() + PI / 2
 	scale = Vector2(_random_scale, _random_scale)
 
-	var collapse_process_material: ShaderMaterial = shatter.process_material
-	collapse_process_material.set_shader_parameter(
-		"initial_linear_velocity_min",
-		collapse_process_material.get_shader_parameter("initial_linear_velocity_min") / _random_scale,
-	)
-	collapse_process_material.set_shader_parameter(
-		"initial_linear_velocity_max",
-		collapse_process_material.get_shader_parameter("initial_linear_velocity_max") / _random_scale,
-	)
-
 	for emitter in [trail, explosion]:
 		var mat: ParticleProcessMaterial = emitter.process_material
 		mat.initial_velocity_min /= _random_scale
 		mat.initial_velocity_max /= _random_scale
 
-	for emitter in [trail, shatter, explosion]:
+	for emitter in [trail, explosion]:
 		emitter.amount *= _random_scale
 
 
@@ -56,6 +45,4 @@ func _die() -> void:
 		return
 	_died = true
 	audio_player.play()
-	shatter.restart()
-	shatter.emitting = true
 	await super()

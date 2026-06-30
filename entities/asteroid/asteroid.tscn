@@ -1,18 +1,13 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://wlkp8hhtov3x"]
 
 [ext_resource type="Script" uid="uid://d025xcw3sundv" path="res://entities/asteroid/asteroid.gd" id="1_20vrb"]
 [ext_resource type="SpriteFrames" uid="uid://ddqj7lbvirpwv" path="res://entities/asteroid/asteroid.aseprite" id="2_4qh0a"]
 [ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats/entity_stats.gd" id="2_78yw1"]
 [ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://visuals/particle.png" id="3_ecv56"]
-[ext_resource type="Shader" uid="uid://ciletaxalhqm4" path="res://visuals/shaders/shatter.gdshader" id="4_go57s"]
 [ext_resource type="AudioStream" uid="uid://dk7frf6ie0cch" path="res://audio/sfx/boom.wav" id="4_useci"]
-[ext_resource type="Texture2D" uid="uid://bqc5o6oog7bl8" path="res://entities/asteroid/asteroid.png" id="5_6133j"]
-
 
 [sub_resource type="Resource" id="Resource_xhm4x"]
 script = ExtResource("2_78yw1")
-max_health = 100.0
-base_speed = 200.0
 hit_shake_intensity = 1
 death_shake_intensity = 2
 metadata/_custom_type_script = "uid://bjq253037nqv"
@@ -28,11 +23,12 @@ particles_anim_v_frames = 1
 particles_anim_loop = false
 
 [sub_resource type="Gradient" id="Gradient_6133j"]
-offsets = PackedFloat32Array(0, 0.0228311, 1)
-colors = PackedColorArray(1, 0.1, 0.1, 0, 1, 0.1, 0.1, 0.5, 1, 0.645, 0.29, 0)
+offsets = PackedFloat32Array(0, 0.13615024, 0.3004695, 0.53051645, 1)
+colors = PackedColorArray(1, 0.482, 0.16000003, 0, 1, 0.25, 0, 1, 1, 0.91, 0.88, 0.8117647, 0, 0.4584847, 0.94901794, 1, 0.6833334, 0, 1, 0)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_xhm4x"]
 gradient = SubResource("Gradient_6133j")
+use_hdr = true
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ecv56"]
 resource_local_to_scene = true
@@ -55,8 +51,8 @@ damping_max = 79.885
 scale_min = 0.5
 scale_max = 0.75
 color_ramp = SubResource("GradientTexture1D_xhm4x")
-hue_variation_min = -0.1
-hue_variation_max = 0.1
+hue_variation_min = -0.030000022
+hue_variation_max = 0.029999977
 anim_speed_min = 1.0
 anim_speed_max = 1.0
 turbulence_noise_strength = 0.45
@@ -65,67 +61,6 @@ turbulence_influence_min = 0.0
 turbulence_influence_max = 0.138
 turbulence_initial_displacement_min = -16.5
 turbulence_initial_displacement_max = 16.5
-
-[sub_resource type="Curve" id="Curve_go57s"]
-_data = [Vector2(0, 1), 0.0, -3.54994, 0, 0, Vector2(1, 0), -10.2168, 0.0, 0, 0]
-point_count = 2
-metadata/_snap_enabled = true
-
-[sub_resource type="CurveTexture" id="CurveTexture_6133j"]
-curve = SubResource("Curve_go57s")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_go57s"]
-resource_local_to_scene = true
-shader = ExtResource("4_go57s")
-shader_parameter/direction = Vector3(0, 0, 0)
-shader_parameter/spread = 180.0
-shader_parameter/flatness = 0.0
-shader_parameter/inherit_emitter_velocity_ratio = 0.0
-shader_parameter/initial_linear_velocity_min = 0.0
-shader_parameter/initial_linear_velocity_max = 10.0
-shader_parameter/directional_velocity_min = 30.0
-shader_parameter/directional_velocity_max = 0.0
-shader_parameter/angular_velocity_min = 0.0
-shader_parameter/angular_velocity_max = 0.0
-shader_parameter/orbit_velocity_min = 0.0
-shader_parameter/orbit_velocity_max = 0.0
-shader_parameter/radial_velocity_min = 0.0
-shader_parameter/radial_velocity_max = 0.0
-shader_parameter/linear_accel_min = 50.0
-shader_parameter/linear_accel_max = 150.0
-shader_parameter/radial_accel_min = 0.0
-shader_parameter/radial_accel_max = 0.0
-shader_parameter/tangent_accel_min = 0.0
-shader_parameter/tangent_accel_max = 0.0
-shader_parameter/damping_min = 0.0
-shader_parameter/damping_max = 0.0
-shader_parameter/initial_angle_min = 0.0
-shader_parameter/initial_angle_max = 0.0
-shader_parameter/scale_min = 1.0
-shader_parameter/scale_max = 1.37
-shader_parameter/hue_variation_min = -0.1
-shader_parameter/hue_variation_max = 0.1
-shader_parameter/anim_speed_min = 1.0
-shader_parameter/anim_speed_max = 1.0
-shader_parameter/anim_offset_min = 0.0
-shader_parameter/anim_offset_max = 0.0
-shader_parameter/lifetime_randomness = 0.5
-shader_parameter/emission_shape_offset = Vector3(0, 0, 0)
-shader_parameter/emission_shape_scale = Vector3(0.3, 0.3, 0.3)
-shader_parameter/velocity_pivot = Vector3(0, 0, 0)
-shader_parameter/emission_sphere_radius = 29.94
-shader_parameter/color_value = Color(0, 0, 0, 1)
-shader_parameter/gravity = Vector3(0, 0, 0)
-shader_parameter/scale_curve = SubResource("CurveTexture_6133j")
-shader_parameter/turbulence_noise_strength = 1.0
-shader_parameter/turbulence_noise_scale = -0.103985
-shader_parameter/turbulence_influence_min = 0.027
-shader_parameter/turbulence_influence_max = 0.199
-shader_parameter/turbulence_initial_displacement_min = 0.0
-shader_parameter/turbulence_initial_displacement_max = 0.0
-shader_parameter/turbulence_noise_speed_random = 0.2
-shader_parameter/turbulence_noise_speed = Vector3(0, 0, 0)
-shader_parameter/sprite = ExtResource("5_6133j")
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_go57s"]
 particles_animation = true
@@ -186,39 +121,26 @@ turbulence_initial_displacement_min = -16.5
 turbulence_initial_displacement_max = 16.5
 turbulence_influence_over_life = SubResource("CurveTexture_wwec2")
 
-[node name="Asteroid" type="Area2D" node_paths=PackedStringArray("shatter", "sprite", "trail", "explosion", "audio_player") groups=["asteroids", "enemies"]]
+[node name="Asteroid" type="Area2D" unique_id=341292377 node_paths=PackedStringArray("sprite", "trail", "explosion", "audio_player", "collision_shape") groups=["asteroids", "enemies"]]
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_20vrb")
-shatter = NodePath("Shatter")
 entity_stats = SubResource("Resource_xhm4x")
 sprite = NodePath("Sprite")
 trail = NodePath("Trail")
 explosion = NodePath("Explosion")
 audio_player = NodePath("AudioStreamPlayer2D")
+collision_shape = NodePath("CollisionShape2D")
 metadata/_custom_type_script = "uid://qy4n5oh6dqpx"
 
-[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1624403416]
 rect = Rect2(-250, -250, 500, 500)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=654755614]
 shape = SubResource("CapsuleShape2D_go57s")
 
-[node name="Trail" type="GPUParticles2D" parent="."]
-modulate = Color(1, 1.75, 1, 1)
-z_index = -1
-material = SubResource("CanvasItemMaterial_useci")
-position = Vector2(0, 6.115)
-amount = 500
-texture = ExtResource("3_ecv56")
-randomness = 0.34
-visibility_rect = Rect2(-150, -6.345, 300, 600)
-process_material = SubResource("ParticleProcessMaterial_ecv56")
-
-[node name="Sprite" type="AnimatedSprite2D" parent="."]
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=624557251]
 sprite_frames = ExtResource("2_4qh0a")
-autoplay = "default"
-frame_progress = 0.979719
 metadata/_aseprite_wizard_interface_config_ = {
 "animation_section": false,
 "layer_section": false,
@@ -239,18 +161,17 @@ metadata/_aseprite_wizard_interface_config_ = {
 "slice_section": false
 }
 
-[node name="Shatter" type="GPUParticles2D" parent="."]
-visible = false
-modulate = Color(1, 0.743833, 0.47, 1)
-emitting = false
-amount = 1000
-lifetime = 5.0
-one_shot = true
-explosiveness = 1.0
-visibility_rect = Rect2(-250, -250, 500, 500)
-process_material = SubResource("ShaderMaterial_go57s")
+[node name="Trail" type="GPUParticles2D" parent="." unique_id=1862697889]
+modulate = Color(1, 1.75, 1, 1)
+material = SubResource("CanvasItemMaterial_useci")
+position = Vector2(0, 1.26)
+amount = 2000
+texture = ExtResource("3_ecv56")
+randomness = 0.34
+visibility_rect = Rect2(-150, -6.345, 300, 600)
+process_material = SubResource("ParticleProcessMaterial_ecv56")
 
-[node name="Explosion" type="GPUParticles2D" parent="."]
+[node name="Explosion" type="GPUParticles2D" parent="." unique_id=1770504927]
 modulate = Color(1, 1.75, 1, 1)
 material = SubResource("CanvasItemMaterial_go57s")
 emitting = false
@@ -260,7 +181,7 @@ one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_6133j")
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=806479843]
 stream = ExtResource("4_useci")
 volume_db = -3.0
 

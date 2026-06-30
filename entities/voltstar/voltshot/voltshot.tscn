@@ -118,13 +118,14 @@ turbulence_initial_displacement_min = -16.5
 turbulence_initial_displacement_max = 16.5
 turbulence_influence_over_life = SubResource("CurveTexture_78yw1")
 
-[node name="Voltshot" type="Area2D" unique_id=1482253833 node_paths=PackedStringArray("sprite", "trail", "explosion") groups=["enemies", "entities", "voltshot"]]
+[node name="Voltshot" type="Area2D" unique_id=1482253833 node_paths=PackedStringArray("sprite", "trail", "explosion", "collision_shape") groups=["enemies", "entities", "voltshot"]]
 collision_layer = 8
 script = ExtResource("1_e4s2s")
 entity_stats = SubResource("Resource_og24r")
 sprite = NodePath("AnimatedSprite2D")
 trail = NodePath("Trail")
 explosion = NodePath("Explosion")
+collision_shape = NodePath("CollisionShape2D")
 metadata/_custom_type_script = "uid://qy4n5oh6dqpx"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2123588904]

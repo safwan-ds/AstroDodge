@@ -22,6 +22,7 @@ const DEATH_CLEANUP_MULTIPLIER := 3.0 # Wait 3× particle lifetime for full fade
 @export var trail: GPUParticles2D
 @export var explosion: GPUParticles2D
 @export var audio_player: AudioStreamPlayer2D
+@export var collision_shape: CollisionShape2D
 
 var hp: float:
 	get:
@@ -76,6 +77,24 @@ func _be_hurt(damage: float) -> void:
 	Global.trigger_camera_shake.emit(entity_stats.hit_shake_intensity)
 
 
+## Calculate a representative explosion radius from the entity's collision shape.
+## Handles CircleShape2D, RectangleShape2D, and CapsuleShape2D — the
+## three shape types used across all Entity subclasses.
+func _get_explosion_radius() -> float:
+	if not collision_shape or not collision_shape.shape:
+		return scale.length()
+
+	var s := collision_shape.shape
+	if s is CircleShape2D:
+		return s.radius / 5.0
+	elif s is RectangleShape2D:
+		return s.size.length() / 2.0 / 5.0
+	elif s is CapsuleShape2D:
+		return s.radius + s.height / 2.0 / 5.0
+
+	return scale.length()
+
+
 ## Play death effects (camera shake, explosion particles), then queue_free.[br]
 ## Idempotent — re-entrancy guard prevents double-execution.
 func _die() -> void:
@@ -83,7 +102,7 @@ func _die() -> void:
 		return
 	_is_dying = true
 	Global.trigger_camera_shake.emit(entity_stats.death_shake_intensity)
-	Global.explosion_occurred.emit(global_position, scale.length())
+	Global.explosion_occurred.emit(global_position, _get_explosion_radius())
 	set_deferred("monitorable", false)
 	set_deferred("monitoring", false)
 	sprite.hide()

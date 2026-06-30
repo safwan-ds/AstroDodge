@@ -159,7 +159,7 @@ _data = {
 &"hit": SubResource("Animation_abrql")
 }
 
-[node name="Player" type="Area2D" unique_id=366239508 node_paths=PackedStringArray("gun", "animation_player", "cooldown_bar", "sprite", "trail", "explosion", "audio_player") groups=["entities", "player"]]
+[node name="Player" type="Area2D" unique_id=366239508 node_paths=PackedStringArray("gun", "animation_player", "cooldown_bar", "sprite", "trail", "explosion", "audio_player", "collision_shape") groups=["entities", "player"]]
 collision_mask = 10
 script = ExtResource("1_abrql")
 bullet_scene = ExtResource("2_fkugw")
@@ -173,6 +173,7 @@ sprite = NodePath("Sprite")
 trail = NodePath("Trail")
 explosion = NodePath("Explosion")
 audio_player = NodePath("EngineSound")
+collision_shape = NodePath("CollisionShape2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2130759966]
 position = Vector2(0, -0.5)
