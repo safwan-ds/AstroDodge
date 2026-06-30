@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://0bbc6e4egp2t"]
 
-[ext_resource type="Script" uid="uid://bd2tp2f0whniy" path="res://entities/player/bullet/bullet.gd" id="1_5h0jh"]
+[ext_resource type="Script" uid="uid://bd2tp2f0whniy" path="res://entities/bullet/bullet.gd" id="1_5h0jh"]
 [ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://visuals/particle.png" id="3_25cl0"]
-[ext_resource type="SpriteFrames" uid="uid://bb1mei7g6gwkc" path="res://entities/player/bullet/bullet.aseprite" id="3_b4ffb"]
+[ext_resource type="SpriteFrames" uid="uid://bb1mei7g6gwkc" path="res://entities/bullet/bullet.aseprite" id="3_b4ffb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5el1u"]
 radius = 4.0

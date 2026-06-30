@@ -50,13 +50,12 @@ enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg")
 
 folder_colors={
 "res://audio/": "teal",
-"res://collectibles/": "yellow",
 "res://components/": "red",
 "res://entities/": "yellow",
+"res://entities/static/": "orange",
 "res://globals/": "green",
 "res://states/": "purple",
-"res://statics/": "yellow",
-"res://themes/": "pink"
+"res://visuals/": "blue"
 }
 
 [global_group]

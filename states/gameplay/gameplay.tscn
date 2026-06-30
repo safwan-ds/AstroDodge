@@ -3,11 +3,11 @@
 [ext_resource type="Script" uid="uid://crolqalprt2j3" path="res://states/gameplay/gameplay.gd" id="1_b11t3"]
 [ext_resource type="PackedScene" uid="uid://d4gqybtf7mnf8" path="res://entities/player/player.tscn" id="2_mknij"]
 [ext_resource type="Texture2D" uid="uid://bws0tgak6lngw" path="res://visuals/star.aseprite" id="3_bt3ji"]
-[ext_resource type="Script" uid="uid://dtrgdfwlixqjg" path="res://entities/entity_spawner.gd" id="3_crk4x"]
+[ext_resource type="Script" uid="uid://dtrgdfwlixqjg" path="res://entities/entity_spawner/entity_spawner.gd" id="3_crk4x"]
 [ext_resource type="Script" uid="uid://bbr8jv8jlcxs2" path="res://states/gameplay/camera.gd" id="3_kvqur"]
 [ext_resource type="PackedScene" uid="uid://g4tq4k4jla0l" path="res://entities/voltstar/voltstar.tscn" id="5_crk4x"]
 [ext_resource type="PackedScene" path="res://entities/asteroid/asteroid.tscn" id="5_kvqur"]
-[ext_resource type="PackedScene" path="res://statics/overcharge_station/overcharge_station.tscn" id="8_3twjh"]
+[ext_resource type="PackedScene" path="res://entities/static/overcharge_station/overcharge_station.tscn" id="8_3twjh"]
 
 [sub_resource type="Curve" id="Curve_dpe7l"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.514706, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]

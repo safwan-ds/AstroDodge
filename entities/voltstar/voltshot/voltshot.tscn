@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cn6x03u4s80py"]
 
 [ext_resource type="Script" uid="uid://1fhi3dlhmrfd" path="res://entities/voltstar/voltshot/voltshot.gd" id="1_e4s2s"]
-[ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats.gd" id="2_h3msd"]
+[ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats/entity_stats.gd" id="2_h3msd"]
 [ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://visuals/particle.png" id="2_t2ija"]
 [ext_resource type="SpriteFrames" uid="uid://cjkgvxxvsymwy" path="res://entities/voltstar/voltshot/voltshot.aseprite" id="4_h3msd"]
 [ext_resource type="Texture2D" uid="uid://dvpf2d7wmapdr" path="res://visuals/radial_point_light_texture.tres" id="5_og24r"]

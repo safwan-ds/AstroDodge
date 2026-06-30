@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://g4tq4k4jla0l"]
 
 [ext_resource type="Script" uid="uid://b6r2kxihtnu0s" path="res://entities/voltstar/voltstar.gd" id="1_kuoce"]
-[ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats.gd" id="2_kuoce"]
+[ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats/entity_stats.gd" id="2_kuoce"]
 [ext_resource type="PackedScene" uid="uid://cn6x03u4s80py" path="res://entities/voltstar/voltshot/voltshot.tscn" id="2_la6je"]
 [ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://visuals/particle.png" id="2_sy5s6"]
 [ext_resource type="SpriteFrames" uid="uid://b32h0nwxlo5om" path="res://entities/voltstar/voltstar.aseprite" id="3_sy5s6"]
-[ext_resource type="PackedScene" path="res://collectibles/j_unit/j_unit.tscn" id="4_t1w5k"]
+[ext_resource type="PackedScene" path="res://entities/collectibles/j_unit/j_unit.tscn" id="4_t1w5k"]
 [ext_resource type="AudioStream" uid="uid://dk7frf6ie0cch" path="res://audio/sfx/boom.wav" id="5_i0qia"]
 [ext_resource type="Texture2D" uid="uid://dvpf2d7wmapdr" path="res://visuals/radial_point_light_texture.tres" id="8_km6wj"]
 

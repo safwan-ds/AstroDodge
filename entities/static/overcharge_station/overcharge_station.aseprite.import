@@ -3,12 +3,12 @@
 importer="aseprite_wizard.plugin.spriteframes"
 type="SpriteFrames"
 uid="uid://d1o2nd2qifqxg"
-path="res://.godot/imported/overcharge_station.aseprite-cf319206fe448c79141915c335528753.res"
+path="res://.godot/imported/overcharge_station.aseprite-abfc9d74f601a21d47e5644a93a6ec47.res"
 
 [deps]
 
-source_file="res://statics/overcharge_station/overcharge_station.aseprite"
-dest_files=["res://.godot/imported/overcharge_station.aseprite-cf319206fe448c79141915c335528753.res"]
+source_file="res://entities/static/overcharge_station/overcharge_station.aseprite"
+dest_files=["res://.godot/imported/overcharge_station.aseprite-abfc9d74f601a21d47e5644a93a6ec47.res"]
 
 [params]
 

@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3]
 
-[ext_resource type="SpriteFrames" path="res://statics/overcharge_station/overcharge_station.aseprite" id="1_mwyfp"]
-[ext_resource type="Script" path="res://statics/overcharge_station/overcharge_station.gd" id="1_rlg6h"]
+[ext_resource type="SpriteFrames" uid="uid://d1o2nd2qifqxg" path="res://entities/static/overcharge_station/overcharge_station.aseprite" id="1_mwyfp"]
+[ext_resource type="Script" uid="uid://bi0j23u3vblin" path="res://entities/static/overcharge_station/overcharge_station.gd" id="1_rlg6h"]
+
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6j77q"]
 size = Vector2(62, 62)

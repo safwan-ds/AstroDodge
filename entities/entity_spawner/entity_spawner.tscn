@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3]
 
-[ext_resource type="Script" path="res://entities/entity_spawner.gd" id="1_7lg3t"]
+[ext_resource type="Script" uid="uid://dtrgdfwlixqjg" path="res://entities/entity_spawner/entity_spawner.gd" id="1_7lg3t"]
+
 
 [node name="Spawner" type="Timer"]
 autostart = true
