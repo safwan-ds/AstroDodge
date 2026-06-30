@@ -27,6 +27,9 @@ signal is_dead ## Emitted when the player dies (consumed by Gameplay to show gam
 ## Minimum delay between shots.
 @export var shoot_cooldown := 0.5
 
+@export_group("Debug")
+@export var _debug_invulnerable := false
+
 var target_angle: float:
 	get:
 		return _target_angle
@@ -51,6 +54,7 @@ var _auto_fire := false
 
 
 func _ready():
+	super()
 	cooldown_bar.max_value = shoot_cooldown
 	cooldown_bar.value = current_shoot_cooldown
 
@@ -58,11 +62,8 @@ func _ready():
 func _process(delta) -> void:
 	super(delta)
 
-	trail.set_deferred("amount_ratio", _velocity.length() / max_speed)
-	audio_player.set_deferred(
-		"pitch_scale",
-		1.0 + (_velocity.length() - entity_stats.base_speed) / (2.0 * (max_speed - entity_stats.base_speed)),
-	)
+	trail.amount_ratio = _velocity.length() / max_speed
+	audio_player.pitch_scale = 1.0 + (_velocity.length() - entity_stats.base_speed) / (2.0 * (max_speed - entity_stats.base_speed))
 
 	if _current_shoot_cooldown > 0.0:
 		_current_shoot_cooldown -= delta
@@ -107,9 +108,11 @@ func _move(delta) -> void:
 
 
 func _be_hurt(damage: float) -> void:
+	if _debug_invulnerable:
+		return
 	super(damage)
 	is_hurt.emit(_hp)
-	if "game_over" in Global.current_world and not Global.current_world.game_over:
+	if Global.current_world is Gameplay and not Global.current_world.game_over:
 		_invulnerable = true
 		sprite.modulate = Color.RED
 		await get_tree().create_timer(invulnerability_time).timeout

@@ -17,6 +17,7 @@ class_name AnimationComponent extends Node
 @export var max_rotation_angle: float = 5.0
 
 var tween: Tween = null
+var rng := RandomNumberGenerator.new()
 
 @onready var button: Button = get_parent()
 
@@ -27,7 +28,6 @@ func _ready():
 	button.pressed.connect(_pressed)
 
 	call_deferred("_init_pivot")
-	randomize()
 	start_random_rotation()
 
 
@@ -66,10 +66,10 @@ func start_random_rotation():
 	tween.set_trans(Tween.TRANS_SINE)
 	tween.set_ease(Tween.EASE_IN_OUT)
 
-	var target_angle_degrees = randf_range(-max_rotation_angle, max_rotation_angle)
-	var target_angle_radians = deg_to_rad(target_angle_degrees)
-	var rotation_duration = randf_range(min_rotation_speed, max_rotation_speed)
+	var target_angle_degrees := rng.randf_range(-max_rotation_angle, max_rotation_angle)
+	var target_angle_radians := deg_to_rad(target_angle_degrees)
+	var rotation_duration := rng.randf_range(min_rotation_speed, max_rotation_speed)
 
 	tween.tween_property(button, "rotation", target_angle_radians, rotation_duration)
 	tween.tween_property(button, "rotation", deg_to_rad(0.0), rotation_duration)
-	tween.finished.connect(start_random_rotation)
+	tween.finished.connect(start_random_rotation, CONNECT_ONE_SHOT)

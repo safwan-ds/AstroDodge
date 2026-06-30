@@ -4,6 +4,8 @@ class_name Entity extends Area2D
 ## and collectible spawning. Subclasses override [method _on_area_entered]
 ## and may call [method _die] directly.
 
+const DEATH_CLEANUP_MULTIPLIER := 3.0 # Wait 3× particle lifetime for full fade-out before freeing.
+
 @export_group("Entity Stats")
 ## Stats resource defining hp, speed, shake intensities, and collectible drops.
 @export var entity_stats: EntityStats
@@ -92,7 +94,7 @@ func _die() -> void:
 	explosion.emitting = true
 
 	# Use SceneTree timer instead of awaiting explosion.finished.
-	var finish_timer := get_tree().create_timer(explosion.lifetime * 3.0)
+	var finish_timer := get_tree().create_timer(explosion.lifetime * DEATH_CLEANUP_MULTIPLIER)
 	await finish_timer.timeout
 
 	if is_instance_valid(self):

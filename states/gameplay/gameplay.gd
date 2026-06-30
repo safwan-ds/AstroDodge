@@ -1,4 +1,4 @@
-extends Node2D
+class_name Gameplay extends Node2D
 ## Main gameplay world. Tracks score with multiplier, follows player with star field,[br]
 ## and handles game-over / menu transitions.
 

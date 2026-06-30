@@ -19,7 +19,7 @@ var _movement_direction = [1, -1].pick_random()
 
 
 func _on_area_entered(area) -> void:
-	if area.get_groups().any(func(x): return x in ["player", "bullets"]):
+	if area.is_in_group("player") or area.is_in_group("bullets"):
 		if area.is_in_group("bullets"):
 			_spawn_collectibles.call_deferred(Global.CollectibleType.J_UNIT, 2, 5)
 		audio_player.play()
@@ -51,7 +51,7 @@ func _move(delta) -> void:
 
 ## Fire a [Voltshot] from each gun toward the player.
 func _on_shooting_timer_timeout() -> void:
-	if is_processing():
+	if is_processing() and guns:
 		for gun in guns.get_children():
 			var voltshot: Voltshot = voltshot_scene.instantiate()
 			voltshot.position = gun.global_position

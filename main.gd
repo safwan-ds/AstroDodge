@@ -44,28 +44,28 @@ var current_gui: Control:
 
 @onready var selected_cursor := primary_cursor
 @onready var selected_cursor_hotspot := Vector2.ZERO
-@onready var _preloader := get_node("/root/Preloader")
 
 
-func _ready():
-	_preloader.preload_all()
-	await _preloader.finished
+func _ready() -> void:
+	Preloader.preload_all()
+	await Preloader.finished
 
 	first_transition_in.get_node("AnimationPlayer").play_backwards("dissolve")
-	Global.change_state.connect(_change_state)
 	Global.show_popup.connect(_show_popup)
 	Global.quit_game.connect(_quit_game)
 	current_world = world_2d.get_child(0)
 	current_gui = gui.get_child(0)
 	await first_transition_in.get_node("AnimationPlayer").animation_finished
 	first_transition_in.queue_free()
-	Global.change_state.emit(Global.GameState.MAIN_MENU)
+	Global.change_state.connect(_change_state)
+	# Set the initial state and start music without going through _change_state
+	# (the world and GUI are already set up by the startup flow above).
+	Global.current_state = Global.GameState.MAIN_MENU
+	AudioManager.play_music(AudioManager.Music.MAIN_MENU)
 
 
 ## Transition out, clear world/GUI, instantiate new state scenes, set cursor, transition in.
 func _change_state(state: Global.GameState):
-	if state == Global.current_state:
-		return
 	if _is_transitioning:
 		return
 	_is_transitioning = true
@@ -122,7 +122,8 @@ func _show_popup(popup: PackedScene):
 		popups.add_child(popup.instantiate())
 
 
-## Play transition animation, then quit the application.
+## Fade music out, play transition animation, then quit the application.
 func _quit_game() -> void:
+	AudioManager.stop_music()
 	await _transition_in()
 	get_tree().quit()

@@ -7,7 +7,7 @@ signal finished()
 const LOADING_SCENE := preload("res://states/loading/loading_screen.tscn")
 
 var _loading := false
-var _loading_scene: CanvasLayer
+var _loading_scene: LoadingScreenView
 var _status_label: Label
 var _progress_bar: ProgressBar
 var _warming_root: Node2D
@@ -24,8 +24,8 @@ func preload_all() -> void:
 	_loading_scene = LOADING_SCENE.instantiate()
 	get_tree().root.add_child.call_deferred(_loading_scene)
 	await get_tree().process_frame
-	_status_label = _loading_scene.get_node("Center/VBox/Status") as Label
-	_progress_bar = _loading_scene.get_node("Center/VBox/Progress") as ProgressBar
+	_status_label = _loading_scene.status_label
+	_progress_bar = _loading_scene.progress_bar
 
 	await get_tree().process_frame
 	_stop_audio()

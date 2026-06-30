@@ -29,9 +29,9 @@ func _ready():
 	)
 
 	for emitter in [trail, explosion]:
-		var trail_process_material: ParticleProcessMaterial = trail.process_material
-		trail_process_material.initial_velocity_min /= _random_scale
-		trail_process_material.initial_velocity_max /= _random_scale
+		var mat: ParticleProcessMaterial = emitter.process_material
+		mat.initial_velocity_min /= _random_scale
+		mat.initial_velocity_max /= _random_scale
 
 	for emitter in [trail, shatter, explosion]:
 		emitter.amount *= _random_scale

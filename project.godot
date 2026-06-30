@@ -37,6 +37,7 @@ window/size/viewport_width=640
 window/size/viewport_height=360
 window/size/always_on_top=true
 window/stretch/mode="viewport"
+window/stretch/scale_mode="integer"
 window/vsync/vsync_mode=0
 mouse_cursor/custom_image="res://visuals/cursors/primary.aseprite"
 mouse_cursor/stretch/aspect="keep"

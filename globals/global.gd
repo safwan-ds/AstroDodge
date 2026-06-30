@@ -1,13 +1,13 @@
 extends Node
 ## Global autoload singleton for signals, shared state, enums, and save data.[br]
 ## Lives across all scenes.
-signal change_state(state: GameState)  ## Emitted when transitioning between MAIN_MENU and GAMEPLAY.
-signal show_popup(popup: PackedScene)  ## Emitted to display a popup (e.g., quit confirmation).
-signal quit_game  ## Emitted to start the quit sequence.
-signal trigger_camera_shake(intensity: int)  ## Emitted to shake the camera with given intensity.
-signal explosion_occurred(world_position: Vector2, world_scale: float)  ## Emitted on entity death with world position and entity scale (consumed by SpaceWarp overlay).
-signal item_collected  ## Emitted when any collectible is picked up.
-signal pause_toggled(is_paused: bool)  ## Emitted when the game is paused or resumed.
+signal change_state(state: GameState) ## Emitted when transitioning between MAIN_MENU and GAMEPLAY.
+signal show_popup(popup: PackedScene) ## Emitted to display a popup (e.g., quit confirmation).
+signal quit_game ## Emitted to start the quit sequence.
+signal trigger_camera_shake(intensity: int) ## Emitted to shake the camera with given intensity.
+signal explosion_occurred(world_position: Vector2, world_scale: float) ## Emitted on entity death with world position and entity scale (consumed by SpaceWarp overlay).
+signal item_collected ## Emitted when any collectible is picked up.
+signal pause_toggled(is_paused: bool) ## Emitted when the game is paused or resumed.
 
 enum GameState {MAIN_MENU, GAMEPLAY}
 enum CollectibleType {J_UNIT, CAP_UNIT, DDRX_CHIP, M2_CHIP, ASM_UNIT}
@@ -34,10 +34,11 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if FileAccess.file_exists(SAVE_FILE_PATH):
 		data_save = load(SAVE_FILE_PATH)
-		if data_save.collectibles_counter.size() != CollectibleType.size():
+		if data_save == null or not data_save is DataSave:
+			push_warning("Save file corrupted, creating new data.")
 			_create_new_data_save()
-	else:
-		_create_new_data_save()
+		elif data_save.collectibles_counter.size() != CollectibleType.size():
+			_create_new_data_save()
 
 
 func _input(event) -> void:

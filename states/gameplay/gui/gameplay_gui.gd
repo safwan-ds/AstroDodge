@@ -64,26 +64,25 @@ func _set_values() -> void:
 		speed_bar.value = player.speed
 
 
+func _flash_hp_bar(target_hp: float, flash_color: Color) -> void:
+	if hp_tween:
+		hp_tween.kill()
+	hp_bar.tint_progress = flash_color
+	hp_tween = create_tween().set_parallel()
+	hp_tween.tween_property(hp_bar, "value", target_hp, 0.5).set_trans(Tween.TRANS_QUAD)
+	hp_tween.tween_property(hp_bar, "tint_progress", Color.WHITE, 0.5).set_trans(Tween.TRANS_QUAD)
+
+
 func _on_item_collected() -> void:
 	collectibles_counter_label.text = str(gameplay.collectibles_counter_temp)
 
 
 func _on_player_is_hurt(hp: float) -> void:
-	if hp_tween:
-		hp_tween.kill()
-	hp_bar.tint_progress = Color(1, 0, 0)
-	hp_tween = create_tween().set_parallel()
-	hp_tween.tween_property(hp_bar, "value", hp, 0.5).set_trans(Tween.TRANS_QUAD)
-	hp_tween.tween_property(hp_bar, "tint_progress", Color(1, 1, 1), 0.5).set_trans(Tween.TRANS_QUAD)
+	_flash_hp_bar(hp, Color(1, 0, 0))
 
 
 func _on_player_is_healed(hp: float) -> void:
-	if hp_tween:
-		hp_tween.kill()
-	hp_bar.tint_progress = Color(0, 1, 0)
-	hp_tween = create_tween().set_parallel()
-	hp_tween.tween_property(hp_bar, "value", hp, 0.5).set_trans(Tween.TRANS_QUAD)
-	hp_tween.tween_property(hp_bar, "tint_progress", Color(1, 1, 1), 0.5).set_trans(Tween.TRANS_QUAD)
+	_flash_hp_bar(hp, Color(0, 1, 0))
 
 
 func _on_player_is_dead() -> void:
@@ -94,6 +93,9 @@ func _on_player_is_dead() -> void:
 	create_tween().tween_property(game_over_label, "visible_ratio", 1.0, 1.0).set_trans(Tween.TRANS_QUAD)
 
 
-## Stop processing input immediately when a state transition begins.
-func _on_change_state(_state: Global.GameState) -> void:
-	set_process_mode(PROCESS_MODE_DISABLED)
+## Stop processing input when leaving the current state for a different one.
+## Does NOT disable on same-state emissions (e.g. game-over restart) to avoid
+## locking the GUI if the transition guard rejects the request.
+func _on_change_state(state: Global.GameState) -> void:
+	if state != Global.current_state:
+		set_process_mode(PROCESS_MODE_DISABLED)

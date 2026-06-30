@@ -1,16 +1,15 @@
-[gd_scene load_steps=20 format=3]
+[gd_scene format=3 uid="uid://cn6x03u4s80py"]
 
-[ext_resource type="Script" path="res://entities/voltstar/voltshot/voltshot.gd" id="1_e4s2s"]
-[ext_resource type="Script" path="res://entities/entity_stats.gd" id="2_h3msd"]
-[ext_resource type="Texture2D" path="res://visuals/particle.png" id="2_t2ija"]
-[ext_resource type="SpriteFrames" path="res://entities/voltstar/voltshot/voltshot.aseprite" id="4_h3msd"]
-[ext_resource type="Texture2D" path="res://visuals/radial_point_light_texture.tres" id="5_og24r"]
+[ext_resource type="Script" uid="uid://1fhi3dlhmrfd" path="res://entities/voltstar/voltshot/voltshot.gd" id="1_e4s2s"]
+[ext_resource type="Script" uid="uid://bjq253037nqv" path="res://entities/entity_stats.gd" id="2_h3msd"]
+[ext_resource type="Texture2D" uid="uid://coyv7ctk5wj7g" path="res://visuals/particle.png" id="2_t2ija"]
+[ext_resource type="SpriteFrames" uid="uid://cjkgvxxvsymwy" path="res://entities/voltstar/voltshot/voltshot.aseprite" id="4_h3msd"]
+[ext_resource type="Texture2D" uid="uid://dvpf2d7wmapdr" path="res://visuals/radial_point_light_texture.tres" id="5_og24r"]
 
 [sub_resource type="Resource" id="Resource_og24r"]
 script = ExtResource("2_h3msd")
 max_health = 1.0
 base_speed = 100.0
-hit_shake_intensity = 0
 death_shake_intensity = 0
 metadata/_custom_type_script = "uid://bjq253037nqv"
 
@@ -119,7 +118,7 @@ turbulence_initial_displacement_min = -16.5
 turbulence_initial_displacement_max = 16.5
 turbulence_influence_over_life = SubResource("CurveTexture_78yw1")
 
-[node name="Voltshot" type="Area2D" node_paths=PackedStringArray("sprite", "trail", "explosion") groups=["enemies", "entities", "voltshot"]]
+[node name="Voltshot" type="Area2D" unique_id=1482253833 node_paths=PackedStringArray("sprite", "trail", "explosion") groups=["enemies", "entities", "voltshot"]]
 collision_layer = 8
 script = ExtResource("1_e4s2s")
 entity_stats = SubResource("Resource_og24r")
@@ -128,10 +127,10 @@ trail = NodePath("Trail")
 explosion = NodePath("Explosion")
 metadata/_custom_type_script = "uid://qy4n5oh6dqpx"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2123588904]
 shape = SubResource("CircleShape2D_og24r")
 
-[node name="Trail" type="GPUParticles2D" parent="."]
+[node name="Trail" type="GPUParticles2D" parent="." unique_id=938212606]
 material = SubResource("CanvasItemMaterial_h3msd")
 amount = 128
 texture = ExtResource("2_t2ija")
@@ -139,13 +138,13 @@ randomness = 0.34
 fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_0apl1")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2088333893]
 modulate = Color(1.2, 1.2, 1.5, 1)
 sprite_frames = ExtResource("4_h3msd")
 autoplay = "default"
 frame_progress = 0.743877
 
-[node name="Explosion" type="GPUParticles2D" parent="."]
+[node name="Explosion" type="GPUParticles2D" parent="." unique_id=1717923608]
 material = SubResource("CanvasItemMaterial_rsqvy")
 emitting = false
 amount = 256
@@ -154,11 +153,11 @@ one_shot = true
 explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_fb55d")
 
-[node name="Lifetime" type="Timer" parent="."]
+[node name="Lifetime" type="Timer" parent="." unique_id=1977970429]
 wait_time = 5.0
 autostart = true
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=17301215]
 energy = 1.25
 texture = ExtResource("5_og24r")
 texture_scale = 0.4
