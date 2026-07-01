@@ -1,6 +1,7 @@
-class_name Collectible extends Area2D
+class_name Collectible extends EntityBase
 ## Collectible resource that accelerates toward the player on pickup.[br]
-## Updates score counters and persists collected counts to disk.
+## Updates score counters and persists collected counts to disk.[br]
+## Death sequence inherited from [EntityBase].
 
 @export var collectible_type: Global.CollectibleType
 @export var initial_speed := 500.0
@@ -17,7 +18,8 @@ func _ready() -> void:
 	_velocity = initial_speed * _direction
 
 
-func _process(delta):
+## Accelerate toward the player until picked up.
+func _move(delta) -> void:
 	if is_queued_for_deletion():
 		return
 	if player:
@@ -30,6 +32,8 @@ func _process(delta):
 
 
 func _on_area_entered(_area):
+	if _is_dying or is_queued_for_deletion():
+		return
 	var gameplay := Global.current_world
 	gameplay.collectibles_counter_temp[collectible_type] += 1
 	Global.data_save.collectibles_counter[collectible_type] += 1
@@ -37,4 +41,4 @@ func _on_area_entered(_area):
 	AudioManager.play_sfx(AudioManager.SFX.PICKUP)
 	Global.item_collected.emit()
 	set_process(false)
-	queue_free()
+	_die()

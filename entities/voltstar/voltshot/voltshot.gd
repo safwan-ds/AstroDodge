@@ -1,15 +1,23 @@
-class_name Voltshot extends Entity
-## Projectile fired by [Voltstar] enemies. Rotates toward the player[br]
+class_name Voltshot extends EntityBase
+## Projectile fired by [Voltstar] enemies. Rotates toward the player
 ## and self-destructs on contact or after a lifetime timeout.
+## Death sequence inherited from [EntityBase].
 
+@export var speed := 200.0
 @export var rotation_speed := 5.0
 
 @onready var player: Player = get_tree().get_first_node_in_group("player")
 
 
 func _ready() -> void:
-	super()
 	rotation = randf() * TAU
+
+
+## Rotate toward player, then fly forward.
+func _move(delta) -> void:
+	if player:
+		rotation = lerp_angle(rotation, (position - player.position).angle() - PI / 2.0, rotation_speed * delta)
+	position += Vector2.UP.rotated(rotation) * speed * delta
 
 
 func _on_area_entered(_area):
@@ -18,10 +26,3 @@ func _on_area_entered(_area):
 
 func _on_lifetime_timeout() -> void:
 	_die()
-
-
-## Rotate toward player, then use default movement. Called by Entity._process via _move().
-func _move(delta):
-	if player:
-		rotation = lerp_angle(rotation, (position - player.position).angle() - PI / 2.0, rotation_speed * delta)
-	super(delta)

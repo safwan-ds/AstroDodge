@@ -1,10 +1,8 @@
-class_name Entity extends Area2D
+class_name Entity extends EntityBase
 ## Base class for all moving entities (player, enemies, projectiles).[br]
-## Provides hp, movement, death effects (explosion, camera shake),
+## Provides hp, movement, death effects (camera shake),
 ## and collectible spawning. Subclasses override [method _on_area_entered]
 ## and may call [method _die] directly.
-
-const DEATH_CLEANUP_MULTIPLIER := 3.0 # Wait 3× particle lifetime for full fade-out before freeing.
 
 @export_group("Entity Stats")
 ## Stats resource defining hp, speed, shake intensities, and collectible drops.
@@ -18,9 +16,6 @@ const DEATH_CLEANUP_MULTIPLIER := 3.0 # Wait 3× particle lifetime for full fade
 @export var asm_unit: PackedScene
 
 @export_group("Links to Nodes")
-@export var sprite: AnimatedSprite2D
-@export var trail: GPUParticles2D
-@export var explosion: GPUParticles2D
 @export var audio_player: AudioStreamPlayer2D
 @export var collision_shape: CollisionShape2D
 
@@ -33,7 +28,6 @@ var speed: float:
 
 var _direction := Vector2.ZERO
 var _velocity := Vector2.ZERO
-var _is_dying := false
 
 @onready var collectibles_map: Dictionary[Global.CollectibleType, PackedScene] = {
 	Global.CollectibleType.J_UNIT: j_unit,
@@ -77,10 +71,9 @@ func _be_hurt(damage: float) -> void:
 	Global.trigger_camera_shake.emit(entity_stats.hit_shake_intensity)
 
 
-## Calculate a representative explosion radius from the entity's collision shape.
 ## Handles CircleShape2D, RectangleShape2D, and CapsuleShape2D — the
 ## three shape types used across all Entity subclasses.
-func _get_explosion_radius() -> float:
+func _get_death_radius() -> float:
 	if not collision_shape or not collision_shape.shape:
 		return scale.length()
 
@@ -95,29 +88,18 @@ func _get_explosion_radius() -> float:
 	return scale.length()
 
 
-## Play death effects (camera shake, explosion particles), then queue_free.[br]
+## Play death effects (camera shake, sprite hide), then delegate to[br]
+## [EntityBase._die] for the common sequence (explosion, trail, wait, free).[br]
 ## Idempotent — re-entrancy guard prevents double-execution.
 func _die() -> void:
 	if _is_dying:
 		return
-	_is_dying = true
+	
 	Global.trigger_camera_shake.emit(entity_stats.death_shake_intensity)
-	Global.explosion_occurred.emit(global_position, _get_explosion_radius())
-	set_deferred("monitorable", false)
-	set_deferred("monitoring", false)
-	sprite.hide()
-	trail.emitting = false
-	set_process(false)
+	Global.explosion_occurred.emit(global_position, _get_death_radius())
+
 	set_process_input(false)
-	explosion.restart()
-	explosion.emitting = true
-
-	# Use SceneTree timer instead of awaiting explosion.finished.
-	var finish_timer := get_tree().create_timer(explosion.lifetime * DEATH_CLEANUP_MULTIPLIER)
-	await finish_timer.timeout
-
-	if is_instance_valid(self):
-		queue_free()
+	super()
 
 
 ## Spawn [param min_count] to [param max_count] collectibles of [param collectible_type] near the entity.

@@ -1,24 +1,25 @@
-class_name Bullet extends Area2D
-## Lightweight projectile. Does not inherit [Entity] — flies forward[br]
-## and cleans up on enemy contact or when off-screen.
+class_name Bullet extends EntityBase
+## Lightweight projectile. Flies forward and cleans up on enemy contact or
+## when off-screen. Death sequence inherited from [EntityBase].
 
 @export var speed := 600.0
-@export var trail: GPUParticles2D
 
 @onready var _direction := Vector2.UP.rotated(rotation)
 
 
-func _process(delta) -> void:
+## Runs every frame. Calls [method _move] for custom movement.[br]
+## Idempotent via [EntityBase._is_dying] guard — re-entrancy safe.
+func _move(delta) -> void:
 	position += _direction * speed * delta
-
-
 func _on_area_entered(area: Area2D) -> void:
-	if is_queued_for_deletion():
+	if _is_dying or is_queued_for_deletion():
 		return
 	if not area.is_in_group("enemies"):
 		return
-	queue_free()
+	_die()
 
 
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
-	queue_free()
+	if _is_dying or is_queued_for_deletion():
+		return
+	_die()
