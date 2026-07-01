@@ -12,7 +12,7 @@ var _velocity: Vector2
 @onready var player: Player = get_tree().get_first_node_in_group("player")
 
 
-func _ready():
+func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 	_velocity = initial_speed * _direction
 
@@ -38,4 +38,5 @@ func _on_area_entered(_area):
 		push_error("Failed to save collectible data: %s" % err)
 	AudioManager.play_sfx(AudioManager.SFX.PICKUP)
 	Global.item_collected.emit()
+	set_process(false)
 	queue_free()

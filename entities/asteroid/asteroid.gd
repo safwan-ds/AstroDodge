@@ -3,11 +3,11 @@ class_name Asteroid extends Entity
 ## or when off-screen. Overrides [method _die] to add shatter particles.
 
 
-var _died := false
+# var _died := false
 var _random_scale := randi_range(2, 8) / 2.0
 
 
-func _ready():
+func _ready() -> void:
 	super()
 	var player: Player = get_tree().get_first_node_in_group("player")
 	if player:
@@ -34,15 +34,13 @@ func _on_area_entered(area: Area2D) -> void:
 
 ## Free self if not already dying — avoids cutting the explosion short.
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
-	if not _died:
+	if not _is_dying:
 		queue_free()
 
 
-## Play shatter particles and audio, then run the base death sequence.[br]
-## Guarded by [member _died] to prevent double-execution.
+## Play audio, then run the base death sequence.[br]
 func _die() -> void:
-	if _died:
+	if _is_dying:
 		return
-	_died = true
 	audio_player.play()
 	await super()

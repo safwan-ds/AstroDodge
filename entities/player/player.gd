@@ -53,7 +53,7 @@ var _auto_fire := false
 @onready var _auto_fire_tween: Tween
 
 
-func _ready():
+func _ready() -> void:
 	super()
 	cooldown_bar.max_value = shoot_cooldown
 	cooldown_bar.value = current_shoot_cooldown

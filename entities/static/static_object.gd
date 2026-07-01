@@ -6,7 +6,7 @@ class_name StaticObject extends Area2D
 @export var sprite: AnimatedSprite2D
 
 
-func _ready():
+func _ready() -> void:
 	pass
 
 

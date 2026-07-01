@@ -13,6 +13,8 @@ func _process(delta) -> void:
 
 
 func _on_area_entered(area: Area2D) -> void:
+	if is_queued_for_deletion():
+		return
 	if not area.is_in_group("enemies"):
 		return
 	queue_free()

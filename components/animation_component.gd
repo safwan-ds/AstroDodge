@@ -22,7 +22,7 @@ var rng := RandomNumberGenerator.new()
 @onready var button: Button = get_parent()
 
 
-func _ready():
+func _ready() -> void:
 	button.mouse_entered.connect(_entered)
 	button.mouse_exited.connect(_exited)
 	button.pressed.connect(_pressed)

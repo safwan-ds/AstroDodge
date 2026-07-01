@@ -7,7 +7,7 @@ extends Control
 @export var animation_player: AnimationPlayer
 
 
-func _ready():
+func _ready() -> void:
 	animation_player.play("logo_loop")
 	animation_player.seek(
 		randf() * animation_player.get_animation("logo_loop").length,

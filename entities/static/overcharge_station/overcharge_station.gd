@@ -3,5 +3,5 @@ class_name OverchargeStation extends StaticObject
 ## No behaviour implemented yet.
 
 
-func _ready():
+func _ready() -> void:
 	pass

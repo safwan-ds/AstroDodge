@@ -59,7 +59,6 @@ func preload_all() -> void:
 		_warming_root.add_child(instance)
 		_warm_particles(instance)
 		await get_tree().process_frame
-		await get_tree().process_frame
 
 	get_tree().root.remove_child(_warming_root)
 	_warming_root.queue_free()

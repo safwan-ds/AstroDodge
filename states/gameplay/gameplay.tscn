@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://dtrgdfwlixqjg" path="res://entities/entity_spawner/entity_spawner.gd" id="3_crk4x"]
 [ext_resource type="Script" uid="uid://bbr8jv8jlcxs2" path="res://states/gameplay/camera.gd" id="3_kvqur"]
 [ext_resource type="PackedScene" uid="uid://g4tq4k4jla0l" path="res://entities/voltstar/voltstar.tscn" id="5_crk4x"]
-[ext_resource type="PackedScene" path="res://entities/asteroid/asteroid.tscn" id="5_kvqur"]
+[ext_resource type="PackedScene" uid="uid://wlkp8hhtov3x" path="res://entities/asteroid/asteroid.tscn" id="5_kvqur"]
 [ext_resource type="PackedScene" path="res://entities/static/overcharge_station/overcharge_station.tscn" id="8_3twjh"]
 
 [sub_resource type="Curve" id="Curve_dpe7l"]
@@ -51,7 +51,7 @@ speed_scale = 2.0
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_mknij")
 
-[node name="OverchargeStation" parent="." unique_id=1456193195 instance=ExtResource("8_3twjh")]
+[node name="OverchargeStation" parent="." unique_id=1456193195 groups=["static_objects"] instance=ExtResource("8_3twjh")]
 visible = false
 
 [node name="AsteroidSpawner" type="Timer" parent="." unique_id=1640952936]

@@ -7,7 +7,7 @@ class_name QuitPopup extends Control
 var canceled := false
 
 
-func _ready():
+func _ready() -> void:
 	animation_player.play("quit_popup")
 
 

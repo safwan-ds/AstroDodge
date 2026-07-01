@@ -7,8 +7,8 @@ class_name Voltshot extends Entity
 @onready var player: Player = get_tree().get_first_node_in_group("player")
 
 
-func _ready():
-	super ()
+func _ready() -> void:
+	super()
 	rotation = randf() * TAU
 
 
@@ -24,4 +24,4 @@ func _on_lifetime_timeout() -> void:
 func _move(delta):
 	if player:
 		rotation = lerp_angle(rotation, (position - player.position).angle() - PI / 2.0, rotation_speed * delta)
-	super (delta)
+	super(delta)

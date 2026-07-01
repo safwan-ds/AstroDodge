@@ -185,7 +185,7 @@ position = Vector2(45, 48)
 position = Vector2(45, -48)
 
 [node name="ShootingTimer" type="Timer" parent="." unique_id=1850676174]
-wait_time = 5.0
+wait_time = 3.0
 autostart = true
 
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=169079147]

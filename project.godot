@@ -68,7 +68,7 @@ bullets=""
 voltshot=""
 collectibles=""
 voltstars=""
-statics="Static objects that are not moving."
+static_objects="Static objects that are not moving."
 
 [gui]
 
