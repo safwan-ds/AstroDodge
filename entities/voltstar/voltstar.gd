@@ -18,6 +18,16 @@ var _movement_direction = [1, -1].pick_random()
 @onready var _speed := entity_stats.base_speed + randf_range(-20.0, 20.0)
 
 
+func _ready() -> void:
+	super()
+	VoltstarRegistry.register(self)
+
+
+func _exit_tree() -> void:
+	if is_instance_valid(VoltstarRegistry):
+		VoltstarRegistry.unregister(self)
+
+
 func _on_area_entered(area) -> void:
 	if area.is_in_group("player") or area.is_in_group("bullets"):
 		if area.is_in_group("bullets"):
@@ -38,8 +48,7 @@ func _move(delta) -> void:
 
 	# Gentle perpendicular repulsion from nearby Voltstars.
 	# Pushes them apart along the orbit tangent so they don't overlap.
-	var voltstars := get_tree().get_nodes_in_group("voltstars")
-	for v in voltstars:
+	for v in VoltstarRegistry.voltstars:
 		if v == self:
 			continue
 		var dist := global_position.distance_to(v.global_position)

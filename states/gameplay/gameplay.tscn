@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://bbr8jv8jlcxs2" path="res://states/gameplay/camera.gd" id="3_kvqur"]
 [ext_resource type="PackedScene" uid="uid://g4tq4k4jla0l" path="res://entities/voltstar/voltstar.tscn" id="5_crk4x"]
 [ext_resource type="PackedScene" uid="uid://wlkp8hhtov3x" path="res://entities/asteroid/asteroid.tscn" id="5_kvqur"]
-[ext_resource type="PackedScene" path="res://entities/static/overcharge_station/overcharge_station.tscn" id="8_3twjh"]
+[ext_resource type="PackedScene" uid="uid://brgtybeb0wo1c" path="res://entities/static/overcharge_station/overcharge_station.tscn" id="8_3twjh"]
 
 [sub_resource type="Curve" id="Curve_dpe7l"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.514706, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -39,7 +39,7 @@ script = ExtResource("1_b11t3")
 player = NodePath("Player")
 star_field = NodePath("StarField")
 direction_arrow = NodePath("DirectionArrow")
-camera = NodePath("Player/Camera")
+camera = NodePath("Camera")
 
 [node name="StarField" type="GPUParticles2D" parent="." unique_id=698075454]
 process_mode = 3
@@ -51,14 +51,16 @@ speed_scale = 2.0
 randomness = 1.0
 process_material = SubResource("ParticleProcessMaterial_mknij")
 
-[node name="OverchargeStation" parent="." unique_id=1456193195 groups=["static_objects"] instance=ExtResource("8_3twjh")]
+[node name="OverchargeStation" parent="." unique_id=1456193195 instance=ExtResource("8_3twjh")]
 visible = false
 
 [node name="AsteroidSpawner" type="Timer" parent="." unique_id=1640952936]
 autostart = true
 script = ExtResource("3_crk4x")
 entity = ExtResource("5_kvqur")
-spawn_count_max = 2
+spawn_count_min = 2
+spawn_count_max = 6
+max_count = 15
 metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
 
 [node name="VoltstarSpawner" type="Timer" parent="." unique_id=631326776]
@@ -67,8 +69,9 @@ autostart = true
 script = ExtResource("3_crk4x")
 entity = ExtResource("5_crk4x")
 entity_group = "voltstar"
-spawn_count_max = 3
-max_count = 7
+spawn_count_min = 2
+spawn_count_max = 5
+max_count = 15
 spread_batch_sides = true
 metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
 
@@ -79,12 +82,11 @@ polygon = PackedVector2Array(-5, -35, 5, -35, 0, -40)
 uv = PackedVector2Array(-45.258, 36.9323, 72.717, 39.7546, -9.69618, -24.0309)
 
 [node name="Player" parent="." unique_id=815012169 node_paths=PackedStringArray("camera") instance=ExtResource("2_mknij")]
-camera = NodePath("Camera")
+camera = NodePath("../Camera")
+_debug_invulnerable = true
 
-[node name="Camera" type="Camera2D" parent="Player" unique_id=442907226]
+[node name="Camera" type="Camera2D" parent="." unique_id=442907226 node_paths=PackedStringArray("tracked_node")]
 offset = Vector2(-0.0164191, -2.58723)
-position_smoothing_enabled = true
-rotation_smoothing_speed = 0.2
 script = ExtResource("3_kvqur")
 transition_duration = 0.75
 transition_type = 5
@@ -92,6 +94,7 @@ noise = SubResource("FastNoiseLite_kvqur")
 noise_speed = 25.0
 base_shake_intensity = 10.0
 shake_decay_rate = 3.5
+tracked_node = NodePath("../Player")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=899471673]
 

@@ -91,7 +91,7 @@ func _on_area_entered(area: Area2D) -> void:
 
 ## Custom physics: mouse aim, acceleration, friction. Called by Entity._process.
 func _move(delta) -> void:
-	_distance_to_mouse = (get_global_mouse_position() - position)
+	_distance_to_mouse = (get_global_mouse_position() + camera.offset / camera.zoom - position)
 	if _distance_to_mouse.length() >= mouse_tracehold:
 		_target_angle = _distance_to_mouse.angle() + PI / 2
 	rotation = lerp_angle(rotation, _target_angle, rotation_speed * delta)
@@ -125,9 +125,6 @@ func _die() -> void:
 	if _is_dying:
 		return
 	AudioManager.play_sfx(AudioManager.SFX.LOSE, 5.0)
-	camera.position = position
-	remove_child(camera)
-	add_sibling(camera)
 	is_dead.emit()
 	super()
 

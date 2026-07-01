@@ -14,6 +14,7 @@ config/name="AstroDodge"
 run/main_scene="res://main.tscn"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.7", "GL Compatibility")
+run/max_fps=60
 boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/use_filter=false
 boot_splash/image="res://visuals/splash.png"
@@ -30,6 +31,7 @@ Global="*res://globals/global.gd"
 AudioManager="*res://audio/audio_manager.tscn"
 DevConsole="*res://globals/dev_console.tscn"
 Preloader="*res://states/loading/preloader.gd"
+VoltstarRegistry="*uid://dyvun23qkexwa"
 
 [display]
 
@@ -38,7 +40,6 @@ window/size/viewport_height=360
 window/size/always_on_top=true
 window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
-window/vsync/vsync_mode=0
 mouse_cursor/custom_image="res://visuals/cursors/primary.aseprite"
 mouse_cursor/stretch/aspect="keep"
 

@@ -20,8 +20,12 @@ extends Camera2D
 ## Max pixel offset toward mouse cursor.
 @export var lookahead_distance := 100.0
 @export var lookahead_smoothness := 4.0
-## Fraction of mouse-to-ship distance applied as offset.
 @export var lookahead_multiplier := 0.2
+
+@export_group("Tracking")
+## Node to follow with the camera position.[br]
+## Leave null to stay where spawned (used by death/standalone scenes).
+@export var tracked_node: Player
 
 var _shake_intensity := 0.0
 var _time := 0.0
@@ -34,12 +38,14 @@ func _ready() -> void:
 
 	zoom = Vector2(initial_zoom, initial_zoom)
 	var tween := create_tween()
-	tween.tween_property(self, "zoom", Vector2(1.0, 1.0), transition_duration)\
-		.set_trans(transition_type)\
+	tween.tween_property(self, "zoom", Vector2(1.0, 1.0), transition_duration) \
+		.set_trans(transition_type) \
 		.set_ease(Tween.EASE_OUT)
 
 
 func _process(delta) -> void:
+	if tracked_node and is_instance_valid(tracked_node):
+		global_position = tracked_node.global_position
 	_time += delta
 	var mouse_world := get_global_mouse_position() + offset / zoom
 	_target_offset = clamp(

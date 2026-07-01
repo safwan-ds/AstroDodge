@@ -3,7 +3,6 @@ class_name Asteroid extends Entity
 ## or when off-screen. Overrides [method _die] to add shatter particles.
 
 
-# var _died := false
 var _random_scale := randi_range(2, 8) / 2.0
 
 

@@ -29,4 +29,7 @@ exports/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# User-specific ignores
 /graphify-out
+.profiling/

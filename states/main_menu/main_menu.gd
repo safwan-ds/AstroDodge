@@ -5,6 +5,8 @@ extends Control
 
 @export var continue_button: Button # TODO: make it visible when there is a saved game
 @export var animation_player: AnimationPlayer
+@export_group("Debug")
+@export var collectibles_label: Label
 
 
 func _ready() -> void:
@@ -13,6 +15,7 @@ func _ready() -> void:
 		randf() * animation_player.get_animation("logo_loop").length,
 		true,
 	)
+	collectibles_label.text = "Collectibles: " + str(Global.data_save.collectibles_counter)
 
 
 func _input(event):

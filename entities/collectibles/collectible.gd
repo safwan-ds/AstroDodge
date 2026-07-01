@@ -33,9 +33,7 @@ func _on_area_entered(_area):
 	var gameplay := Global.current_world
 	gameplay.collectibles_counter_temp[collectible_type] += 1
 	Global.data_save.collectibles_counter[collectible_type] += 1
-	var err := Global.data_save.save()
-	if err != OK:
-		push_error("Failed to save collectible data: %s" % err)
+	Global.data_save.mark_dirty()
 	AudioManager.play_sfx(AudioManager.SFX.PICKUP)
 	Global.item_collected.emit()
 	set_process(false)

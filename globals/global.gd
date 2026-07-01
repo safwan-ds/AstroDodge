@@ -29,6 +29,8 @@ var current_state: GameState = GameState.MAIN_MENU
 var _prev_window_mode := DisplayServer.WINDOW_MODE_WINDOWED
 var _current_window_mode: DisplayServer.WindowMode
 
+var _data_save_timer: SceneTreeTimer
+
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -56,6 +58,23 @@ func _input(event) -> void:
 			if DevConsole.visible:
 				DevConsole.input_text.grab_focus()
 			get_viewport().set_input_as_handled()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		data_save.flush()
+
+
+func _start_data_save_timer() -> void:
+	if _data_save_timer:
+		return
+	_data_save_timer = get_tree().create_timer(1.0)
+	_data_save_timer.timeout.connect(_on_data_save_timer_timeout)
+
+
+func _on_data_save_timer_timeout() -> void:
+	_data_save_timer = null
+	data_save.flush()
 
 
 func _create_new_data_save() -> void:

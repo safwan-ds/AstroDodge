@@ -6,18 +6,18 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6j77q"]
 size = Vector2(62, 62)
 
-[node name="OverchargeStation" type="Area2D" node_paths=PackedStringArray("sprite") groups=["static_objects"]]
+[node name="OverchargeStation" type="Area2D" unique_id=977999936 node_paths=PackedStringArray("sprite") groups=["static_objects"]]
 collision_layer = 32
 script = ExtResource("1_rlg6h")
 sprite = NodePath("AnimatedSprite2D")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=870662027]
 shape = SubResource("RectangleShape2D_6j77q")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1483789407]
 sprite_frames = ExtResource("1_mwyfp")
 autoplay = "default"
 frame_progress = 0.149243
 
-[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1954405453]
 rect = Rect2(-1000, -1000, 2000, 2000)
