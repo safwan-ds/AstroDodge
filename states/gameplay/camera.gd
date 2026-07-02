@@ -22,10 +22,6 @@ extends Camera2D
 @export var lookahead_smoothness := 4.0
 @export var lookahead_multiplier := 0.2
 
-@export_group("Tracking")
-## Node to follow with the camera position.[br]
-## Leave null to stay where spawned (used by death/standalone scenes).
-@export var tracked_node: Player
 
 var _shake_intensity := 0.0
 var _time := 0.0
@@ -44,10 +40,8 @@ func _ready() -> void:
 
 
 func _process(delta) -> void:
-	if tracked_node and is_instance_valid(tracked_node):
-		global_position = tracked_node.global_position
 	_time += delta
-	var mouse_world := get_global_mouse_position() + offset / zoom
+	var mouse_world := get_global_mouse_position()
 	_target_offset = clamp(
 		(mouse_world - global_position) * lookahead_multiplier,
 		Vector2(-lookahead_distance, -lookahead_distance),

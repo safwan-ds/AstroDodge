@@ -1,6 +1,8 @@
 extends Node
 ## Global autoload singleton for signals, shared state, enums, and save data.[br]
 ## Lives across all scenes.
+
+@warning_ignore_start("unused_signal")
 signal change_state(state: GameState) ## Emitted when transitioning between MAIN_MENU and GAMEPLAY.
 signal show_popup(popup: PackedScene) ## Emitted to display a popup (e.g., quit confirmation).
 signal quit_game ## Emitted to start the quit sequence.
@@ -8,6 +10,7 @@ signal trigger_camera_shake(intensity: int) ## Emitted to shake the camera with 
 signal explosion_occurred(world_position: Vector2, world_scale: float) ## Emitted on entity death with world position and entity scale (consumed by SpaceWarp overlay).
 signal item_collected ## Emitted when any collectible is picked up.
 signal pause_toggled(is_paused: bool) ## Emitted when the game is paused or resumed.
+@warning_ignore_restore("unused_signal")
 
 enum GameState {MAIN_MENU, GAMEPLAY}
 enum CollectibleType {J_UNIT, CAP_UNIT, DDRX_CHIP, M2_CHIP, ASM_UNIT}

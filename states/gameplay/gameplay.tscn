@@ -39,7 +39,7 @@ script = ExtResource("1_b11t3")
 player = NodePath("Player")
 star_field = NodePath("StarField")
 direction_arrow = NodePath("DirectionArrow")
-camera = NodePath("Camera")
+camera = NodePath("Player/Camera")
 
 [node name="StarField" type="GPUParticles2D" parent="." unique_id=698075454]
 process_mode = 3
@@ -58,9 +58,9 @@ visible = false
 autostart = true
 script = ExtResource("3_crk4x")
 entity = ExtResource("5_kvqur")
-spawn_count_min = 2
-spawn_count_max = 6
-max_count = 15
+spawn_count_min = 5
+spawn_count_max = 10
+max_count = 30
 metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
 
 [node name="VoltstarSpawner" type="Timer" parent="." unique_id=631326776]
@@ -69,8 +69,8 @@ autostart = true
 script = ExtResource("3_crk4x")
 entity = ExtResource("5_crk4x")
 entity_group = "voltstar"
-spawn_count_min = 2
-spawn_count_max = 5
+spawn_count_min = 5
+spawn_count_max = 9
 max_count = 15
 spread_batch_sides = true
 metadata/_custom_type_script = "uid://dtrgdfwlixqjg"
@@ -82,10 +82,11 @@ polygon = PackedVector2Array(-5, -35, 5, -35, 0, -40)
 uv = PackedVector2Array(-45.258, 36.9323, 72.717, 39.7546, -9.69618, -24.0309)
 
 [node name="Player" parent="." unique_id=815012169 node_paths=PackedStringArray("camera") instance=ExtResource("2_mknij")]
-camera = NodePath("../Camera")
+z_index = 1
+camera = NodePath("Camera")
 _debug_invulnerable = true
 
-[node name="Camera" type="Camera2D" parent="." unique_id=442907226 node_paths=PackedStringArray("tracked_node")]
+[node name="Camera" type="Camera2D" parent="Player" unique_id=442907226]
 offset = Vector2(-0.0164191, -2.58723)
 script = ExtResource("3_kvqur")
 transition_duration = 0.75
@@ -94,7 +95,6 @@ noise = SubResource("FastNoiseLite_kvqur")
 noise_speed = 25.0
 base_shake_intensity = 10.0
 shake_decay_rate = 3.5
-tracked_node = NodePath("../Player")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=899471673]
 

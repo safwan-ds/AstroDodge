@@ -33,7 +33,7 @@ func _on_area_entered(area) -> void:
 		if area.is_in_group("bullets"):
 			_spawn_collectibles.call_deferred(Global.CollectibleType.J_UNIT, 2, 5)
 		audio_player.play()
-		await _die()
+		_die()
 
 
 ## Orbit around the player. Called by Entity._process via _move().

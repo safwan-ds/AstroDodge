@@ -42,4 +42,4 @@ func _die() -> void:
 	if _is_dying:
 		return
 	audio_player.play()
-	await super()
+	super()

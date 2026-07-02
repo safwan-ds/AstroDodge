@@ -23,8 +23,8 @@ particles_anim_v_frames = 1
 particles_anim_loop = false
 
 [sub_resource type="Gradient" id="Gradient_4qh0a"]
-offsets = PackedFloat32Array(0, 0.557078)
-colors = PackedColorArray(0, 0.866667, 1, 1, 0, 1, 0, 1)
+offsets = PackedFloat32Array(0, 0.23004694, 0.49295774, 0.685446, 1)
+colors = PackedColorArray(1, 0.08333331, 0, 1, 0.98, 0.34300002, 0, 1, 1, 1, 1, 1, 0, 0.61666656, 1, 1, 0.25, 0, 1, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_fkugw"]
 gradient = SubResource("Gradient_4qh0a")
@@ -49,8 +49,6 @@ damping_max = 79.885
 scale_min = 0.25
 scale_max = 0.75
 color_ramp = SubResource("GradientTexture1D_fkugw")
-hue_variation_min = -0.1
-hue_variation_max = 0.1
 anim_speed_min = 1.0
 anim_speed_max = 1.0
 turbulence_noise_strength = 0.45
@@ -159,7 +157,7 @@ _data = {
 &"hit": SubResource("Animation_abrql")
 }
 
-[node name="Player" type="Area2D" unique_id=366239508 node_paths=PackedStringArray("gun", "animation_player", "cooldown_bar", "sprite", "trail", "explosion", "audio_player", "collision_shape") groups=["entities", "player"]]
+[node name="Player" type="Area2D" unique_id=366239508 node_paths=PackedStringArray("gun", "animation_player", "cooldown_bar", "audio_player", "collision_shape", "sprite", "trail", "explosion") groups=["entities", "player"]]
 collision_mask = 10
 script = ExtResource("1_abrql")
 bullet_scene = ExtResource("2_fkugw")
@@ -169,17 +167,18 @@ cooldown_bar = NodePath("CooldownBar")
 invulnerability_time = 0.5
 shoot_cooldown = 0.25
 entity_stats = SubResource("Resource_fkugw")
+audio_player = NodePath("EngineSound")
+collision_shape = NodePath("CollisionShape2D")
 sprite = NodePath("Sprite")
 trail = NodePath("Trail")
 explosion = NodePath("Explosion")
-audio_player = NodePath("EngineSound")
-collision_shape = NodePath("CollisionShape2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2130759966]
 position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_symyc")
 
 [node name="Trail" type="GPUParticles2D" parent="." unique_id=2040300756]
+modulate = Color(1.1638972, 1.1638972, 1.1638972, 1)
 material = SubResource("CanvasItemMaterial_bls4j")
 position = Vector2(0, 6.115)
 amount = 300

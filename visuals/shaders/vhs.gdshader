@@ -41,6 +41,8 @@ uniform float static_noise_intensity : hint_range(0.0, 1.0) = 0.06;
 uniform float aberration : hint_range(-1.0, 1.0) = 0.03; // Chromatic aberration, a distortion on each color channel.
 uniform float brightness = 1.4; // When adding scanline gaps and grille the image can get very dark. Brightness tries to compensate for that.
 uniform bool discolor = true; // Add a discolor effect simulating a VHS
+uniform float saturation = 0.5;
+uniform float contrast = 1.2;
 
 uniform float warp_amount :hint_range(0.0, 5.0) = 1.0; // Warp the texture edges simulating the curved glass of a CRT monitor or old TV.
 uniform bool clip_warp = false;
@@ -214,8 +216,6 @@ void fragment()
 	
 	// Apply discoloration to get a VHS look (lower saturation and higher contrast)
 	// You can play with the values below or expose them in the Inspector.
-	float saturation = 0.5;
-	float contrast = 1.2;
 	if (discolor)
 	{
 		// Saturation

@@ -23,7 +23,7 @@ func _process(delta) -> void:
 
 
 ## Virtual: override in subclasses for custom movement. Default is no-op.
-func _move(delta) -> void:
+func _move(_delta) -> void:
 	pass
 
 

@@ -24,7 +24,7 @@ main_menu_music = ExtResource("8_01q3q")
 gameplay_music = ExtResource("9_6wlj3")
 
 [node name="SFX" type="AudioStreamPlayer" parent="." unique_id=831534136]
-max_polyphony = 4
+max_polyphony = 10
 bus = &"SFX"
 
 [node name="Music" type="AudioStreamPlayer" parent="." unique_id=1650826825]
