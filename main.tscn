@@ -16,11 +16,10 @@
 background_mode = 3
 background_canvas_max_layer = 2
 tonemap_white = 6.84
-glow_enabled = true
 glow_normalized = true
-glow_intensity = 1.0
-glow_bloom = 0.21
-glow_hdr_threshold = 0.27
+glow_intensity = 0.61
+glow_strength = 0.77
+glow_bloom = 0.2
 glow_hdr_scale = 2.2
 fog_light_energy = 5.38
 fog_sun_scatter = 0.38
@@ -30,10 +29,11 @@ adjustment_saturation = 1.84
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_oxhfl"]
 shader = ExtResource("9_e3b7a")
-shader_parameter/warp_origin = Vector2(0.5, 0.5)
-shader_parameter/warp_intensity = 0.0
-shader_parameter/warp_radius = 0.52400002489
-shader_parameter/warp_amplitude = 0.03200000152
+shader_parameter/warp_origins = PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/warp_intensities = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/warp_radii = PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0)
+shader_parameter/warp_count = 0
+shader_parameter/warp_amplitude = 0.0170000008075
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lquwl"]
 shader = ExtResource("4_1bvp3")

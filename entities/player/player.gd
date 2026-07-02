@@ -50,11 +50,13 @@ var _current_shoot_cooldown := 0.0:
 	set(value):
 		_current_shoot_cooldown = max(0.0, value)
 var _auto_fire := false
+
 @onready var _auto_fire_tween: Tween
 
 
 func _ready() -> void:
 	super()
+	_skip_queue_free = true
 	cooldown_bar.max_value = shoot_cooldown
 	cooldown_bar.value = current_shoot_cooldown
 
@@ -84,9 +86,12 @@ func _input(event):
 		_auto_fire_tween.tween_property(cooldown_bar, "modulate", Color.RED if _auto_fire else Color.WHITE, 0.1)
 
 
-func _on_area_entered(area: Area2D) -> void:
-	if area.is_in_group("enemies") and not _invulnerable:
-		_be_hurt(10)
+## Emit hurt/healed signals when HP changes through the setter.
+func _hp_changed(old: float, new: float) -> void:
+	if new < old:
+		is_hurt.emit(new)
+	elif new > old:
+		is_healed.emit(new)
 
 
 ## Custom physics: mouse aim, acceleration, friction. Called by Entity._process.
@@ -111,8 +116,7 @@ func _be_hurt(damage: float) -> void:
 	if _debug_invulnerable:
 		return
 	super(damage)
-	is_hurt.emit(_hp)
-	if Global.current_world is Gameplay and not Global.current_world.game_over:
+	if _hp > 0 and Global.current_world is Gameplay and not Global.current_world.game_over:
 		_invulnerable = true
 		sprite.modulate = Color.RED
 		await get_tree().create_timer(invulnerability_time).timeout
@@ -139,3 +143,8 @@ func _shoot() -> void:
 		bullet.rotation = _target_angle + randf_range(-PI / 20.0, PI / 20.0)
 		add_sibling(bullet)
 		Global.trigger_camera_shake.emit(1)
+
+
+func _on_area_entered(area: Area2D) -> void:
+	if area.is_in_group("enemies") and not _invulnerable:
+		_be_hurt(10)

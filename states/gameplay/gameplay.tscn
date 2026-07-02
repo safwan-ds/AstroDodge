@@ -97,6 +97,7 @@ base_shake_intensity = 10.0
 shake_decay_rate = 3.5
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=899471673]
+visible = false
 
 [connection signal="is_dead" from="Player" to="." method="_on_player_is_dead"]
 [connection signal="is_hurt" from="Player" to="." method="_on_player_is_hurt"]

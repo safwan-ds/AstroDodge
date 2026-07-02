@@ -1,5 +1,7 @@
 extends Camera2D
 ## Camera with zoom-in transition, Perlin-noise shake decay, and mouse lookahead offset.
+## Follows the player by parenting (child of Player), survives death because
+## Player uses _skip_queue_free to avoid freeing its children.
 
 @export_group("Zoom Out Transition")
 ## Zoom level at scene start (transitions to 1.0).

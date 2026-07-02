@@ -139,15 +139,15 @@ func help():
 func modify_hp(new_hp: float) -> Variant:
 	var player = get_tree().get_first_node_in_group(GROUP_PLAYER)
 	if player:
-		player._hp = new_hp
-		return player._hp
+		player.hp = new_hp
+		return player.hp
 	return null
 
 
 func game_over() -> void:
 	var player = get_tree().get_first_node_in_group(GROUP_PLAYER)
 	if player:
-		player._hp = 0.0
+		player.hp = 0.0
 
 
 func get_nodes_in_group(group_name: String) -> Array:

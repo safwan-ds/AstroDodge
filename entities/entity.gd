@@ -22,12 +22,23 @@ class_name Entity extends EntityBase
 var hp: float:
 	get:
 		return _hp
+	set(value):
+		var clamped := clampf(value, 0.0, entity_stats.max_health)
+		if is_equal_approx(clamped, _hp):
+			return # no-op: value unchanged after clamping
+		var old := _hp
+		_hp = clamped
+		_hp_changed(old, _hp)
+		if _hp <= 0.0 and not _is_dying:
+			_die()
+
 var speed: float:
 	get:
 		return _velocity.length()
 
 var _direction := Vector2.ZERO
 var _velocity := Vector2.ZERO
+var _hp := 0.0
 
 @onready var collectibles_map: Dictionary[Global.CollectibleType, PackedScene] = {
 	Global.CollectibleType.J_UNIT: j_unit,
@@ -36,23 +47,20 @@ var _velocity := Vector2.ZERO
 	Global.CollectibleType.M2_CHIP: m2_chip,
 	Global.CollectibleType.ASM_UNIT: asm_unit,
 }
-@onready var _hp := entity_stats.max_health:
-	set(value):
-		value = clamp(value, 0.0, entity_stats.max_health)
-		if value <= 0.0:
-			_die()
-		_hp = value
 
 
 func _ready() -> void:
 	area_entered.connect(_on_area_entered)
+	_hp = entity_stats.max_health
 
 
 func _process(delta) -> void:
 	_move(delta)
 
 
-func _on_area_entered(_area: Area2D) -> void:
+## Override in subclasses to react to HP changes.
+## Called by the [member hp] setter whenever the clamped value differs.
+func _hp_changed(_old: float, _new: float) -> void:
 	pass
 
 
@@ -65,10 +73,14 @@ func _move(delta) -> void:
 
 ## Reduce hp by [param damage]. Triggers camera shake if entity survives.
 func _be_hurt(damage: float) -> void:
-	_hp -= damage
-	if _hp <= 0:
-		return
-	Global.trigger_camera_shake.emit(entity_stats.hit_shake_intensity)
+	hp -= damage
+	if _hp > 0:
+		Global.trigger_camera_shake.emit(entity_stats.hit_shake_intensity)
+
+
+## Increase hp by [param amount]. Clamped to max_health by the setter.
+func _heal(amount: float) -> void:
+	hp += amount
 
 
 ## Handles CircleShape2D, RectangleShape2D, and CapsuleShape2D — the
@@ -109,3 +121,7 @@ func _spawn_collectibles(collectible_type: Global.CollectibleType, min_count: in
 		var collectible_node: Collectible = collectible_scene.instantiate()
 		collectible_node.position = position
 		add_sibling(collectible_node)
+
+
+func _on_area_entered(_area: Area2D) -> void:
+	pass

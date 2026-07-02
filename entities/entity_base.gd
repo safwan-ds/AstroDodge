@@ -6,15 +6,19 @@ class_name EntityBase extends Area2D
 ## [code]super()[/code] for the common sequence.
 ## Subclasses override [method _move] for custom movement.
 
+@export var sprite: AnimatedSprite2D
 ## Optional trail particle system. Stops emitting on death and waits for
 ## existing particles to finish before freeing.
-@export var sprite: AnimatedSprite2D
 @export var trail: GPUParticles2D
 ## Optional explosion particle system. Restarted on death; wait time is based
 ## on its lifetime. If both explosion and trail exist, explosion dictates the wait.
 @export var explosion: GPUParticles2D
 
 var _is_dying := false
+## When true, [method _die] skips [method queue_free] at the end of the death
+## sequence. Useful for nodes that must stay alive in the tree after death
+## (e.g. the player keeps its Camera2D child for the game-over view).
+var _skip_queue_free := false
 
 
 ## Runs every frame. Calls [method _move] unless dying.
@@ -55,5 +59,5 @@ func _die() -> void:
 		var wait: float = max(trail.lifetime, 0.5) * 1.5
 		await get_tree().create_timer(wait).timeout
 
-	if is_instance_valid(self):
-		queue_free()
+	if is_instance_valid(self) and not _skip_queue_free:
+			queue_free()
